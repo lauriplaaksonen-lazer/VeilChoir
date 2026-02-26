@@ -42,13 +42,40 @@ canvas { display: block; width: 100%; height: 100%; }
 #madness-btn { position: fixed; top: 88px; right: 16px; z-index: 15; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 6px 12px; color: rgba(255,255,255,0.6); font-family: 'Orbitron', 'Courier New', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; pointer-events: all; transition: background 0.15s, border-color 0.15s, color 0.15s; }
 #madness-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.9); }
 #madness-btn.active { border-color: rgba(255,50,80,0.7); color: #ff3050; text-shadow: 0 0 8px rgba(255,50,80,0.5); }
+#autolvl-btn { position: fixed; top: 120px; right: 16px; z-index: 15; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 6px 12px; color: rgba(255,255,255,0.6); font-family: 'Orbitron', 'Courier New', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; pointer-events: all; transition: background 0.15s, border-color 0.15s, color 0.15s; }
+#autolvl-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.9); }
+#autolvl-btn.active { border-color: rgba(0,255,160,0.7); color: #00ffa0; text-shadow: 0 0 8px rgba(0,255,160,0.5); }
+#inftaps-btn { position: fixed; top: 152px; right: 16px; z-index: 15; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 6px 12px; color: rgba(255,255,255,0.6); font-family: 'Orbitron', 'Courier New', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; pointer-events: all; transition: background 0.15s, border-color 0.15s, color 0.15s; }
+#inftaps-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.9); }
+#inftaps-btn.active { border-color: rgba(255,200,50,0.7); color: #ffc832; text-shadow: 0 0 8px rgba(255,200,50,0.5); }
+#lore-splash { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 50; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 1.5s ease-out; pointer-events: all; cursor: pointer; }
+#lore-splash.visible { opacity: 1; transition: opacity 3s ease-in; }
+#lore-splash.fade-out { opacity: 0; transition: opacity 1.5s ease-out; }
+#lore-splash .lore-symbol { font-size: 35px; color: rgba(180,80,255,0.4); margin-bottom: 24px; letter-spacing: 12px; font-family: 'Orbitron', 'Courier New', monospace; opacity: 0; transition: opacity 2s ease-out 0.5s; }
+#lore-splash.visible .lore-symbol { opacity: 1; }
+#lore-splash .lore-text { max-width: 600px; padding: 0 32px; text-align: center; font-family: 'Orbitron', 'Courier New', monospace; font-size: 18px; line-height: 2.0; color: rgba(255,255,255,0.55); letter-spacing: 1px; opacity: 0; transition: opacity 2.5s ease-out 1s; }
+#lore-splash.visible .lore-text { opacity: 1; }
+#lore-splash .lore-attribution { margin-top: 28px; font-family: 'Orbitron', 'Courier New', monospace; font-size: 13px; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.15); opacity: 0; transition: opacity 2s ease-out 2s; }
+#lore-splash.visible .lore-attribution { opacity: 1; }
+#lore-splash .skip-hint { position: absolute; bottom: 32px; font-family: 'Orbitron', 'Courier New', monospace; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.12); opacity: 0; transition: opacity 1.5s ease-out 4s; }
+#lore-splash.visible .skip-hint { opacity: 1; }
+@keyframes lore-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
 <body>
 
+<div id="lore-splash">
+  <div class="lore-symbol">&#9683;</div>
+  <div class="lore-text" id="lore-text"></div>
+  <div class="lore-attribution">&#8212; from the Membrane Codex</div>
+  <div class="skip-hint">tap or press any key</div>
+</div>
+
 <canvas id="c"></canvas>
 <button id="biome-btn" title="Toggle biome [B]">Abyss</button>
 <button id="madness-btn" title="Toggle full madness [M]">Madness</button>
+<button id="autolvl-btn" title="Auto level up">Auto LvL</button>
+<button id="inftaps-btn" title="Infinite taps">&#8734; Taps</button>
 
 <div id="xp-bar-wrap"><div id="xp-bar-fill"></div></div>
 <div id="hud" style="display:none;">
@@ -97,11 +124,11 @@ canvas { display: block; width: 100%; height: 100%; }
 // ==================================================
 // SECTION 1: CONSTANTS & CONFIGURATION
 // ==================================================
-const BASE_TAPS = 8;                    // generous starting taps
-const BASE_CIRCLE_COUNT = 45;          // denser field = better chains early
+const BASE_TAPS = 10;                   // forgiving start — room to learn
+const BASE_CIRCLE_COUNT = 35;          // enough to chain but not overwhelming
 const BASE_CIRCLE_RADIUS = 18;
-const BASE_BLAST_RADIUS = 100;         // bigger base blast — reliable chains
-const MAX_BLAST_RADIUS = 150;          // cap for late-game blast growth
+const BASE_BLAST_RADIUS = 55;          // slightly tighter start — prevents easy cascades at lvl 3-4
+const MAX_BLAST_RADIUS = 130;          // tighter cap — late-game power more controlled
 const MAX_TAP_DISTANCE = 80;
 const MAX_CIRCLES = 300;
 const MAX_PARTICLES = 800;
@@ -109,17 +136,23 @@ const MAX_EXPLOSIONS = 40;
 const MAX_FLOATING_TEXTS = 15;
 const MAX_PAINT_SPLATS = 200;
 const MAX_AFTERSHOCKS = 20;
-const XP_BASE = 15;                     // level 2 after ~3-4 decent chains
+const XP_BASE = 12;                     // level 2 after ~2-3 decent chains
 const XP_SCALE = 1.7;                   // steeper curve: 15→26→44→74→126...
 const INTER_ORB_GRAVITY = 15;            // gentle pull from bigger → smaller orbs
 const CHAIN_POP_DELAY_MIN = 0.015;
 const CHAIN_POP_DELAY_MAX = 0.045;
 const CHAIN_POP_DELAY_JITTER = 0.015;
 const LINK_TENSION_TIME_BASE = 0.18;
-// Chain animation 25% faster for small/mid combos, normal speed for biggest (40+)
+// Chain animation speed tiered by combo size:
+//  TIER S (50+):  Full epic pacing — dramatic pauses, max impact
+//  TIER A (30-49): Good but 40% less dramatic than S — snappier, less buildup
+//  TIER B (15-29): Fast, satisfying, no drama
+//  TIER C (<15):   Very snappy, quick pops
 function getLinkTensionTime() {
-  if (G.chainCount >= 40) return LINK_TENSION_TIME_BASE; // biggest combos keep original speed
-  return LINK_TENSION_TIME_BASE * 0.75; // 25% faster
+  if (G.chainCount >= 50) return LINK_TENSION_TIME_BASE;            // S-tier: full epic
+  if (G.chainCount >= 30) return LINK_TENSION_TIME_BASE * 0.60;     // A-tier: 40% less epic
+  if (G.chainCount >= 15) return LINK_TENSION_TIME_BASE * 0.70;     // B-tier: fast
+  return LINK_TENSION_TIME_BASE * 0.55;                              // C-tier: very snappy
 }
 const LINK_PULL_STRENGTH = 120;
 const SC_SPAWN_CHANCE = 0.09;
@@ -128,9 +161,9 @@ const SC_SPIKE_MIN = 5;
 const SC_SPIKE_MAX = 8;
 const SC_GRAVITY_LIFE = 0.4;
 const SC_GRAVITY_STRENGTH = 200;
-const DELAYED_BLAST_MINOR = 15;        // harder to trigger
-const DELAYED_BLAST_MAJOR = 25;        // megacombo rarer
-const DELAYED_BLAST_MEGA = 45;         // true megacombo is special
+const DELAYED_BLAST_MINOR = 20;        // first bonus blast needs real effort
+const DELAYED_BLAST_MAJOR = 35;        // megacombo is an achievement
+const DELAYED_BLAST_MEGA = 55;         // true megacombo is rare and special
 const TAP_TIMER_BASE = 12;             // +20% more time between tap decay
 const BOMB_FUSE_TIME = 3.5;
 const BOMB_BLAST_MULT = 1.4;
@@ -233,12 +266,12 @@ const BIOME_LORE = {
 // SECTION 3: UPGRADE DEFINITIONS
 // ==================================================
 const UPGRADE_DEFS = {
-  novaRadius:   { name: 'Nova Radius',   maxLvl: 8, desc: l => `Blast radius +${l*12}px wider — chains reach much further` },
-  echoBurst:    { name: 'Echo Burst',    maxLvl: 6, desc: l => `${18*l}% chance each pop triggers a second blast (1.4x range)` },
+  novaRadius:   { name: 'Nova Radius',   maxLvl: 8, desc: l => `Blast radius +${l*5}px wider — chains reach further` },
+  echoBurst:    { name: 'Echo Burst',    maxLvl: 6, desc: l => `${10*l}% chance each pop triggers a second blast (1.3x range)` },
   gravityWell:  { name: 'Gravity Well',  maxLvl: 6, desc: l => `Pops pull nearby orbs inward (strength ${l}) — clusters chains` },
   volatileOrbs: { name: 'Volatile Orbs', maxLvl: 5, desc: l => `${8*l}% of orbs glow volatile — when popped, 3x blast radius` },
   aftershock:   { name: 'Aftershock',    maxLvl: 5, desc: l => `Pops leave hot zones for ${(0.5*l).toFixed(1)}s — orbs drifting in get popped` },
-  fission:      { name: 'Fission',       maxLvl: 6, desc: l => `Each pop spawns ${Math.min(3,l)} mini orbs that fly outward and chain` },
+  fission:      { name: 'Fission',       maxLvl: 4, desc: l => `Each pop spawns ${Math.min(2,l)} mini orb${Math.min(2,l)>1?'s':''} that ${l>=3?'fly fast':'fly'} outward and chain` },
   chainFuel:    { name: 'Chain Bounty',   maxLvl: 6, desc: l => `Bonus tap rewards x${(1+0.3*l).toFixed(1)} — bigger chains earn more taps` },
   density:      { name: 'Density',       maxLvl: 6, desc: l => `+${6*l} orbs on field — more targets, bigger chains` },
   bombCharges:  { name: 'Mine Layer',    maxLvl: 3, desc: l => `Long press to place ${l} free mine${l>1?'s':''} (${BOMB_FUSE_TIME}s fuse, ${Math.round(BOMB_BLAST_MULT*100)}% blast)` },
@@ -267,6 +300,7 @@ const G = {
   chainTimer: 0,
   chainOriginX: 0,
   chainOriginY: 0,
+  chainGenId: 0,     // increments each chain — fragments born during chain X are immune until it ends
   time: 0,
   dt: 0,
   rawDt: 0,
@@ -309,6 +343,8 @@ const G = {
   bombsPlacedThisRound: 0,
   blackHole: null,
   blackHoleTimer: 0,
+  superBlackHole: null,
+  superBlackHoleTimer: 0,
   watcher: { opacity: 0, eyeGlow: 0, reachAmount: 0, breathPhase: 0 },
   horrorBoost: 0,      // cumulative horror from black holes (0-0.5 range, adds to score-based horror)
   biomeOverride: -1,  // -1 = use level-based, 0+ = index into SPECIAL_BIOMES
@@ -328,7 +364,8 @@ const G = {
   gameH: 0,
   popCenterX: 0,           // exponential moving average of pop positions
   popCenterY: 0,
-  popTrackCount: 0          // number of pops tracked for directional bias
+  popTrackCount: 0,         // number of pops tracked for directional bias
+  shadowBalls: []            // non-interactive dark phantom orbs at 70%+ madness
 };
 
 function resetGame() {
@@ -365,6 +402,8 @@ function resetGame() {
   G.bombsPlacedThisRound = 0;
   G.blackHole = null;
   G.blackHoleTimer = 0;
+  G.superBlackHole = null;
+  G.superBlackHoleTimer = 0;
   G.watcher = { opacity: 0, eyeGlow: 0, reachAmount: 0, breathPhase: 0 };
   G.horrorBoost = 0;
   G.biomeIndex = 0;
@@ -384,6 +423,7 @@ function resetGame() {
   G.popCenterX = 0;
   G.popCenterY = 0;
   G.popTrackCount = 0;
+  G.shadowBalls = [];
   // Compute game boundaries immediately so spawning uses correct area
   const resetHalfW = G.W / (2 * G.zoomLevel);
   const resetHalfH = G.H / (2 * G.zoomLevel);
@@ -669,6 +709,8 @@ function lerpColor(c1, c2, t) {
 // Black holes add permanent horrorBoost (capped at 0.6)
 // Total capped at 1.0
 let devMadnessOverride = -1; // -1 = off, 0-1 = forced value
+let autoLevelUp = false; // Auto-select random upgrade on level up
+let infiniteTaps = false; // Dev toggle: infinite taps (no game over)
 
 function getMadnessAmount() {
   if (devMadnessOverride >= 0) return devMadnessOverride;
@@ -760,15 +802,17 @@ function getClusterColor(x, y) {
 }
 
 function getTargetCircleCount() {
-  // Starts at 45, grows by ~2 per level, caps around 65 (before density upgrade)
-  const levelBonus = Math.min(20, (G.level - 1) * 2);
+  // Starts at 30, grows by ~1.5 per level, caps around 50 (before density upgrade)
+  const levelBonus = Math.min(20, Math.floor((G.level - 1) * 1.5));
   const baseCount = BASE_CIRCLE_COUNT + levelBonus + G.upgrades.density * 6;
   // Soften by zoom: at 2.0× → ~70% orbs, at 1.0 → 100%, at 0.5 → 100% (capped)
   const zoomFactor = Math.min(1, 0.3 + 0.7 / G.zoomLevel);
-  // Madness orb flood: after 50% madness, gradually double the orb count
-  // 0-50% madness: 1.0×, 50-100% madness: ramps 1.0× → 2.0×
+  // Madness orb flood: gradual ramp — starts at 10% madness, triples by 80%, peaks at 100%
+  // 0-10%: 1.0×, 10-80%: ramps 1.0× → 3.0× (+200%), 80-100%: 3.0× → 3.5×
   const madness = getMadnessAmount();
-  const madnessOrbMult = madness <= 0.5 ? 1.0 : 1.0 + (madness - 0.5) * 2.0;
+  const madnessOrbMult = madness <= 0.1 ? 1.0 :
+    madness <= 0.8 ? 1.0 + (madness - 0.1) / 0.7 * 2.0 :
+    3.0 + (madness - 0.8) * 2.5;
   return Math.round(baseCount * zoomFactor * madnessOrbMult);
 }
 
@@ -776,12 +820,16 @@ function getTargetCircleCount() {
 // Level-scaled blast radius: sqrt curve — big jump early, diminishing later
 // All physics scale with madness: radius grows up to +30% at full madness
 function getMadnessPhysicsScale() {
-  return 1 + getMadnessAmount() * 0.3; // 1.0 at 0 madness, 1.3 at full
+  const m = getMadnessAmount();
+  // 0-50%: 1.0 → 1.15 (gentle ramp)
+  // 50-100%: 1.15 → 1.7 (aggressive ramp — +50% force, doubled ratio)
+  if (m <= 0.5) return 1 + m * 0.3;
+  return 1.15 + (m - 0.5) * 1.1; // 1.15 → 1.7 at full madness
 }
 
 function getBlastRadius() {
-  const t = Math.min(1, (G.level - 1) / 9); // 0 at lvl1, 1 at lvl10
-  const growth = Math.sqrt(t);
+  const t = Math.min(1, (G.level - 1) / 20); // 0 at lvl1, 1 at lvl21 — very slow ramp (was /16)
+  const growth = Math.pow(t, 0.65);           // slightly steeper than 0.6 — flatter early, catches up late
   const base = BASE_BLAST_RADIUS + (MAX_BLAST_RADIUS - BASE_BLAST_RADIUS) * growth;
   // Soften blast by zoom: at 2.0× → ~85%, at 1.0 → 100%, at 0.5 → 100%
   const zoomScale = Math.min(1, 0.3 + 0.7 / G.zoomLevel);
@@ -789,38 +837,39 @@ function getBlastRadius() {
   return base * zoomScale * getMadnessPhysicsScale();
 }
 
-// Level-scaled fracturing: no fractures at lvl1, ramps in GRADUALLY over 10 levels
+// Level-scaled fracturing: no fractures at lvl1, ramps in GRADUALLY over 12+ levels
 function getFractureCounts() {
-  // Level 1-2: no fracturing at all
-  // Level 3-4: gen0→1 only (1 fragment)
-  // Level 5-6: gen0→1, gen1→1 (single chain)
-  // Level 7-8: gen0→2, gen1→1 (branching starts)
-  // Level 9:   gen0→2, gen1→1, gen2→1 (full depth, lean)
-  // Level 10-11: gen0→2, gen1→2, gen2→1 (full fracturing tree)
-  // Level 12-14: gen0→2, gen1→2, gen2→1, gen3→1 (gen-4 "smaller1" tier)
-  // Level 15+: gen0→2, gen1→2, gen2→1, gen3→1, gen4→1 (gen-5 "micro" tier)
+  // Level 1-3: no fracturing at all (learn basic popping, build tap reserves)
+  // Level 4-5: gen0→1 only (1 fragment — gentle chains)
+  // Level 6-8: gen0→1, gen1→1 (single chain depth, no branching)
+  // Level 9-10: gen0→2, gen1→1 (branching begins — delayed to prevent lvl 6-7 cascade)
+  // Level 11-12: gen0→2, gen1→1, gen2→1 (full depth, lean)
+  // Level 13-14: gen0→2, gen1→2, gen2→1 (full fracturing tree)
+  // Level 15-16: gen0→2, gen1→2, gen2→1, gen3→1 (gen-4 tier)
+  // Level 17+: gen0→2, gen1→2, gen2→1, gen3→1, gen4→1 (gen-5 "micro" tier)
   // [gen0, gen1, gen2, gen3, gen4] → how many children each generation spawns
-  if (G.level <= 2) return [0, 0, 0, 0, 0];
-  if (G.level <= 4) return [1, 0, 0, 0, 0];
-  if (G.level <= 6) return [1, 1, 0, 0, 0];
-  if (G.level <= 8) return [2, 1, 0, 0, 0];
-  if (G.level <= 9) return [2, 1, 1, 0, 0];
-  if (G.level <= 11) return [2, 2, 1, 0, 0];
-  if (G.level <= 14) return [2, 2, 1, 1, 0]; // gen-4 "smaller1" at level 12+
-  return [2, 2, 1, 1, 1]; // gen-5 "micro" at level 15+
+  if (G.level <= 3) return [0, 0, 0, 0, 0];
+  if (G.level <= 5) return [1, 0, 0, 0, 0];
+  if (G.level <= 8) return [1, 1, 0, 0, 0];  // single fragments through lvl 8
+  if (G.level <= 10) return [2, 1, 0, 0, 0]; // branching at lvl 9 (was 8)
+  if (G.level <= 12) return [2, 1, 1, 0, 0];
+  if (G.level <= 14) return [2, 2, 1, 0, 0];
+  if (G.level <= 16) return [2, 2, 1, 1, 0]; // gen-4 at level 15+
+  return [2, 2, 1, 1, 1]; // gen-5 "micro" at level 17+
 }
 
 // Level-scaled shrapnel: needs higher chain count early, loosens later
 function getShrapnelThreshold() {
-  if (G.level <= 2) return 4;   // need chain ≥ 4 early
-  if (G.level <= 4) return 3;
+  if (G.level <= 2) return 6;   // need chain ≥ 6 early — rare at small blast
+  if (G.level <= 4) return 4;
+  if (G.level <= 6) return 3;
   return 2;
 }
 
 // Level-scaled bonus tap thresholds
 function getBonusTapThresholds() {
   const lvl = G.level;
-  if (lvl <= 2) return { big: 15, mid: 8,  small: 4, smallChance: 0.50 };  // 4+ pops = 50% chance +1 tap
+  if (lvl <= 2) return { big: 12, mid: 6,  small: 3, smallChance: 0.60 };  // 3+ pops = 60% chance +1 tap
   if (lvl <= 4) return { big: 20, mid: 12, small: 6, smallChance: 0.45 };
   if (lvl <= 6) return { big: 25, mid: 15, small: 8, smallChance: 0.40 };
   if (lvl <= 9) return { big: 35, mid: 22, small: 12, smallChance: 0.35 };
@@ -835,12 +884,12 @@ function getTapTimerMax() {
 
 // Cascade Burst: smaller orbs (gen-1, gen-2) spawn bonus micro-fragments
 // during long chains. Rule: chainCount must exceed threshold based on generation.
-// gen-1 needs chain≥12 to burst, gen-2 needs chain≥20. Spawns 1-2 even tinier orbs.
+// Thresholds raised so cascading builds gradually, not explosively.
 function getCascadeBurstCount(generation) {
-  if (generation === 1 && G.chainCount >= 12) return 1 + (G.chainCount >= 25 ? 1 : 0);
-  if (generation === 2 && G.chainCount >= 20) return 1;
-  if (generation === 3 && G.chainCount >= 25) return 1; // gen-3 can burst into gen-4
-  if (generation === 4 && G.chainCount >= 30) return 1; // gen-4 can burst into gen-5
+  if (generation === 1 && G.chainCount >= 18) return 1 + (G.chainCount >= 35 ? 1 : 0);
+  if (generation === 2 && G.chainCount >= 28) return 1;
+  if (generation === 3 && G.chainCount >= 35) return 1; // gen-3 can burst into gen-4
+  if (generation === 4 && G.chainCount >= 45) return 1; // gen-4 can burst into gen-5
   return 0;
 }
 
@@ -850,8 +899,24 @@ function getCascadeBurstCount(generation) {
 function createCircle(x, y) {
   const color = getClusterColor(x, y);
   const isVolatile = Math.random() < (G.upgrades.volatileOrbs * 0.08);
-  const baseR = BASE_CIRCLE_RADIUS + Math.random() * 4;
-  let r = baseR;
+  // At >50% madness: default orbs grow bigger. At >66%: extreme size variation (tiny + huge)
+  const madSizeAmt = getMadnessAmount();
+  let sizeVar = 4; // default random range added to base
+  let sizeMin = 1.0; // multiplier for minimum size
+  let sizeBase = 1.0; // multiplier for base radius — makes default orbs bigger
+  if (madSizeAmt > 0.50) {
+    // From 50-100%: base orb size gradually grows up to 1.5× (50% bigger)
+    const growFrac = Math.min(1, (madSizeAmt - 0.50) / 0.50);
+    sizeBase = 1.0 + growFrac * 0.5; // 1.0× → 1.5× base radius
+    sizeVar = 4 + growFrac * 8; // wider random range as madness grows
+  }
+  if (madSizeAmt > 0.66) {
+    const madSizeFrac = Math.min(1, (madSizeAmt - 0.66) / 0.34); // 0-1 from 66% to 100% madness
+    sizeVar = 12 + madSizeFrac * 12; // up to +24px random range
+    sizeMin = 1.0 - madSizeFrac * 0.55; // down to 0.45× base size for tiny orbs
+  }
+  const baseR = BASE_CIRCLE_RADIUS * sizeBase * sizeMin + Math.random() * sizeVar;
+  let r = Math.max(5, baseR); // minimum 5px radius
   if (isVolatile) r *= 1.3;
   // Void Crack orbs: RARE special armored orbs from level 3+ (flat 3% chance)
   const armorChance = G.level >= 3 ? 0.03 : 0;
@@ -880,7 +945,9 @@ function createCircle(x, y) {
     driftTimer: Math.random() * 3,
     generation: 0,
     shrapnel: false,
+    fissionSpawn: false,
     shrapnelImmune: 0,
+    chainBornId: -1,     // chain generation that spawned this particle (-1 = not chain-born)
     spawnAnim: 1.0,
     fadeIn: 0,
     alive: true,
@@ -928,8 +995,8 @@ function spawnInitialCircles() {
 function spawnCircleFromEdge() {
   if (G.circles.length >= MAX_CIRCLES) return;
 
-  // ~25% chance: spawn from darkness (fade-in at random position)
-  if (Math.random() < 0.25) {
+  // ~40% chance: spawn from darkness (fade-in at random position within play area)
+  if (Math.random() < 0.40) {
     spawnCircleFadeIn();
     return;
   }
@@ -1109,6 +1176,8 @@ function updateCircles(dt) {
     c.y += Math.sin(c.driftAngle) * driftSpeed * dt;
 
     // Cursor gravity — pull toward mouse/touch, boosted by cursor movement speed
+    // Strength: 1.5× at 0% madness → 3.0× at 100% madness (50-200% buff)
+    // Radius: 2.0× at 0% madness → 5.0× at 100% madness (100-400% buff)
     if (G.cursorX > 0 && G.cursorY > 0) {
       const cdx = G.cursorX - c.x;
       const cdy = G.cursorY - c.y;
@@ -1118,15 +1187,23 @@ function updateCircles(dt) {
       const speedBoost = 1 + Math.min(1.5, cursorSpeed / 400);
       // Gradual inverse-square falloff — strong nearby, wide reach, grows with madness
       const madPhys = getMadnessPhysicsScale();
-      const cursorPull = Math.min(65 * speedBoost * madPhys, 16000 * speedBoost * madPhys / (cDist * cDist + 80)) * dt;
+      const madness = getMadnessAmount();
+      // Cursor REACH: 4× at 0% madness → 10× at 100% madness (doubled from previous)
+      const cursorReachMult = 4.0 + madness * 6.0;
+      // Cursor STRENGTH: 1.0× base, up to 2.0× at full madness (33% weaker)
+      const cursorStrMult = 1.0 + madness * 1.0;
+      // Shrink effective distance to extend reach
+      const effDist = cDist / cursorReachMult;
+      const cursorPull = Math.min(65 * speedBoost * madPhys * cursorStrMult, 16000 * speedBoost * madPhys * cursorStrMult / (effDist * effDist + 80)) * dt;
       c.x += (cdx / cDist) * cursorPull;
       c.y += (cdy / cDist) * cursorPull;
 
       // Cursor BRUSH: moving cursor pushes nearby orbs in cursor direction
-      // Like brushing marbles on a table
-      if (cursorSpeed > 30 && cDist < 60 + c.radius) {
-        const brushStr = Math.min(1, cursorSpeed / 800) * (1 - cDist / (60 + c.radius));
-        const brushForce = brushStr * 120 * dt;
+      // Brush range also scales with madness reach
+      const brushRange = (60 + c.radius) * cursorReachMult * 0.5;
+      if (cursorSpeed > 30 && cDist < brushRange) {
+        const brushStr = Math.min(1, cursorSpeed / 800) * (1 - cDist / brushRange);
+        const brushForce = brushStr * 120 * cursorStrMult * dt;
         c.vx += (G.cursorVx / cursorSpeed) * brushForce;
         c.vy += (G.cursorVy / cursorSpeed) * brushForce;
       }
@@ -1393,7 +1470,9 @@ function updateOrbMerging(dt) {
   for (let i = 0; i < len && merges < maxMerges; i++) {
     const a = circles[i];
     if (!a.alive || a.popped || a.mergeCooldown > 0 || a.spawnAnim > 0.3) continue;
-    if (a.mergeCount >= 6 || a.superCell || a.armored) continue;
+    // Merge count cap scales with madness: 6 base, up to 10 at full madness
+    const mergeCap = 6 + Math.floor(getMadnessAmount() * 4);
+    if (a.mergeCount >= mergeCap || a.superCell || a.armored) continue;
 
     const gx = Math.floor(a.x / cellSize);
     const gy = Math.floor(a.y / cellSize);
@@ -1407,7 +1486,7 @@ function updateOrbMerging(dt) {
           const b = circles[j];
           const nextJ = b._mergeNext;
           if (j > i && b.alive && !b.popped && b.mergeCooldown <= 0
-              && b.spawnAnim <= 0.3 && (b.mergeCount || 1) < 4
+              && b.spawnAnim <= 0.3 && (b.mergeCount || 1) < mergeCap
               && !b.superCell && !b.armored) {
             const ddx = a.x - b.x;
             const ddy = a.y - b.y;
@@ -1429,9 +1508,10 @@ function updateOrbMerging(dt) {
               const massFactor = Math.min(1, (massRatio - 1) / 3);
               const mergeChance = 0.02 + speedFactor * 0.45 + massFactor * 0.25;
               if (Math.random() < mergeChance) {
-                // Area-based radius growth, capped
+                // Area-based radius growth — cap scales with madness (3.5× base → 5× at full madness)
+                const mergeRadiusCap = BASE_CIRCLE_RADIUS * (3.5 + getMadnessAmount() * 1.5);
                 const newArea = Math.PI * a.radius * a.radius + Math.PI * b.radius * b.radius;
-                a.radius = Math.min(BASE_CIRCLE_RADIUS * 3.5, Math.sqrt(newArea / Math.PI));
+                a.radius = Math.min(mergeRadiusCap, Math.sqrt(newArea / Math.PI));
                 a.baseRadius = a.radius;
 
                 // Blend colors
@@ -1974,6 +2054,7 @@ function detonateBomb(b) {
   const wasActive = G.chainActive;
   if (!wasActive) {
     G.chainActive = true;
+    G.chainGenId++;
     G.chainCount = 0;
     G.chainXpValue = 0;
     G.chainTimer = 0;
@@ -2054,6 +2135,273 @@ function playBombPlaceSound() {
 }
 
 // ==================================================
+// SECTION 9b: SHADOW BALLS — Dark phantom orbs at 70%+ madness
+// Non-interactive, follow gravity chaotically, can feed black holes
+// ==================================================
+const SHADOW_BALL_MIN_MADNESS = 0.70;  // madness threshold to start spawning
+const SHADOW_BALL_MAX_COUNT = 40;      // max shadow balls on field
+const SHADOW_BALL_SIZE_MIN = 3;        // smallest shadow ball radius
+const SHADOW_BALL_SIZE_MAX = 9;        // largest shadow ball radius
+const SHADOW_BALL_SPAWN_RATE = 0.15;   // seconds between spawn attempts
+let shadowSpawnTimer = 0;
+
+function createShadowBall() {
+  // Spawn from random edge (like normal orbs)
+  const gL = G.gameLeft, gR = G.gameRight, gT = G.gameTop, gB = G.gameBottom;
+  const edge = Math.floor(Math.random() * 4);
+  let x, y;
+  if (edge === 0) { x = gL - 10; y = gT + Math.random() * (gB - gT); }
+  else if (edge === 1) { x = gR + 10; y = gT + Math.random() * (gB - gT); }
+  else if (edge === 2) { x = gL + Math.random() * (gR - gL); y = gT - 10; }
+  else { x = gL + Math.random() * (gR - gL); y = gB + 10; }
+
+  return {
+    x, y,
+    vx: (Math.random() - 0.5) * 40,
+    vy: (Math.random() - 0.5) * 40,
+    radius: SHADOW_BALL_SIZE_MIN + Math.random() * (SHADOW_BALL_SIZE_MAX - SHADOW_BALL_SIZE_MIN),
+    phase: Math.random() * Math.PI * 2,     // unique oscillation phase
+    chaosAngle: Math.random() * Math.PI * 2, // random jitter angle
+    chaosTimer: 0.5 + Math.random() * 1.5,   // time until next jitter shift
+    driftAngle: Math.random() * Math.PI * 2,
+    alive: true,
+    alpha: 0,   // fade in
+    life: 0
+  };
+}
+
+function updateShadowBalls(dt) {
+  const madness = getMadnessAmount();
+
+  // Below threshold: despawn all shadow balls gradually
+  if (madness < SHADOW_BALL_MIN_MADNESS) {
+    for (let i = G.shadowBalls.length - 1; i >= 0; i--) {
+      G.shadowBalls[i].alpha -= dt * 2;
+      if (G.shadowBalls[i].alpha <= 0) G.shadowBalls.splice(i, 1);
+    }
+    return;
+  }
+
+  // Target count scales from 0 at 70% to max at 100%
+  const madFrac = Math.min(1, (madness - SHADOW_BALL_MIN_MADNESS) / (1.0 - SHADOW_BALL_MIN_MADNESS));
+  const targetCount = Math.floor(SHADOW_BALL_MAX_COUNT * madFrac);
+
+  // Spawn new shadow balls at intervals
+  shadowSpawnTimer -= dt;
+  if (shadowSpawnTimer <= 0 && G.shadowBalls.length < targetCount) {
+    G.shadowBalls.push(createShadowBall());
+    shadowSpawnTimer = SHADOW_BALL_SPAWN_RATE;
+  }
+
+  // Remove excess if madness dropped
+  while (G.shadowBalls.length > targetCount + 5) {
+    G.shadowBalls.pop();
+  }
+
+  const madPhys = getMadnessPhysicsScale();
+  const gcx = ((G.gameLeft || 0) + (G.gameRight || G.W)) * 0.5;
+  const gcy = ((G.gameTop || 0) + (G.gameBottom || G.H)) * 0.5;
+  const gw = G.gameW || G.W, gh = G.gameH || G.H;
+
+  for (let i = G.shadowBalls.length - 1; i >= 0; i--) {
+    const sb = G.shadowBalls[i];
+    sb.life += dt;
+
+    // Fade in
+    if (sb.alpha < 1) sb.alpha = Math.min(1, sb.alpha + dt * 1.5);
+
+    // --- CHAOTIC GRAVITY: same forces as normal orbs but amplified + jittery ---
+
+    // Gravitational swirl toward field center (amplified 1.5×)
+    const attractX = gcx + Math.sin(G.time * 0.13 + sb.phase * 2) * gw * 0.3;
+    const attractY = gcy + Math.cos(G.time * 0.11 + sb.phase * 1.7) * gh * 0.25;
+    const adx = attractX - sb.x;
+    const ady = attractY - sb.y;
+    const aDist = Math.sqrt(adx * adx + ady * ady) + 1;
+    const gravStr = Math.min(50, 1200 / aDist) * dt;
+    const tangentX = -ady / aDist;
+    const tangentY = adx / aDist;
+    const tangentStr = Math.min(35, 700 / aDist) * dt;
+    sb.x += (adx / aDist) * gravStr + tangentX * tangentStr;
+    sb.y += (ady / aDist) * gravStr + tangentY * tangentStr;
+
+    // Chaotic jitter — random directional shifts more aggressive than normal orbs
+    sb.chaosTimer -= dt;
+    if (sb.chaosTimer <= 0) {
+      sb.chaosTimer = 0.3 + Math.random() * 1.0;
+      sb.chaosAngle += (Math.random() - 0.5) * 4.0; // aggressive angle shift
+      sb.driftAngle += (Math.random() - 0.5) * 3.0;
+    }
+    const jitterSpeed = 25 + madFrac * 20;
+    sb.vx += Math.cos(sb.chaosAngle) * jitterSpeed * dt;
+    sb.vy += Math.sin(sb.chaosAngle) * jitterSpeed * dt;
+
+    // Ambient wave (faster, more erratic than normal orbs)
+    sb.x += Math.sin(G.time * 0.8 + sb.phase) * 1.2 * dt * 10;
+    sb.y += Math.cos(G.time * 0.7 + sb.phase * 1.5) * 1.2 * dt * 10;
+
+    // Brownian drift (faster direction changes)
+    const driftSpeed = 18 + madFrac * 12;
+    sb.x += Math.cos(sb.driftAngle) * driftSpeed * dt;
+    sb.y += Math.sin(sb.driftAngle) * driftSpeed * dt;
+
+    // Cursor gravity — pulled toward cursor (1.3× normal strength, same reach)
+    if (G.cursorX > 0 && G.cursorY > 0) {
+      const cdx = G.cursorX - sb.x;
+      const cdy = G.cursorY - sb.y;
+      const cDist = Math.sqrt(cdx * cdx + cdy * cdy) + 1;
+      const cursorReachMult = 4.0 + madness * 6.0;
+      const cursorStrMult = (1.0 + madness * 1.0) * 1.3;
+      const effDist = cDist / cursorReachMult;
+      const cursorPull = Math.min(65 * madPhys * cursorStrMult, 16000 * madPhys * cursorStrMult / (effDist * effDist + 80)) * dt;
+      sb.x += (cdx / cDist) * cursorPull;
+      sb.y += (cdy / cDist) * cursorPull;
+    }
+
+    // Apply velocity with strong damping (shadow balls are floaty)
+    sb.x += sb.vx * dt;
+    sb.y += sb.vy * dt;
+    sb.vx *= 0.92;
+    sb.vy *= 0.92;
+
+    // --- BLACK HOLE GRAVITY + FEEDING ---
+    if (G.blackHole) {
+      const bh = G.blackHole;
+      const dx = bh.x - sb.x;
+      const dy = bh.y - sb.y;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < bh.gravityRadius * madPhys && d > 3) {
+        // Stronger pull than normal orbs (1.5×) — shadow balls are drawn to darkness
+        const accel = bh.strength * madPhys * 1.5 * dt / Math.max(d, 20);
+        const nx = dx / d, ny = dy / d;
+        sb.vx += nx * accel;
+        sb.vy += ny * accel;
+        // Tangential spin
+        sb.vx += (-ny) * accel * BH_TANGENT_STRENGTH;
+        sb.vy += (nx) * accel * BH_TANGENT_STRENGTH;
+
+        // Swallow: shadow ball touches event horizon → feeds mass
+        if (d < bh.radius * BH_SWALLOW_RADIUS_MULT) {
+          sb.alive = false;
+          bh.mass++;
+          bh.radius = BH_VISUAL_RADIUS + bh.mass * 3;
+          bh.gravityRadius = BH_GRAVITY_RADIUS + bh.mass * 15;
+          bh.strength = BH_STRENGTH + bh.mass * 80;
+          // Subtle dark particle burst
+          for (let p = 0; p < 4; p++) {
+            G.particles.push({
+              x: sb.x, y: sb.y,
+              vx: (Math.random() - 0.5) * 60,
+              vy: (Math.random() - 0.5) * 60,
+              radius: 1 + Math.random() * 2,
+              color: '#1a1a2e',
+              life: 0.4 + Math.random() * 0.3,
+              maxLife: 0.7,
+              layer: 'fg'
+            });
+          }
+          if (bh.mass >= BH_COLLAPSE_THRESHOLD) {
+            spawnFloatingText(bh.x, bh.y - 30, 'TAP TO COLLAPSE', '#e0a0ff');
+          }
+        }
+      }
+    }
+
+    // Supermassive black hole gravity + feeding
+    if (G.superBlackHole) {
+      const sbh = G.superBlackHole;
+      const dx = sbh.x - sb.x;
+      const dy = sbh.y - sb.y;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < sbh.gravityRadius * madPhys && d > 3) {
+        const pullStr = sbh.strength * madPhys * 1.5 * dt / Math.max(Math.sqrt(d) * 4, 10);
+        const nx = dx / d, ny = dy / d;
+        sb.vx += nx * pullStr;
+        sb.vy += ny * pullStr;
+        sb.vx += (-ny) * pullStr * sbh.tangentRatio;
+        sb.vy += (nx) * pullStr * sbh.tangentRatio;
+
+        // Swallow
+        if (d < sbh.radius * SBH_SWALLOW_FRAC) {
+          sb.alive = false;
+          sbh.mass++;
+          sbh.radius = sbh.baseRadius + sbh.mass * 5;
+          sbh.gravityRadius = sbh.baseGravityRadius + sbh.mass * 20;
+          sbh.strength = sbh.baseStrength + sbh.mass * 150;
+          for (let p = 0; p < 4; p++) {
+            G.particles.push({
+              x: sb.x, y: sb.y,
+              vx: (Math.random() - 0.5) * 80,
+              vy: (Math.random() - 0.5) * 80,
+              radius: 1 + Math.random() * 2,
+              color: '#0a0a1e',
+              life: 0.4 + Math.random() * 0.3,
+              maxLife: 0.7,
+              layer: 'fg'
+            });
+          }
+          if (sbh.mass >= SBH_COLLAPSE_MASS && !sbh.collapseReady) {
+            sbh.collapseReady = true;
+            sbh.pulseTime = 0;
+            spawnFloatingText(sbh.x, sbh.y - 40, 'TAP TO COLLAPSE!', '#ff6080');
+          }
+        }
+      }
+    }
+
+    // Keep on screen — soft bounce off game boundaries
+    const margin = 30;
+    const gL = G.gameLeft, gR = G.gameRight, gT = G.gameTop, gB = G.gameBottom;
+    if (sb.x < gL - margin) { sb.x = gL - margin; sb.vx = Math.abs(sb.vx) * 0.5; }
+    if (sb.x > gR + margin) { sb.x = gR + margin; sb.vx = -Math.abs(sb.vx) * 0.5; }
+    if (sb.y < gT - margin) { sb.y = gT - margin; sb.vy = Math.abs(sb.vy) * 0.5; }
+    if (sb.y > gB + margin) { sb.y = gB + margin; sb.vy = -Math.abs(sb.vy) * 0.5; }
+
+    // Remove dead shadow balls
+    if (!sb.alive) {
+      G.shadowBalls.splice(i, 1);
+    }
+  }
+}
+
+function renderShadowBalls(ctx) {
+  if (G.shadowBalls.length === 0) return;
+
+  ctx.save();
+  for (let i = 0; i < G.shadowBalls.length; i++) {
+    const sb = G.shadowBalls[i];
+    const alpha = sb.alpha * 0.7; // always somewhat translucent
+
+    // Dark core — pure black with slight dark purple edge
+    ctx.globalAlpha = alpha;
+    const grad = ctx.createRadialGradient(sb.x, sb.y, 0, sb.x, sb.y, sb.radius);
+    grad.addColorStop(0, '#000000');
+    grad.addColorStop(0.6, '#050510');
+    grad.addColorStop(1, 'rgba(15, 10, 30, 0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(sb.x, sb.y, sb.radius * 1.4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Inner solid black circle
+    ctx.globalAlpha = alpha * 0.9;
+    ctx.fillStyle = '#000000';
+    ctx.beginPath();
+    ctx.arc(sb.x, sb.y, sb.radius * 0.8, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Subtle dark shimmer ring — barely visible
+    ctx.globalAlpha = alpha * 0.25;
+    ctx.strokeStyle = '#1a1030';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.arc(sb.x, sb.y, sb.radius + Math.sin(sb.life * 3 + sb.phase) * 1.5, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+// ==================================================
 // SECTION 10: CHAIN REACTION ENGINE
 // ==================================================
 function startChain(x, y) {
@@ -2061,6 +2409,7 @@ function startChain(x, y) {
   // If a chain is already active, this tap adds to it instead of starting fresh
   if (!G.chainActive) {
     G.chainActive = true;
+    G.chainGenId++;
     G.chainCount = 0;
     G.chainXpValue = 0;
     G.chainTimer = 0;
@@ -2190,7 +2539,7 @@ function popCircle(circleId) {
 
   // Calculate blast radius (scales with level AND orb size)
   const baseR = getBlastRadius();
-  const novaBonus = G.upgrades.novaRadius * 12;
+  const novaBonus = G.upgrades.novaRadius * 5;
   const sizeScale = circle.radius / BASE_CIRCLE_RADIUS; // 1.0 for normal, up to 2.5 for merged
   let blastR = (baseR + novaBonus) * (0.7 + 0.3 * sizeScale);
   if (circle.volatile) blastR *= 3;
@@ -2249,6 +2598,8 @@ function popCircle(circleId) {
     const other = G.circles[i];
     if (other.popped || other.queued || !other.alive) continue;
     if (other.shrapnelImmune > 0) continue; // shrapnel needs time to fly out
+    // Fragments born during THIS chain survive it — poppable in the next chain
+    if (other.chainBornId === G.chainGenId && G.chainActive) continue;
     const d = dist(circle.x, circle.y, other.x, other.y);
     if (d < blastR + other.radius) {
       other.queued = true;
@@ -2268,13 +2619,14 @@ function popCircle(circleId) {
   damageBoss(circle.x, circle.y, blastR, circle.radius);
 
   // Echo Burst
-  if (G.upgrades.echoBurst > 0 && Math.random() < G.upgrades.echoBurst * 0.18) {
-    const echoR = blastR * 1.4;
+  if (G.upgrades.echoBurst > 0 && Math.random() < G.upgrades.echoBurst * 0.10) {
+    const echoR = blastR * 1.3;
     createExplosion(circle.x, circle.y, echoR, circle.color, true);
     for (let i = 0; i < G.circles.length; i++) {
       const other = G.circles[i];
       if (other.popped || other.queued || !other.alive) continue;
       if (other.shrapnelImmune > 0) continue;
+      if (other.chainBornId === G.chainGenId && G.chainActive) continue;
       const d = dist(circle.x, circle.y, other.x, other.y);
       if (d < echoR + other.radius) {
         other.queued = true;
@@ -2323,22 +2675,25 @@ function popCircle(circleId) {
       sc.spawnAnim = 0;
       sc.shrapnel = true;
       sc.shrapnelImmune = 0.35; // immune to blasts for 350ms so it can fly out visibly
+      sc.chainBornId = G.chainGenId; // survives this chain, poppable in next
       G.circles.push(sc);
     }
   }
 
-  // Fission (nerfed: gen-1+, max 3, shrapnel XP, blast immunity) — directional
-  if (G.upgrades.fission > 0) {
-    const fissionCount = Math.min(3, G.upgrades.fission);
+  // Fission — spawns mini orbs that fly outward. Cannot chain-fission (no recursion).
+  // Only non-fission orbs trigger fission; fission orbs themselves do NOT spawn more.
+  // Capped at 2 orbs max. Small, fast, long immunity — spread out, don't instant-chain.
+  if (G.upgrades.fission > 0 && !circle.fissionSpawn) {
+    const fissionCount = Math.min(2, G.upgrades.fission); // max 2 (was 3)
     for (let i = 0; i < fissionCount; i++) {
       if (G.circles.length < MAX_CIRCLES) {
-        const fSpread = (fissionCount > 1) ? ((i / (fissionCount - 1)) - 0.5) * Math.PI * 0.7 : 0;
+        const fSpread = (fissionCount > 1) ? ((i / (fissionCount - 1)) - 0.5) * Math.PI * 0.8 : 0;
         const angle = awayAngle + fSpread + (Math.random() - 0.5) * 0.4;
-        const speed = 100 + Math.random() * 60;
+        const speed = 150 + Math.random() * 80; // even faster escape
         const fc = createCircle(circle.x, circle.y);
-        fc.radius = BASE_CIRCLE_RADIUS * 0.6;
+        fc.radius = BASE_CIRCLE_RADIUS * 0.4; // tiny (was 0.5)
         fc.baseRadius = fc.radius;
-        fc.generation = Math.max(1, circle.generation + 1); // always at least gen-1
+        fc.generation = Math.max(3, circle.generation + 1); // gen-3 minimum (minimal XP)
         fc.superCell = false;
         fc.spikeCount = 0;
         fc.scCooldown = 999;
@@ -2346,8 +2701,10 @@ function popCircle(circleId) {
         fc.vx = Math.cos(angle) * speed;
         fc.vy = Math.sin(angle) * speed;
         fc.spawnAnim = 0.5;
-        fc.shrapnel = true;  // reduced XP
-        fc.shrapnelImmune = 0.2; // blast immunity to prevent instant chain from parent
+        fc.shrapnel = true;      // reduced XP
+        fc.fissionSpawn = true;   // prevents recursive fission
+        fc.shrapnelImmune = 0.6;  // 600ms immunity — must fly far before catchable
+        fc.chainBornId = G.chainGenId; // survives this chain, poppable in next
         G.circles.push(fc);
       }
     }
@@ -2395,6 +2752,7 @@ function popCircle(circleId) {
       mc.armored = false; mc.armorHP = 0;  // fragments never armored
       mc.spawnAnim = 0;
       mc.shrapnelImmune = 0.2; // brief immunity so they fly out visibly
+      mc.chainBornId = G.chainGenId; // survives this chain, poppable in next
       mc.vx = Math.cos(angle) * speed;
       mc.vy = Math.sin(angle) * speed;
       G.circles.push(mc);
@@ -2421,6 +2779,7 @@ function popCircle(circleId) {
       mc.armored = false; mc.armorHP = 0;
       mc.spawnAnim = 0;
       mc.shrapnelImmune = 0.25;
+      mc.chainBornId = G.chainGenId; // survives this chain, poppable in next
       mc.vx = Math.cos(angle) * speed;
       mc.vy = Math.sin(angle) * speed;
       G.circles.push(mc);
@@ -2442,6 +2801,7 @@ function updateAftershocks(dt) {
         const c = G.circles[i];
         if (c.popped || c.queued || !c.alive) continue;
         if (c.shrapnelImmune > 0) continue;
+        if (c.chainBornId === G.chainGenId) continue; // chain-born particles immune this chain
         const d = dist(as.x, as.y, c.x, c.y);
         if (d < as.radius + c.radius) {
           c.queued = true;
@@ -2700,6 +3060,7 @@ function triggerBlackHoleCollapse(bh) {
   // If we queued orbs, start a chain reaction (free — no tap deducted)
   if (poppedCount > 0 && !G.chainActive) {
     G.chainActive = true;
+    G.chainGenId++;
     G.chainCount = 0;
     G.chainXpValue = 0;
     G.chainTimer = 0;
@@ -2716,6 +3077,312 @@ function triggerBlackHoleCollapse(bh) {
   G.taps += bhTapBonus;
   spawnFloatingText(bh.x, bh.y - 55, `+${bhTapBonus} TAP${bhTapBonus > 1 ? 'S' : ''}`, '#c080ff');
   playBonusTapSound();
+}
+
+// ==================================================
+// SUPERMASSIVE BLACK HOLE — spawns at madness > 75%
+// Enormous gravity well covering nearly the entire play area
+// Creates urgency and spectacle at high madness
+// ==================================================
+const SBH_SPAWN_INTERVAL_MIN = 20; // seconds between spawns (20-35s)
+const SBH_SPAWN_INTERVAL_MAX = 35;
+const SBH_LIFETIME = 8;            // seconds alive
+const SBH_COLLAPSE_MASS = 8;       // orbs needed for auto-collapse
+const SBH_SWALLOW_FRAC = 0.12;     // swallow radius as fraction of visual radius
+
+function updateSuperBlackHole(dt) {
+  const madness = getMadnessAmount();
+
+  // Only active above 75% madness
+  if (madness < 0.75) {
+    G.superBlackHoleTimer = 0;
+    if (G.superBlackHole) {
+      // Madness dropped — fade out gracefully
+      G.superBlackHole.life = Math.min(G.superBlackHole.life, 1.0);
+    }
+    return;
+  }
+
+  // Spawn timer
+  if (!G.superBlackHole) {
+    G.superBlackHoleTimer += dt;
+    const interval = SBH_SPAWN_INTERVAL_MIN + Math.random() * (SBH_SPAWN_INTERVAL_MAX - SBH_SPAWN_INTERVAL_MIN);
+    if (G.superBlackHoleTimer < interval) return;
+    G.superBlackHoleTimer = 0;
+
+    // Spawn at a random position within the play area (biased toward center)
+    const gcx = ((G.gameLeft || 0) + (G.gameRight || G.W)) * 0.5;
+    const gcy = ((G.gameTop || 0) + (G.gameBottom || G.H)) * 0.5;
+    const gw = G.gameW || G.W, gh = G.gameH || G.H;
+    const spawnX = gcx + (Math.random() - 0.5) * gw * 0.4;
+    const spawnY = gcy + (Math.random() - 0.5) * gh * 0.4;
+
+    // Gravity radius: ~60-80% of the play area diagonal
+    const areaDiag = Math.sqrt(gw * gw + gh * gh);
+    const gravRadius = areaDiag * (0.55 + madness * 0.15); // 55-70% of diagonal
+
+    // Visual radius: large but not absurd — 10-15% of shorter dimension
+    const shorterDim = Math.min(gw, gh);
+    const visRadius = shorterDim * 0.12;
+
+    G.superBlackHole = {
+      x: spawnX,
+      y: spawnY,
+      radius: visRadius,
+      baseRadius: visRadius,
+      gravityRadius: gravRadius,
+      baseGravityRadius: gravRadius,
+      strength: 3500,           // very strong base pull
+      baseStrength: 3500,
+      tangentRatio: 0.4,        // some orbital spin
+      life: SBH_LIFETIME,
+      maxLife: SBH_LIFETIME,
+      fadeIn: 0,
+      mass: 0,
+      collapseReady: false,
+      pulseTime: 0,
+      dust: [],
+      distortionPhase: Math.random() * Math.PI * 2,
+      rumble: 0              // screen rumble intensity
+    };
+
+    // Initialize massive star dust cloud (more particles than regular BH)
+    for (let di = 0; di < 60; di++) {
+      G.superBlackHole.dust.push({
+        angle: Math.random() * Math.PI * 2,
+        dist: 0.2 + Math.random() * 0.8,
+        size: 0.8 + Math.random() * 2.5,
+        speed: 0.2 + Math.random() * 1.0,
+        color: Math.floor(Math.random() * 5)
+      });
+    }
+
+    G.superBlackHole.maxLife = G.superBlackHole.life;
+    spawnFloatingText(spawnX, spawnY - 60, 'SUPERMASSIVE VOID', '#ff3060');
+    G.shakeAmount = Math.max(G.shakeAmount, 8);
+    G.chromaticAb = Math.max(G.chromaticAb, 5);
+    return;
+  }
+
+  // Update existing supermassive black hole
+  const sbh = G.superBlackHole;
+  sbh.distortionPhase += dt * 0.8;
+
+  // Fade in (slower than regular — more dramatic)
+  if (sbh.fadeIn < 1) sbh.fadeIn = Math.min(1, sbh.fadeIn + dt / 2.0);
+
+  // Persistent rumble while active
+  sbh.rumble = sbh.fadeIn * (0.5 + sbh.mass * 0.15);
+  G.shakeAmount = Math.max(G.shakeAmount, sbh.rumble * 0.8);
+
+  // Horror corruption (faster than regular BH)
+  const sHorrorRate = 0.006 + sbh.mass * 0.003;
+  G.horrorBoost = Math.min(0.8, G.horrorBoost + sHorrorRate * dt);
+
+  // Chromatic aberration while active
+  G.chromaticAb = Math.max(G.chromaticAb, sbh.fadeIn * (2 + sbh.mass * 0.5));
+
+  // Update star dust — faster spiral
+  if (sbh.dust) {
+    for (let di = 0; di < sbh.dust.length; di++) {
+      const d = sbh.dust[di];
+      d.angle += d.speed * dt * 3.0;
+      d.dist -= dt * 0.08;
+      if (d.dist < 0.05) {
+        d.dist = 0.6 + Math.random() * 0.4;
+        d.angle = Math.random() * Math.PI * 2;
+        d.size = 0.8 + Math.random() * 2.5;
+        d.speed = 0.2 + Math.random() * 1.0;
+      }
+    }
+  }
+
+  // Countdown life
+  sbh.life -= dt;
+  if (sbh.life <= 0) {
+    if (sbh.mass >= 3) {
+      triggerSuperBlackHoleCollapse(sbh);
+    }
+    G.superBlackHole = null;
+    return;
+  }
+
+  const sFadeOut = sbh.life < 2.0 ? sbh.life / 2.0 : 1;
+  const sFadeMult = sbh.fadeIn * sFadeOut;
+
+  // Collapse check
+  if (sbh.mass >= SBH_COLLAPSE_MASS && !sbh.collapseReady) {
+    sbh.collapseReady = true;
+    sbh.pulseTime = 0;
+    spawnFloatingText(sbh.x, sbh.y - 40, 'TAP TO COLLAPSE!', '#ff6080');
+  }
+  if (sbh.collapseReady) {
+    sbh.pulseTime += dt;
+    if (sbh.pulseTime > 4) {
+      triggerSuperBlackHoleCollapse(sbh);
+      G.superBlackHole = null;
+      return;
+    }
+  }
+
+  // Gravity pull — VERY strong, nearly full play area
+  const sMadPhys = getMadnessPhysicsScale();
+  for (let i = 0; i < G.circles.length; i++) {
+    const c = G.circles[i];
+    if (c.popped || !c.alive) continue;
+    const dx = sbh.x - c.x;
+    const dy = sbh.y - c.y;
+    const d = Math.sqrt(dx * dx + dy * dy);
+    if (d > sbh.gravityRadius * sMadPhys || d < 3) continue;
+
+    // Much stronger radial pull than regular BH — 1/sqrt(d) for wider effective range
+    const pullStr = sbh.strength * sMadPhys * sFadeMult * dt / Math.max(Math.sqrt(d) * 4, 10);
+    const nx = dx / d;
+    const ny = dy / d;
+    c.vx += nx * pullStr;
+    c.vy += ny * pullStr;
+
+    // Tangential force for dramatic orbital spirals
+    const tangentStr = pullStr * sbh.tangentRatio;
+    c.vx += (-ny) * tangentStr;
+    c.vy += (nx) * tangentStr;
+
+    // Swallow: orb reaches inner event horizon
+    if (d < sbh.radius * SBH_SWALLOW_FRAC) {
+      c.alive = false;
+      c.popped = true;
+      sbh.mass++;
+      // Grow with mass
+      sbh.radius = sbh.baseRadius + sbh.mass * 5;
+      sbh.gravityRadius = sbh.baseGravityRadius + sbh.mass * 20;
+      sbh.strength = sbh.baseStrength + sbh.mass * 150;
+      spawnPopParticles(c.x, c.y, '#ff4060');
+
+      if (sbh.mass >= SBH_COLLAPSE_MASS) {
+        if (!sbh.collapseReady) {
+          sbh.collapseReady = true;
+          sbh.pulseTime = 0;
+          spawnFloatingText(sbh.x, sbh.y - 40, 'TAP TO COLLAPSE!', '#ff6080');
+        }
+      } else {
+        spawnFloatingText(sbh.x, sbh.y - 25, `${sbh.mass}/${SBH_COLLAPSE_MASS}`, '#ff6080');
+      }
+    }
+  }
+
+  // Pull bombs too — stronger than regular BH
+  for (let i = 0; i < G.bombs.length; i++) {
+    const b = G.bombs[i];
+    const dx = sbh.x - b.x;
+    const dy = sbh.y - b.y;
+    const d = Math.sqrt(dx * dx + dy * dy);
+    if (d < sbh.gravityRadius && d > 8) {
+      const pull = sbh.strength * 0.3 * sFadeMult * dt / Math.max(d, 20);
+      b.x += (dx / d) * pull;
+      b.y += (dy / d) * pull;
+    }
+  }
+}
+
+// Tapping the supermassive black hole triggers early collapse
+function tryTapSuperBlackHole(x, y) {
+  if (!G.superBlackHole) return false;
+  const sbh = G.superBlackHole;
+  const d = dist(x, y, sbh.x, sbh.y);
+  if (d > sbh.radius * 3) return false;
+
+  triggerSuperBlackHoleCollapse(sbh);
+  G.superBlackHole = null;
+  return true;
+}
+
+function triggerSuperBlackHoleCollapse(sbh) {
+  const isSupernova = sbh.mass >= SBH_COLLAPSE_MASS; // fully loaded = SUPERNOVA
+
+  // Collapse radius — supernova covers most of the play area
+  const baseBlast = BASE_BLAST_RADIUS * (isSupernova ? 3.0 : 1.5);
+  const massBonus = sbh.mass * (isSupernova ? 30 : 18);
+  const collapseR = isSupernova
+    ? Math.max(baseBlast + massBonus, Math.max(G.gameW || G.W, G.gameH || G.H) * 0.45)
+    : baseBlast + massBonus;
+
+  // Horror boost — supernova is cataclysmic
+  G.horrorBoost = Math.min(0.8, G.horrorBoost + (isSupernova ? 0.08 : 0.04) + sbh.mass * 0.008);
+
+  if (isSupernova) {
+    // SUPERNOVA — triple explosion cascade, screen-filling white blast
+    createExplosion(sbh.x, sbh.y, collapseR, '#ffffff', false);
+    createExplosion(sbh.x, sbh.y, collapseR * 0.7, '#ffe080', false);
+    createExplosion(sbh.x, sbh.y, collapseR * 0.4, '#ff4060', false);
+    // Spawn radial burst explosions outward
+    for (let a = 0; a < 8; a++) {
+      const angle = (a / 8) * Math.PI * 2;
+      const bx = sbh.x + Math.cos(angle) * collapseR * 0.5;
+      const by = sbh.y + Math.sin(angle) * collapseR * 0.5;
+      createExplosion(bx, by, collapseR * 0.3, '#ff8040', false);
+    }
+  } else {
+    // Regular collapse — double burst
+    createExplosion(sbh.x, sbh.y, collapseR, '#ff2050', false);
+    createExplosion(sbh.x, sbh.y, collapseR * 0.6, '#ffffff', false);
+  }
+
+  // Sound + dramatic screen effects — supernova = maximum everything
+  playBossDeathSound();
+  G.shakeAmount = Math.max(G.shakeAmount, isSupernova ? 25 : 8 + sbh.mass * 2);
+  G.whiteGlow = isSupernova ? 1.0 : Math.min(0.6, 0.2 + sbh.mass * 0.05);
+  G.chromaticAb = Math.max(G.chromaticAb, isSupernova ? 15 : 6 + sbh.mass);
+
+  // Pop everything in blast radius — free chain
+  let poppedCount = 0;
+  for (let i = 0; i < G.circles.length; i++) {
+    const c = G.circles[i];
+    if (c.popped || c.queued || !c.alive) continue;
+    if (c.shrapnelImmune > 0) continue;
+    const d = dist(sbh.x, sbh.y, c.x, c.y);
+    if (d < collapseR + c.radius) {
+      c.queued = true;
+      const tension = getLinkTensionTime() * (isSupernova ? 0.2 : 0.4) + Math.random() * 0.08;
+      G.chainLinks.push({
+        srcX: sbh.x, srcY: sbh.y,
+        targetId: c.id,
+        color: isSupernova ? '#ffffff' : '#ff4060',
+        timer: 0,
+        duration: tension
+      });
+      poppedCount++;
+    }
+  }
+
+  if (poppedCount > 0 && !G.chainActive) {
+    G.chainActive = true;
+    G.chainGenId++;
+    G.chainCount = 0;
+    G.chainXpValue = 0;
+    G.chainTimer = 0;
+    G.chainOriginX = sbh.x;
+    G.chainOriginY = sbh.y;
+  }
+
+  // Floating text
+  const sLabel = isSupernova ? '☀ SUPERNOVA ☀' : 'VOID RUPTURE!';
+  spawnFloatingText(sbh.x, sbh.y - 40, sLabel, isSupernova ? '#ffffff' : '#ff3060');
+
+  // Tap reward — supernova gives massive bonus
+  const sTapBonus = isSupernova ? Math.max(5, Math.min(10, 3 + Math.floor(sbh.mass * 0.8))) :
+    Math.max(2, Math.min(5, 1 + Math.floor(sbh.mass * 0.5)));
+  G.taps += sTapBonus;
+  spawnFloatingText(sbh.x, sbh.y - 70, `+${sTapBonus} TAPS`, isSupernova ? '#ffe080' : '#ff8090');
+  playBonusTapSound();
+
+  // Damage boss if present — supernova deals double damage
+  if (G.boss && G.boss.state !== 'dying') {
+    const bossHits = isSupernova ? Math.min(6, sbh.mass) : Math.min(3, sbh.mass);
+    for (let dmg = 0; dmg < bossHits; dmg++) {
+      damageBoss(sbh.x, sbh.y, collapseR);
+      G.boss.hitCooldown = 0;
+    }
+  }
 }
 
 // ==================================================
@@ -2737,14 +3404,15 @@ function updateWhirlwind(dt) {
   // Trigger whirlwind every 10-18 seconds (more frequent at high madness)
   const interval = 14 - madness * 6; // 14s at 0 madness, 8s at full
   if (whirlwindActive <= 0 && whirlwindTimer > interval) {
-    whirlwindActive = 1.8 + madness * 0.5; // 1.8-2.3s duration
+    // Duration +50% base (2.7-3.45s), further extended by madness
+    whirlwindActive = 2.7 + madness * 0.75; // was 1.8 + madness * 0.5
     whirlwindTimer = 0;
     whirlwindDir = Math.random() < 0.5 ? 1 : -1;
   }
 
   if (whirlwindActive > 0) {
     whirlwindActive -= dt;
-    const maxDur = 1.8 + madness * 0.5;
+    const maxDur = 2.7 + madness * 0.75;
     const waveStr = Math.sin((maxDur - whirlwindActive) / maxDur * Math.PI); // sine pulse
     const cx = ((G.gameLeft || 0) + (G.gameRight || G.W)) * 0.5;
     const cy = ((G.gameTop || 0) + (G.gameBottom || G.H)) * 0.5;
@@ -2756,7 +3424,9 @@ function updateWhirlwind(dt) {
       const d = Math.sqrt(dx * dx + dy * dy) + 1;
 
       // Tangential force (swirl) + slight radial pull inward, amplified by madness
-      const swirlStr = waveStr * 50 * getMadnessPhysicsScale() * dt * Math.min(1, d / 200);
+      // Strength: 1.25× at 0% madness → 3.0× at 100% (was 1.0→3.0, now 25-200% stronger base)
+      const swirlMadMult = 1.25 + madness * 1.75; // linear ramp: 1.25× → 3.0×
+      const swirlStr = waveStr * 50 * getMadnessPhysicsScale() * swirlMadMult * dt * Math.min(1, d / 200);
       // Tangential: perpendicular to radial direction
       const tx = -dy / d * whirlwindDir;
       const ty = dx / d * whirlwindDir;
@@ -2816,14 +3486,14 @@ function updateAbyssalPressure(dt) {
 
   // Trigger a pressure wave every 8-14 seconds
   if (abyssPressureWave <= 0 && abyssPressureTimer > 8 + Math.random() * 6) {
-    abyssPressureWave = 1.5; // 1.5 second wave
+    abyssPressureWave = 2.25; // 2.25 second wave (+50% from 1.5s)
     abyssPressureTimer = 0;
     playAbyssWooshSound();
   }
 
   if (abyssPressureWave > 0) {
     abyssPressureWave -= dt;
-    const waveStr = Math.sin((1.5 - abyssPressureWave) / 1.5 * Math.PI); // sine pulse
+    const waveStr = Math.sin((2.25 - abyssPressureWave) / 2.25 * Math.PI); // sine pulse
     const cx = ((G.gameLeft || 0) + (G.gameRight || G.W)) * 0.5;
     const cy = ((G.gameTop || 0) + (G.gameBottom || G.H)) * 0.5;
 
@@ -2832,18 +3502,22 @@ function updateAbyssalPressure(dt) {
       if (c.popped || !c.alive) continue;
       const dx = cx - c.x, dy = cy - c.y;
       const d = Math.sqrt(dx * dx + dy * dy) + 1;
-      // Push toward center with strength proportional to distance from center
-      const pushStr = waveStr * 80 * dt * Math.min(1, d / 200);
+      // Push toward center — 1.25× base, up to 3× at full madness (25-200% stronger)
+      const abyssMad = getMadnessAmount();
+      const abyssMadMult = 1.25 + abyssMad * 1.75; // linear ramp: 1.25× → 3.0×
+      const pushStr = waveStr * 80 * abyssMadMult * dt * Math.min(1, d / 200);
       c.vx += (dx / d) * pushStr;
       c.vy += (dy / d) * pushStr;
     }
   }
 
-  // Gentle underwater current — horizontal sine drift
+  // Gentle underwater current — horizontal sine drift, also scales with madness
+  const abyssCurMad = getMadnessAmount();
+  const abyssCurMult = abyssCurMad < 0.1 ? 1.0 : 1.0 + Math.min(1.0, (abyssCurMad - 0.1) / 0.9);
   for (let i = 0; i < G.circles.length; i++) {
     const c = G.circles[i];
     if (c.popped || !c.alive) continue;
-    const currentStr = 8 * dt;
+    const currentStr = 8 * abyssCurMult * dt;
     const currentAngle = Math.sin(G.time * 0.1 + c.y * 0.003) * 0.3;
     c.vx += Math.cos(currentAngle) * currentStr;
     c.vy += Math.sin(currentAngle) * currentStr * 0.3;
@@ -2858,64 +3532,347 @@ function renderBlackHole(ctx) {
   const r = bh.radius;
   if (r * alpha < 1) return;
 
+  const isAbyss = G.biomeOverride >= 0 && SPECIAL_BIOMES[G.biomeOverride] && SPECIAL_BIOMES[G.biomeOverride].name === 'ABYSS';
+
   ctx.save();
 
-  // Subtle gravity field hint
-  ctx.globalAlpha = alpha * 0.025;
-  const fieldGrad = ctx.createRadialGradient(bh.x, bh.y, r, bh.x, bh.y, bh.gravityRadius * 0.6);
-  fieldGrad.addColorStop(0, '#6030ff');
-  fieldGrad.addColorStop(1, 'transparent');
-  ctx.fillStyle = fieldGrad;
-  ctx.beginPath();
-  ctx.arc(bh.x, bh.y, bh.gravityRadius * 0.6, 0, Math.PI * 2);
-  ctx.fill();
+  if (isAbyss) {
+    // === ABYSS: Black Whirlpool ===
+    const p = getCurrentPalette();
+    const spin = G.time * 2.5; // rotation speed
 
-  // Event horizon — black center with soft violet edge
-  ctx.globalAlpha = alpha * 0.9;
-  const horizonGrad = ctx.createRadialGradient(bh.x, bh.y, 0, bh.x, bh.y, r);
-  horizonGrad.addColorStop(0, '#000000');
-  horizonGrad.addColorStop(0.6, '#050008');
-  horizonGrad.addColorStop(0.85, '#180030');
-  horizonGrad.addColorStop(1, 'transparent');
-  ctx.fillStyle = horizonGrad;
-  ctx.beginPath();
-  ctx.arc(bh.x, bh.y, r, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Star dust — tiny particles spiraling inside the event horizon
-  if (bh.dust) {
-    const dustColors = ['#ffffff', '#aaccff', '#ffd080', '#c0a0ff'];
-    for (let s = 0; s < bh.dust.length; s++) {
-      const d = bh.dust[s];
-      const dx = bh.x + Math.cos(d.angle) * d.dist * r;
-      const dy = bh.y + Math.sin(d.angle) * d.dist * r;
-      ctx.globalAlpha = alpha * d.dist * 0.8;
-      ctx.fillStyle = dustColors[s % dustColors.length];
+    // Outer swirl field — concentric spinning rings
+    for (let ring = 5; ring >= 1; ring--) {
+      const ringR = r * (0.5 + ring * 0.5);
+      const ringAlpha = alpha * 0.06 * (1 - ring * 0.12);
+      ctx.globalAlpha = Math.max(0, ringAlpha);
+      ctx.strokeStyle = p.accent;
+      ctx.lineWidth = 1.5 - ring * 0.15;
       ctx.beginPath();
-      ctx.arc(dx, dy, d.size, 0, Math.PI * 2);
-      ctx.fill();
+      // Spiral arc segments — each ring rotates at different speed
+      const segments = 3 + ring;
+      for (let s = 0; s < segments; s++) {
+        const startAngle = spin * (1 + ring * 0.3) + (s / segments) * Math.PI * 2;
+        const arcLen = Math.PI * (0.3 + 0.15 * ring);
+        ctx.arc(bh.x, bh.y, ringR, startAngle, startAngle + arcLen);
+        ctx.moveTo(bh.x + Math.cos(startAngle + arcLen + 0.3) * ringR, bh.y + Math.sin(startAngle + arcLen + 0.3) * ringR);
+      }
+      ctx.stroke();
+    }
+
+    // Dark vortex center — deep ocean black
+    ctx.globalAlpha = alpha * 0.85;
+    const vortexGrad = ctx.createRadialGradient(bh.x, bh.y, 0, bh.x, bh.y, r);
+    vortexGrad.addColorStop(0, '#000206');
+    vortexGrad.addColorStop(0.5, '#001020');
+    vortexGrad.addColorStop(0.85, p.accent + '40');
+    vortexGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = vortexGrad;
+    ctx.beginPath();
+    ctx.arc(bh.x, bh.y, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Foam/bubble particles spiraling around edge
+    if (bh.dust) {
+      const foamColors = [p.accent, p.colors[0], '#88ccdd', '#aaddee'];
+      for (let s = 0; s < bh.dust.length; s++) {
+        const d = bh.dust[s];
+        const spiralAngle = d.angle + spin * (1.2 + d.dist * 0.8);
+        const px = bh.x + Math.cos(spiralAngle) * d.dist * r * 1.2;
+        const py = bh.y + Math.sin(spiralAngle) * d.dist * r * 1.2;
+        ctx.globalAlpha = alpha * d.dist * 0.6;
+        ctx.fillStyle = foamColors[s % foamColors.length];
+        ctx.beginPath();
+        ctx.arc(px, py, d.size * 0.8, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Bioluminescent edge glow
+    ctx.globalAlpha = alpha * 0.2;
+    ctx.strokeStyle = p.accent;
+    ctx.lineWidth = 1.5 + Math.sin(spin * 0.5) * 0.5;
+    ctx.beginPath();
+    ctx.arc(bh.x, bh.y, r * 0.85, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Collapse-ready pulse — uses biome accent
+    if (bh.collapseReady) {
+      const pulseT = bh.pulseTime * 3;
+      const pulseAlpha = 0.15 + 0.15 * Math.sin(pulseT);
+      ctx.globalAlpha = alpha * pulseAlpha;
+      ctx.strokeStyle = p.colors[0];
+      ctx.lineWidth = 2;
+      const pulseR = r * (1.5 + 0.3 * Math.sin(pulseT * 0.7));
+      ctx.beginPath();
+      ctx.arc(bh.x, bh.y, pulseR, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  } else {
+    // === DEFAULT: Black Hole ===
+    // Subtle gravity field hint
+    ctx.globalAlpha = alpha * 0.025;
+    const fieldGrad = ctx.createRadialGradient(bh.x, bh.y, r, bh.x, bh.y, bh.gravityRadius * 0.6);
+    fieldGrad.addColorStop(0, '#6030ff');
+    fieldGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = fieldGrad;
+    ctx.beginPath();
+    ctx.arc(bh.x, bh.y, bh.gravityRadius * 0.6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Event horizon — black center with soft violet edge
+    ctx.globalAlpha = alpha * 0.9;
+    const horizonGrad = ctx.createRadialGradient(bh.x, bh.y, 0, bh.x, bh.y, r);
+    horizonGrad.addColorStop(0, '#000000');
+    horizonGrad.addColorStop(0.6, '#050008');
+    horizonGrad.addColorStop(0.85, '#180030');
+    horizonGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = horizonGrad;
+    ctx.beginPath();
+    ctx.arc(bh.x, bh.y, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Star dust — tiny particles spiraling inside the event horizon
+    if (bh.dust) {
+      const dustColors = ['#ffffff', '#aaccff', '#ffd080', '#c0a0ff'];
+      for (let s = 0; s < bh.dust.length; s++) {
+        const d = bh.dust[s];
+        const dx = bh.x + Math.cos(d.angle) * d.dist * r;
+        const dy = bh.y + Math.sin(d.angle) * d.dist * r;
+        ctx.globalAlpha = alpha * d.dist * 0.8;
+        ctx.fillStyle = dustColors[s % dustColors.length];
+        ctx.beginPath();
+        ctx.arc(dx, dy, d.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Thin bright edge
+    ctx.globalAlpha = alpha * 0.35;
+    ctx.strokeStyle = '#7040aa';
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.arc(bh.x, bh.y, r * 0.8, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Collapse-ready pulse
+    if (bh.collapseReady) {
+      const pulseT = bh.pulseTime * 3;
+      const pulseAlpha = 0.15 + 0.15 * Math.sin(pulseT);
+      ctx.globalAlpha = alpha * pulseAlpha;
+      ctx.strokeStyle = '#e0a0ff';
+      ctx.lineWidth = 2;
+      const pulseR = r * (1.5 + 0.3 * Math.sin(pulseT * 0.7));
+      ctx.beginPath();
+      ctx.arc(bh.x, bh.y, pulseR, 0, Math.PI * 2);
+      ctx.stroke();
     }
   }
 
-  // Thin bright edge
-  ctx.globalAlpha = alpha * 0.35;
-  ctx.strokeStyle = '#7040aa';
-  ctx.lineWidth = 0.8;
-  ctx.beginPath();
-  ctx.arc(bh.x, bh.y, r * 0.8, 0, Math.PI * 2);
-  ctx.stroke();
+  ctx.restore();
+}
 
-  // Collapse-ready pulse
-  if (bh.collapseReady) {
-    const pulseT = bh.pulseTime * 3;
-    const pulseAlpha = 0.15 + 0.15 * Math.sin(pulseT);
-    ctx.globalAlpha = alpha * pulseAlpha;
-    ctx.strokeStyle = '#e0a0ff';
-    ctx.lineWidth = 2;
-    const pulseR = r * (1.5 + 0.3 * Math.sin(pulseT * 0.7));
+function renderSuperBlackHole(ctx) {
+  if (!G.superBlackHole) return;
+  const sbh = G.superBlackHole;
+  const fadeOut = sbh.life < 2.0 ? sbh.life / 2.0 : 1;
+  const alpha = sbh.fadeIn * fadeOut;
+  const r = sbh.radius;
+  if (r * alpha < 1) return;
+
+  const isAbyss = G.biomeOverride >= 0 && SPECIAL_BIOMES[G.biomeOverride] && SPECIAL_BIOMES[G.biomeOverride].name === 'ABYSS';
+
+  ctx.save();
+
+  if (isAbyss) {
+    // === ABYSS: Supermassive Whirlpool (Maelstrom) ===
+    const p = getCurrentPalette();
+    const spin = G.time * 1.8;
+
+    // Massive swirl field — wide spinning current rings
+    for (let ring = 7; ring >= 1; ring--) {
+      const ringR = r * (0.4 + ring * 0.7) + Math.sin(sbh.distortionPhase + ring * 1.5) * r * 0.1;
+      const ringAlpha = alpha * 0.05 * (1 - ring * 0.08);
+      ctx.globalAlpha = Math.max(0, ringAlpha);
+      ctx.strokeStyle = ring <= 3 ? p.accent : p.colors[ring % 3];
+      ctx.lineWidth = 2.0 - ring * 0.15;
+      ctx.beginPath();
+      const segments = 4 + ring;
+      for (let s = 0; s < segments; s++) {
+        const startAngle = spin * (0.8 + ring * 0.25) + (s / segments) * Math.PI * 2;
+        const arcLen = Math.PI * (0.25 + 0.12 * ring);
+        ctx.arc(sbh.x, sbh.y, ringR, startAngle, startAngle + arcLen);
+        ctx.moveTo(sbh.x + Math.cos(startAngle + arcLen + 0.4) * ringR, sbh.y + Math.sin(startAngle + arcLen + 0.4) * ringR);
+      }
+      ctx.stroke();
+    }
+
+    // Deep abyss vortex center
+    ctx.globalAlpha = alpha * 0.92;
+    const vortexGrad = ctx.createRadialGradient(sbh.x, sbh.y, 0, sbh.x, sbh.y, r);
+    vortexGrad.addColorStop(0, '#000104');
+    vortexGrad.addColorStop(0.3, '#001018');
+    vortexGrad.addColorStop(0.6, '#002030');
+    vortexGrad.addColorStop(0.85, p.accent + '50');
+    vortexGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = vortexGrad;
     ctx.beginPath();
-    ctx.arc(bh.x, bh.y, pulseR, 0, Math.PI * 2);
+    ctx.arc(sbh.x, sbh.y, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Bioluminescent accretion ring — glowing water ring
+    ctx.globalAlpha = alpha * 0.2;
+    ctx.globalCompositeOperation = 'lighter';
+    const accrGrad = ctx.createRadialGradient(sbh.x, sbh.y, r * 0.6, sbh.x, sbh.y, r * 1.4);
+    accrGrad.addColorStop(0, 'transparent');
+    accrGrad.addColorStop(0.4, p.accent + '60');
+    accrGrad.addColorStop(0.7, p.colors[0] + '40');
+    accrGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = accrGrad;
+    ctx.beginPath();
+    ctx.arc(sbh.x, sbh.y, r * 1.4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
+
+    // Spiraling foam/debris particles
+    if (sbh.dust) {
+      const foamColors = [p.accent, p.colors[0], p.colors[1], '#88ccdd', '#aaddee'];
+      for (let s = 0; s < sbh.dust.length; s++) {
+        const d = sbh.dust[s];
+        const spiralAngle = d.angle + spin * (1.0 + d.dist * 0.6);
+        const px = sbh.x + Math.cos(spiralAngle) * d.dist * r * 1.8;
+        const py = sbh.y + Math.sin(spiralAngle) * d.dist * r * 1.8;
+        ctx.globalAlpha = alpha * d.dist * 0.5;
+        ctx.fillStyle = foamColors[d.color % foamColors.length];
+        ctx.beginPath();
+        ctx.arc(px, py, d.size * 1.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Glowing vortex edge
+    ctx.globalAlpha = alpha * 0.35;
+    ctx.strokeStyle = p.accent;
+    ctx.lineWidth = 2 + Math.sin(spin * 0.4) * 0.7;
+    ctx.beginPath();
+    ctx.arc(sbh.x, sbh.y, r * 0.85, 0, Math.PI * 2);
     ctx.stroke();
+
+    // Collapse-ready pulse — tidal wave warning
+    if (sbh.collapseReady) {
+      const pulseT = sbh.pulseTime * 2.5;
+      const pulseAlpha = 0.2 + 0.2 * Math.sin(pulseT);
+      ctx.globalAlpha = alpha * pulseAlpha;
+      ctx.strokeStyle = p.colors[0];
+      ctx.lineWidth = 3;
+      const pulseR = r * (1.8 + 0.5 * Math.sin(pulseT * 0.6));
+      ctx.beginPath();
+      ctx.arc(sbh.x, sbh.y, pulseR, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.globalAlpha = alpha * pulseAlpha * 0.3;
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(sbh.x, sbh.y, pulseR * 1.4, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  } else {
+    // === DEFAULT: Supermassive Black Hole ===
+    // Massive gravity distortion field — pulsing, ominous
+    const distPulse = 0.7 + 0.3 * Math.sin(sbh.distortionPhase * 2);
+    ctx.globalAlpha = alpha * 0.04 * distPulse;
+    const distGrad = ctx.createRadialGradient(sbh.x, sbh.y, r * 0.5, sbh.x, sbh.y, sbh.gravityRadius * 0.7);
+    distGrad.addColorStop(0, '#ff1040');
+    distGrad.addColorStop(0.4, '#6020a0');
+    distGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = distGrad;
+    ctx.beginPath();
+    ctx.arc(sbh.x, sbh.y, sbh.gravityRadius * 0.7, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Distortion rings — concentric pulsing rings
+    ctx.globalAlpha = alpha * 0.06;
+    ctx.strokeStyle = '#a040ff';
+    ctx.lineWidth = 1.2;
+    for (let ring = 1; ring <= 4; ring++) {
+      const ringR = r * (1.5 + ring * 0.8) + Math.sin(sbh.distortionPhase + ring) * r * 0.15;
+      const ringAlpha = alpha * 0.06 * (1 - ring * 0.2);
+      ctx.globalAlpha = Math.max(0, ringAlpha);
+      ctx.beginPath();
+      ctx.arc(sbh.x, sbh.y, ringR, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    // Dark void center — deeper and larger than regular BH
+    ctx.globalAlpha = alpha * 0.95;
+    const voidGrad = ctx.createRadialGradient(sbh.x, sbh.y, 0, sbh.x, sbh.y, r);
+    voidGrad.addColorStop(0, '#000000');
+    voidGrad.addColorStop(0.4, '#020004');
+    voidGrad.addColorStop(0.7, '#0a0015');
+    voidGrad.addColorStop(0.9, '#200030');
+    voidGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = voidGrad;
+    ctx.beginPath();
+    ctx.arc(sbh.x, sbh.y, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Inner accretion glow — red/violet ring at the edge of the void
+    ctx.globalAlpha = alpha * 0.25;
+    const accrGrad = ctx.createRadialGradient(sbh.x, sbh.y, r * 0.6, sbh.x, sbh.y, r * 1.3);
+    accrGrad.addColorStop(0, 'transparent');
+    accrGrad.addColorStop(0.5, '#ff204080');
+    accrGrad.addColorStop(0.8, '#a030ff40');
+    accrGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = accrGrad;
+    ctx.beginPath();
+    ctx.arc(sbh.x, sbh.y, r * 1.3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Star dust — larger, more dramatic particles spiraling in
+    if (sbh.dust) {
+      const dustColors = ['#ffffff', '#ff8090', '#ffcc60', '#c0a0ff', '#80ddff'];
+      for (let s = 0; s < sbh.dust.length; s++) {
+        const d = sbh.dust[s];
+        const px = sbh.x + Math.cos(d.angle) * d.dist * r * 1.5;
+        const py = sbh.y + Math.sin(d.angle) * d.dist * r * 1.5;
+        const pAlpha = alpha * d.dist * 0.7;
+        ctx.globalAlpha = pAlpha;
+        ctx.fillStyle = dustColors[d.color % dustColors.length];
+        ctx.beginPath();
+        ctx.arc(px, py, d.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Hot bright edge — red/white glow ring
+    ctx.globalAlpha = alpha * 0.45;
+    ctx.strokeStyle = '#ff4060';
+    ctx.lineWidth = 1.5 + Math.sin(sbh.distortionPhase * 1.5) * 0.5;
+    ctx.beginPath();
+    ctx.arc(sbh.x, sbh.y, r * 0.85, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Collapse-ready mega pulse
+    if (sbh.collapseReady) {
+      const pulseT = sbh.pulseTime * 2.5;
+      const pulseAlpha = 0.2 + 0.2 * Math.sin(pulseT);
+      ctx.globalAlpha = alpha * pulseAlpha;
+      ctx.strokeStyle = '#ff6080';
+      ctx.lineWidth = 3;
+      const pulseR = r * (1.8 + 0.5 * Math.sin(pulseT * 0.6));
+      ctx.beginPath();
+      ctx.arc(sbh.x, sbh.y, pulseR, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Second outer pulse ring
+      ctx.globalAlpha = alpha * pulseAlpha * 0.4;
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.5;
+      const outerPulseR = pulseR * 1.5;
+      ctx.beginPath();
+      ctx.arc(sbh.x, sbh.y, outerPulseR, 0, Math.PI * 2);
+      ctx.stroke();
+    }
   }
 
   ctx.restore();
@@ -3088,28 +4045,25 @@ function applyChainFeedback(chainIndex) {
 function triggerDelayedBlast(tier, duration, targetTimeScale) {
   // Collect all pending targets (from links + queue)
   const targetIds = [];
-  let cx = 0, cy = 0, count = 0;
   for (let i = 0; i < G.chainLinks.length; i++) {
     const t = findCircleById(G.chainLinks[i].targetId);
     if (t && !t.popped) {
       targetIds.push(t.id);
-      cx += t.x; cy += t.y; count++;
     }
   }
   for (let i = 0; i < G.chainQueue.length; i++) {
     const t = findCircleById(G.chainQueue[i].circleId);
     if (t && !t.popped) {
       targetIds.push(t.id);
-      cx += t.x; cy += t.y; count++;
     }
   }
-  if (count === 0) return;
-  cx /= count; cy /= count;
+  if (targetIds.length === 0) return;
 
+  // Center the megacombo explosion on the original tap position
   G.delayedBlast = {
     tier, duration, targetTimeScale,
     timer: 0,
-    centerX: cx, centerY: cy,
+    centerX: G.chainOriginX, centerY: G.chainOriginY,
     targetIds,
     executed: false
   };
@@ -3445,6 +4399,7 @@ function updateBoss(dt) {
           G.chainQueue.push({ circleId: c.id, triggerTime: G.chainTimer + Math.random() * 0.15 });
           if (!G.chainActive) {
             G.chainActive = true;
+            G.chainGenId++;
             G.chainCount = 0;
             G.chainXpValue = 0;
             G.chainTimer = 0;
@@ -4087,21 +5042,32 @@ function showUpgradePanel() {
   const available = Object.keys(UPGRADE_DEFS).filter(k => G.upgrades[k] < UPGRADE_DEFS[k].maxLvl);
   if (available.length === 0) return;
 
+  // Pick ONE random upgrade — no choice, fate decides
+  const pickedKey = available[Math.floor(Math.random() * available.length)];
+  const def = UPGRADE_DEFS[pickedKey];
+  const nextLvl = G.upgrades[pickedKey] + 1;
+
+  // Auto level-up: apply immediately with floating text
+  if (autoLevelUp) {
+    G.pendingLevelUp = true;
+    selectUpgrade(pickedKey);
+    const cx = ((G.gameLeft || 0) + (G.gameRight || G.W)) * 0.5;
+    const cy = ((G.gameTop || 0) + (G.gameBottom || G.H)) * 0.4;
+    spawnFloatingText(cx, cy, `${def.name} Lv${G.upgrades[pickedKey]}`, '#00ffa0', 1.8);
+    return;
+  }
+
   G.pendingLevelUp = true;
-  const choices = shuffle(available).slice(0, Math.min(3, available.length));
   const container = document.getElementById('upgrade-choices');
   container.innerHTML = '';
 
-  choices.forEach(key => {
-    const def = UPGRADE_DEFS[key];
-    const nextLvl = G.upgrades[key] + 1;
-    const card = document.createElement('div');
-    card.className = 'upgrade-card';
-    card.innerHTML = `<div class="name">${def.name}</div><div class="level">Level ${G.upgrades[key]} → ${nextLvl}</div><div class="desc">${def.desc(nextLvl)}</div>`;
-    card.addEventListener('click', (e) => { e.stopPropagation(); selectUpgrade(key); });
-    card.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); selectUpgrade(key); });
-    container.appendChild(card);
-  });
+  // Single upgrade card — tap to accept
+  const card = document.createElement('div');
+  card.className = 'upgrade-card';
+  card.innerHTML = `<div class="name">${def.name}</div><div class="level">Level ${G.upgrades[pickedKey]} → ${nextLvl}</div><div class="desc">${def.desc(nextLvl)}</div>`;
+  card.addEventListener('click', (e) => { e.stopPropagation(); selectUpgrade(pickedKey); });
+  card.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); selectUpgrade(pickedKey); });
+  container.appendChild(card);
 
   document.getElementById('upgrade-panel').style.display = 'flex';
 }
@@ -4149,6 +5115,9 @@ function render() {
   // Layer 1c: The Watcher — cosmic entity behind the field (madness-tied, full-canvas, before zoom)
   renderWatcher(ctx, W, H);
 
+  // Layer 1d: Galaxy background — deep space nebula on top of Watcher (default biome only)
+  renderGalaxyBackground(ctx, W, H);
+
   // Zoom: scale around screen center (applies to all game content)
   if (G.zoomLevel !== 1) {
     const cx = W / 2, cy = H / 2;
@@ -4182,8 +5151,9 @@ function render() {
   // Layer 4b: Gravity wells
   renderGravityWells(ctx);
 
-  // Layer 4c: Black hole
+  // Layer 4c: Black hole + supermassive black hole
   renderBlackHole(ctx);
+  renderSuperBlackHole(ctx);
 
   // Layer 4d: Boss entity
   renderBoss(ctx);
@@ -4215,19 +5185,19 @@ function render() {
   // Layer 9: Floating texts
   renderFloatingTexts(ctx);
 
-  // Layer 10: White-hot glow
-  if (G.whiteGlow > 0.01) {
-    renderWhiteGlow(ctx, W, H);
-  }
-
-  // Layer 10b: Delayed blast buildup
+  // Layer 10b: Delayed blast buildup (stays in zoom-space — centered on game point)
   if (G.delayedBlast && !G.delayedBlast.executed) {
     renderDelayedBlastBuildup(ctx, W, H);
   }
 
   ctx.restore();
 
-  // Post-processing (no shake offset)
+  // Post-processing (no shake/zoom offset — full screen coverage)
+  // Layer 10: White-hot glow (moved outside zoom so it always covers full screen)
+  if (G.whiteGlow > 0.01) {
+    renderWhiteGlow(ctx, W, H);
+  }
+
   // Layer 12: Vignette
   renderVignette(ctx, W, H);
 
@@ -4236,20 +5206,29 @@ function render() {
     renderChromaticAb(ctx, W, H);
   }
 
-  // Layer 14: Tap timer bar (top of screen, under HUD)
+  // Layer 14: Tap timer bar (top of screen, under HUD) — prominent
   if (G.state === 'playing' && G.taps > 0 && !G.chainActive && !G.pendingLevelUp) {
     const timerT = Math.max(0, G.tapTimer / G.tapTimerMax);
+    const barH = 6; // thicker bar for visibility
+    const barY = 0; // top of screen — maximum visibility
     ctx.save();
     // Background track
-    ctx.globalAlpha = 0.15;
+    ctx.globalAlpha = 0.2;
     ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, W, 2);
-    // Fill — changes color as time runs low
-    ctx.globalAlpha = 0.5 + (1 - timerT) * 0.5;
+    ctx.fillRect(0, barY, W, barH);
+    // Fill — changes color as time runs low, brighter overall
+    ctx.globalAlpha = 0.6 + (1 - timerT) * 0.4;
     if (timerT > 0.4) ctx.fillStyle = '#ffffff';
     else if (timerT > 0.15) ctx.fillStyle = '#ffd84d';
     else ctx.fillStyle = '#ff3c8e';
-    ctx.fillRect(0, 0, W * timerT, 2);
+    ctx.fillRect(0, barY, W * timerT, barH);
+    // Glow effect when time is low
+    if (timerT < 0.25) {
+      ctx.globalAlpha = (0.25 - timerT) * 1.5;
+      ctx.shadowColor = timerT > 0.15 ? '#ffd84d' : '#ff3c8e';
+      ctx.shadowBlur = 12;
+      ctx.fillRect(0, barY, W * timerT, barH);
+    }
     ctx.restore();
   }
 }
@@ -4269,6 +5248,14 @@ const watcherMainImg = new Image();
 watcherMainImg.src = 'images/Watcher_test1.jpeg';
 let watcherMainLoaded = false;
 watcherMainImg.onload = () => { watcherMainLoaded = true; };
+
+// Galaxy background — rendered on top of Watcher in default biome only
+// Different depth plane: slower drift, separate opacity ramp
+const galaxyBgImg = new Image();
+galaxyBgImg.src = 'images/BG_Galax.jpg';
+let galaxyBgLoaded = false;
+galaxyBgImg.onload = () => { galaxyBgLoaded = true; };
+let galaxyBgOpacity = 0; // smoothly interpolated
 
 const watcherAbyssImg = new Image();
 watcherAbyssImg.src = 'images/Watchr_2.jpeg';
@@ -4292,8 +5279,9 @@ function updateWatcher(dt) {
   const targetGlow = G.chainActive ? 0.3 + Math.min(0.4, G.chainCount * 0.015) : 0.1;
   w.eyeGlow += (targetGlow - w.eyeGlow) * dt * 3;
 
-  // Reach reacts to black hole presence
-  const targetReach = G.blackHole ? 0.5 + G.blackHole.mass * 0.04 : 0;
+  // Reach reacts to black hole presence (supermassive = stronger reaction)
+  let targetReach = G.blackHole ? 0.5 + G.blackHole.mass * 0.04 : 0;
+  if (G.superBlackHole) targetReach = Math.max(targetReach, 0.7 + G.superBlackHole.mass * 0.06);
   w.reachAmount += (targetReach - w.reachAmount) * dt * 1.5;
 }
 
@@ -4331,6 +5319,59 @@ function renderWatcher(ctx, W, H) {
     ctx.globalCompositeOperation = 'source-over';
   }
 
+  ctx.restore();
+}
+
+// Galaxy background — deep space nebula layer rendered on top of Watcher
+// Only in default biome. Gradually becomes visible. Different depth plane (slower parallax).
+function renderGalaxyBackground(ctx, W, H) {
+  if (!galaxyBgLoaded) return;
+
+  // Only in default biome (not ABYSS)
+  const isAbyss = G.biomeOverride >= 0 && SPECIAL_BIOMES[G.biomeOverride] && SPECIAL_BIOMES[G.biomeOverride].name === 'ABYSS';
+  if (isAbyss) {
+    // Fade out quickly when switching to ABYSS
+    galaxyBgOpacity = Math.max(0, galaxyBgOpacity - G.dt * 2.0);
+    if (galaxyBgOpacity < 0.001) return;
+  } else {
+    // Gradually visible — starts appearing at 5% madness, full at 60% madness
+    // This is deeper/further than the Watcher, so it shows up earlier but subtler
+    const madness = getMadnessAmount();
+    const targetGalaxyOpacity = madness < 0.05 ? 0 :
+      Math.min(0.22, (madness - 0.05) / 0.55 * 0.22); // max 22% opacity
+    // Smooth interpolation
+    const gFadeSpeed = galaxyBgOpacity > targetGalaxyOpacity ? 2.0 : 0.3;
+    galaxyBgOpacity += (targetGalaxyOpacity - galaxyBgOpacity) * G.dt * gFadeSpeed;
+  }
+
+  if (galaxyBgOpacity < 0.001) return;
+
+  const w = G.watcher;
+  ctx.save();
+
+  // Galaxy layer wobbles MORE than the Watcher — creates clear parallax depth distinction
+  // Watcher breathes at 0.003 amplitude, galaxy at 0.015 — 5x more zoom pulse
+  const gBreathe = 1 + Math.sin(w.breathPhase * 0.25) * 0.015
+                     + Math.sin(w.breathPhase * 0.13) * 0.008; // dual-frequency zoom wobble
+  // Large lateral drift — Watcher drifts 2px, galaxy drifts 12-18px (feels like a separate layer)
+  const gDriftX = Math.sin(w.breathPhase * 0.07) * 14 + Math.sin(w.breathPhase * 0.19) * 5;
+  const gDriftY = Math.cos(w.breathPhase * 0.05) * 10 + Math.cos(w.breathPhase * 0.14) * 4;
+
+  const gImgW = galaxyBgImg.width;
+  const gImgH = galaxyBgImg.height;
+  const gCoverScale = Math.max(W / gImgW, H / gImgH) * 1.12 * gBreathe; // 1.12 margin to cover wobble
+  const gDrawW = gImgW * gCoverScale;
+  const gDrawH = gImgH * gCoverScale;
+  const gDrawX = (W - gDrawW) / 2 + gDriftX;
+  const gDrawY = (H - gDrawH) / 2 + gDriftY;
+
+  // Draw with screen blend for a luminous nebula effect
+  ctx.globalAlpha = galaxyBgOpacity;
+  ctx.globalCompositeOperation = 'screen';
+  ctx.drawImage(galaxyBgImg, gDrawX, gDrawY, gDrawW, gDrawH);
+
+  // Reset composite
+  ctx.globalCompositeOperation = 'source-over';
   ctx.restore();
 }
 
@@ -4399,6 +5440,21 @@ function updateFieldStars(dt, W, H) {
         // Tangential spin
         s.vx += (-dy / d) * pull * 0.3 / W;
         s.vy += (dx / d) * pull * 0.3 / H;
+      }
+    }
+
+    // Supermassive black hole — stronger pull on stars
+    if (G.superBlackHole) {
+      const sbh = G.superBlackHole;
+      const sx = s.x * W, sy = s.y * H;
+      const dx = sbh.x - sx, dy = sbh.y - sy;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < sbh.gravityRadius && d > 5) {
+        const pull = 0.4 * dt / Math.max(d / sbh.gravityRadius, 0.1);
+        s.vx += (dx / d) * pull / W;
+        s.vy += (dy / d) * pull / H;
+        s.vx += (-dy / d) * pull * 0.25 / W;
+        s.vy += (dx / d) * pull * 0.25 / H;
       }
     }
 
@@ -5246,71 +6302,95 @@ function renderCircles(ctx) {
       const isAbyssOrb = G.biomeOverride >= 0 && SPECIAL_BIOMES[G.biomeOverride] && SPECIAL_BIOMES[G.biomeOverride].name === 'ABYSS';
 
       if (isAbyssOrb && drawR > 2) {
-        // === ABYSS ORB: Abstract twisted geometry — warped, undulating forms ===
-        // Not recognizable creatures, just unsettling geometric distortions
+        // === ABYSS ORB: Progressive mutation — normal ball → warped medusa ===
+        // Tied to madness: 0% = normal circle, 50% = warped body, 100% = full tentacle horror
         const abyssPal = getCurrentPalette();
         const savedAlpha = ctx.globalAlpha || 1;
-        const seed = c.id * 7.31; // deterministic randomness per orb
+        const seed = c.id * 7.31;
+        const madness = getMadnessAmount();
 
-        // Each orb is a warped polygon with animated vertex distortion
-        // The number of sides, warp frequency, and rotation vary per orb
-        const sides = 5 + (c.id % 4); // 5 to 8 sides — pentagons to octagons
-        const warpFreq = 1.5 + (c.id % 7) * 0.4; // how fast it writhes
-        const warpAmt = 0.12 + ((c.id * 3) % 11) * 0.015; // distortion amount
-        const baseRot = G.time * (0.15 + (c.id % 5) * 0.06) * ((c.id % 2) ? 1 : -1); // slow spin
+        // Mutation factor: 0.0 (normal ball) → 1.0 (full horror)
+        const mutT = madness;
+        // Body warp doesn't start until 10% madness, fully warped by 60%
+        const bodyWarp = Math.max(0, Math.min(1, (mutT - 0.1) / 0.5));
+        // Tentacles don't appear until 30% madness, fully grown by 100%
+        const tentGrowth = Math.max(0, Math.min(1, (mutT - 0.3) / 0.7));
 
-        // Draw the main twisted body — brighter, more colorful
+        const sides = 5 + (c.id % 4);
+        const warpFreq = 1.5 + (c.id % 7) * 0.4;
+        const warpAmt = (0.12 + ((c.id * 3) % 11) * 0.015) * bodyWarp; // scales with mutation
+        const baseRot = G.time * (0.15 + (c.id % 5) * 0.06) * ((c.id % 2) ? 1 : -1) * bodyWarp;
+
+        // Draw the body — lerps from clean circle to warped polygon
         ctx.globalAlpha = savedAlpha * 0.85;
         const bodyGrad = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, drawR);
-        bodyGrad.addColorStop(0, '#ffffff');
+        // Colors darken with mutation
+        const coreColor = bodyWarp > 0.5 ? '#ffffff' : c.color;
+        bodyGrad.addColorStop(0, coreColor);
         bodyGrad.addColorStop(0.25, c.color);
         bodyGrad.addColorStop(0.7, c.color);
-        bodyGrad.addColorStop(1, '#0a1520');
+        const edgeDark = lerpColor(c.color, '#0a1520', bodyWarp);
+        bodyGrad.addColorStop(1, edgeDark);
         ctx.fillStyle = bodyGrad;
         ctx.beginPath();
-        const pts = sides * 3; // smooth polygon
-        for (let p = 0; p <= pts; p++) {
-          const baseAngle = (p / pts) * Math.PI * 2 + baseRot;
-          // Multiple sine waves distort the radius — creates organic warping
-          const warp1 = Math.sin(baseAngle * sides * 0.5 + G.time * warpFreq + seed) * warpAmt;
-          const warp2 = Math.sin(baseAngle * (sides + 1) + G.time * warpFreq * 0.7 + seed * 2.1) * warpAmt * 0.6;
-          const warp3 = Math.sin(G.time * 1.2 + seed * 0.5) * 0.04; // breathing
-          const r = drawR * (0.8 + warp1 + warp2 + warp3);
-          const ax = c.x + Math.cos(baseAngle) * r;
-          const ay = c.y + Math.sin(baseAngle) * r;
-          if (p === 0) ctx.moveTo(ax, ay); else ctx.lineTo(ax, ay);
+
+        if (bodyWarp < 0.01) {
+          // Pure circle — no warping at all
+          ctx.arc(c.x, c.y, drawR, 0, Math.PI * 2);
+        } else {
+          // Warped polygon — distortion scales with bodyWarp
+          const pts = sides * 3;
+          for (let p = 0; p <= pts; p++) {
+            const baseAngle = (p / pts) * Math.PI * 2 + baseRot;
+            const warp1 = Math.sin(baseAngle * sides * 0.5 + G.time * warpFreq + seed) * warpAmt;
+            const warp2 = Math.sin(baseAngle * (sides + 1) + G.time * warpFreq * 0.7 + seed * 2.1) * warpAmt * 0.6;
+            const warp3 = Math.sin(G.time * 1.2 + seed * 0.5) * 0.04 * bodyWarp;
+            // Lerp between perfect circle (0.95 base) and warped (0.8 base)
+            const baseR = 0.95 - 0.15 * bodyWarp;
+            const r = drawR * (baseR + warp1 + warp2 + warp3);
+            const ax = c.x + Math.cos(baseAngle) * r;
+            const ay = c.y + Math.sin(baseAngle) * r;
+            if (p === 0) ctx.moveTo(ax, ay); else ctx.lineTo(ax, ay);
+          }
+          ctx.closePath();
         }
-        ctx.closePath();
         ctx.fill();
 
-        // Inner void — subtler dark center (less oppressively dark)
-        ctx.globalAlpha = savedAlpha * 0.3;
-        const voidR = drawR * (0.2 + Math.sin(G.time * 1.5 + seed) * 0.06);
-        const voidGrad = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, voidR);
-        voidGrad.addColorStop(0, '#081018');
-        voidGrad.addColorStop(0.7, '#0c1828');
-        voidGrad.addColorStop(1, 'transparent');
-        ctx.fillStyle = voidGrad;
-        ctx.beginPath();
-        ctx.arc(c.x, c.y, voidR, 0, Math.PI * 2);
-        ctx.fill();
+        // Inner void — appears from 30% bodyWarp
+        if (bodyWarp > 0.3) {
+          const voidAlpha = (bodyWarp - 0.3) / 0.7; // 0→1 over 30-100% warp
+          ctx.globalAlpha = savedAlpha * 0.3 * voidAlpha;
+          const voidR = drawR * (0.2 + Math.sin(G.time * 1.5 + seed) * 0.06);
+          const voidGrad = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, voidR);
+          voidGrad.addColorStop(0, '#081018');
+          voidGrad.addColorStop(0.7, '#0c1828');
+          voidGrad.addColorStop(1, 'transparent');
+          ctx.fillStyle = voidGrad;
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, voidR, 0, Math.PI * 2);
+          ctx.fill();
+        }
 
-        // Bioluminescent edge glow — brighter accent color along the warped perimeter
-        ctx.globalAlpha = savedAlpha * 0.4;
-        ctx.globalCompositeOperation = 'lighter';
-        const edgeGrad = ctx.createRadialGradient(c.x, c.y, drawR * 0.5, c.x, c.y, drawR * 1.1);
-        edgeGrad.addColorStop(0, 'transparent');
-        edgeGrad.addColorStop(0.7, abyssPal.accent);
-        edgeGrad.addColorStop(1, 'transparent');
-        ctx.fillStyle = edgeGrad;
-        ctx.beginPath();
-        ctx.arc(c.x, c.y, drawR * 1.05, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalCompositeOperation = 'source-over';
+        // Bioluminescent edge glow — fades in with bodyWarp
+        if (bodyWarp > 0.2) {
+          const glowAlpha = (bodyWarp - 0.2) / 0.8;
+          ctx.globalAlpha = savedAlpha * 0.4 * glowAlpha;
+          ctx.globalCompositeOperation = 'lighter';
+          const edgeGrad = ctx.createRadialGradient(c.x, c.y, drawR * 0.5, c.x, c.y, drawR * 1.1);
+          edgeGrad.addColorStop(0, 'transparent');
+          edgeGrad.addColorStop(0.7, abyssPal.accent);
+          edgeGrad.addColorStop(1, 'transparent');
+          ctx.fillStyle = edgeGrad;
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, drawR * 1.05, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalCompositeOperation = 'source-over';
+        }
 
-        // Subtle geometric stress lines — internal fractures that shift
-        if (drawR > 6) {
-          ctx.globalAlpha = savedAlpha * 0.15;
+        // Stress lines — appear from 40% bodyWarp
+        if (drawR > 6 && bodyWarp > 0.4) {
+          const lineAlpha = (bodyWarp - 0.4) / 0.6;
+          ctx.globalAlpha = savedAlpha * 0.15 * lineAlpha;
           ctx.strokeStyle = abyssPal.accent;
           ctx.lineWidth = 0.5;
           const lineCount = 2 + (c.id % 3);
@@ -5320,7 +6400,6 @@ function renderCircles(ctx) {
             const outerR = drawR * (0.55 + Math.sin(G.time * 1.1 + li * 1.7 + seed) * 0.15);
             ctx.beginPath();
             ctx.moveTo(c.x + Math.cos(la) * innerR, c.y + Math.sin(la) * innerR);
-            // Slight curve to the line
             const cpAngle = la + Math.sin(G.time * 0.6 + seed + li) * 0.3;
             const cpR = (innerR + outerR) * 0.5;
             ctx.quadraticCurveTo(
@@ -5333,68 +6412,67 @@ function renderCircles(ctx) {
           }
         }
 
-        // === WRITHING TENTACLES — horrifying organic protrusions ===
-        if (drawR > 4) {
-          const tentCount = 3 + (c.id % 4); // 3-6 tentacles per orb
+        // === WRITHING TENTACLES — sprout gradually with tentGrowth ===
+        if (drawR > 4 && tentGrowth > 0) {
+          // Number of tentacles grows: 1 at first, up to 3-6 at full madness
+          const maxTents = 3 + (c.id % 4);
+          const visibleTents = Math.max(1, Math.ceil(maxTents * tentGrowth));
           const tentSeed = c.id * 13.37;
           ctx.globalCompositeOperation = 'source-over';
 
-          for (let ti = 0; ti < tentCount; ti++) {
-            const tentAngle = (ti / tentCount) * Math.PI * 2 + baseRot * 0.3 + tentSeed * 0.1;
-            // Vary thickness: some thick/muscular, some thin/wispy
+          for (let ti = 0; ti < visibleTents; ti++) {
+            const tentAngle = (ti / maxTents) * Math.PI * 2 + baseRot * 0.3 + tentSeed * 0.1;
             const isThick = ((c.id + ti) % 3) === 0;
-            const baseWidth = isThick ? drawR * 0.28 : drawR * 0.10;
-            const tentLen = drawR * (isThick ? (1.1 + ((ti * 7 + c.id) % 5) * 0.15) : (1.4 + ((ti * 11 + c.id) % 7) * 0.12));
+            // Tentacle length scales with tentGrowth — starts as tiny nubs
+            const fullBaseWidth = isThick ? drawR * 0.28 : drawR * 0.10;
+            const baseWidth = fullBaseWidth * tentGrowth;
+            const fullTentLen = drawR * (isThick ? (1.1 + ((ti * 7 + c.id) % 5) * 0.15) : (1.4 + ((ti * 11 + c.id) % 7) * 0.12));
+            const tentLen = fullTentLen * tentGrowth;
 
-            // Writhing animation — multiple sine waves for organic motion
-            const writhe1 = Math.sin(G.time * (1.8 + ti * 0.4) + tentSeed + ti * 2.3) * 0.35;
-            const writhe2 = Math.sin(G.time * (2.7 + ti * 0.3) + tentSeed * 1.7 + ti) * 0.2;
-            const writhe3 = Math.sin(G.time * (0.9 + ti * 0.15) + tentSeed * 0.5) * 0.15;
+            // Writhing — amplitude scales with growth
+            const writhe1 = Math.sin(G.time * (1.8 + ti * 0.4) + tentSeed + ti * 2.3) * 0.35 * tentGrowth;
+            const writhe2 = Math.sin(G.time * (2.7 + ti * 0.3) + tentSeed * 1.7 + ti) * 0.2 * tentGrowth;
+            const writhe3 = Math.sin(G.time * (0.9 + ti * 0.15) + tentSeed * 0.5) * 0.15 * tentGrowth;
 
-            // Build tentacle as segmented curve
             const segments = isThick ? 8 : 6;
             const tentPts = [];
             for (let si = 0; si <= segments; si++) {
-              const t = si / segments; // 0 at base, 1 at tip
-              // Progressive wrinkling — more distortion toward tip
+              const t = si / segments;
               const wrinkle = t * t * (writhe1 + writhe2 * t + writhe3 * (1 - t));
               const perpAngle = tentAngle + Math.PI * 0.5;
               const segAngle = tentAngle + wrinkle;
-              const dist = drawR * 0.7 + tentLen * t;
-              const sx = c.x + Math.cos(segAngle) * dist + Math.cos(perpAngle) * wrinkle * drawR * 0.2;
-              const sy = c.y + Math.sin(segAngle) * dist + Math.sin(perpAngle) * wrinkle * drawR * 0.2;
+              const segDist = drawR * 0.7 + tentLen * t;
+              const sx = c.x + Math.cos(segAngle) * segDist + Math.cos(perpAngle) * wrinkle * drawR * 0.2;
+              const sy = c.y + Math.sin(segAngle) * segDist + Math.sin(perpAngle) * wrinkle * drawR * 0.2;
               tentPts.push({ x: sx, y: sy, t: t });
             }
 
-            // Draw tentacle body — tapered width
-            ctx.globalAlpha = savedAlpha * (isThick ? 0.7 : 0.5);
-            const tentGrad = ctx.createLinearGradient(
+            // Draw tentacle body
+            ctx.globalAlpha = savedAlpha * (isThick ? 0.7 : 0.5) * tentGrowth;
+            const tentGrad2 = ctx.createLinearGradient(
               c.x + Math.cos(tentAngle) * drawR * 0.7,
               c.y + Math.sin(tentAngle) * drawR * 0.7,
               tentPts[segments].x, tentPts[segments].y
             );
-            tentGrad.addColorStop(0, c.color);
-            tentGrad.addColorStop(0.4, abyssPal.accent);
-            tentGrad.addColorStop(1, '#0a0a18');
-            ctx.strokeStyle = tentGrad;
+            tentGrad2.addColorStop(0, c.color);
+            tentGrad2.addColorStop(0.4, abyssPal.accent);
+            tentGrad2.addColorStop(1, '#0a0a18');
+            ctx.strokeStyle = tentGrad2;
             ctx.lineCap = 'round';
 
-            // Draw main tentacle stroke with taper
             for (let si = 0; si < segments; si++) {
               const t = si / segments;
-              const taper = baseWidth * (1 - t * 0.85); // taper to thin tip
-              // Add wrinkling bumps along the tentacle
+              const taper = baseWidth * (1 - t * 0.85);
               const wrinkleBump = isThick ? Math.sin(G.time * 3.5 + si * 1.8 + tentSeed) * taper * 0.3 : 0;
               ctx.lineWidth = Math.max(0.5, taper + wrinkleBump);
-              ctx.globalAlpha = savedAlpha * (isThick ? 0.7 : 0.45) * (1 - t * 0.4);
+              ctx.globalAlpha = savedAlpha * (isThick ? 0.7 : 0.45) * (1 - t * 0.4) * tentGrowth;
               ctx.beginPath();
               ctx.moveTo(tentPts[si].x, tentPts[si].y);
-              // Smooth curve through control point
               if (si + 2 <= segments) {
                 const cpx = (tentPts[si].x + tentPts[si + 1].x) * 0.5 +
-                  Math.sin(G.time * 2.1 + si * 3.1 + tentSeed) * drawR * 0.06;
+                  Math.sin(G.time * 2.1 + si * 3.1 + tentSeed) * drawR * 0.06 * tentGrowth;
                 const cpy = (tentPts[si].y + tentPts[si + 1].y) * 0.5 +
-                  Math.cos(G.time * 1.9 + si * 2.7 + tentSeed) * drawR * 0.06;
+                  Math.cos(G.time * 1.9 + si * 2.7 + tentSeed) * drawR * 0.06 * tentGrowth;
                 ctx.quadraticCurveTo(cpx, cpy, tentPts[si + 1].x, tentPts[si + 1].y);
               } else {
                 ctx.lineTo(tentPts[si + 1].x, tentPts[si + 1].y);
@@ -5402,17 +6480,16 @@ function renderCircles(ctx) {
               ctx.stroke();
             }
 
-            // Thick tentacles get wrinkling texture ridges
-            if (isThick && drawR > 8) {
-              ctx.globalAlpha = savedAlpha * 0.25;
+            // Thick tentacles: wrinkling ridges (only at high growth)
+            if (isThick && drawR > 8 && tentGrowth > 0.6) {
+              ctx.globalAlpha = savedAlpha * 0.25 * tentGrowth;
               ctx.strokeStyle = '#ffffff';
               ctx.lineWidth = 0.5;
               for (let ri = 1; ri < segments - 1; ri += 2) {
                 const ridgeT = ri / segments;
                 const ridgeW = baseWidth * (1 - ridgeT * 0.85) * 0.6;
                 const perpA = tentAngle + Math.PI * 0.5 + (writhe1 + writhe2) * ridgeT;
-                const rx = tentPts[ri].x;
-                const ry = tentPts[ri].y;
+                const rx = tentPts[ri].x, ry = tentPts[ri].y;
                 ctx.beginPath();
                 ctx.moveTo(rx - Math.cos(perpA) * ridgeW, ry - Math.sin(perpA) * ridgeW);
                 ctx.lineTo(rx + Math.cos(perpA) * ridgeW, ry + Math.sin(perpA) * ridgeW);
@@ -5420,21 +6497,21 @@ function renderCircles(ctx) {
               }
             }
 
-            // Thin tentacles get wispy curling tip
-            if (!isThick && drawR > 6) {
+            // Thin tentacles: wispy curling tip (only at high growth)
+            if (!isThick && drawR > 6 && tentGrowth > 0.5) {
               const tipPt = tentPts[segments];
-              const tipAngle = tentAngle + writhe1 * 1.5 + writhe2;
-              const curlLen = drawR * 0.3;
-              ctx.globalAlpha = savedAlpha * 0.3;
+              const tipAngle2 = tentAngle + writhe1 * 1.5 + writhe2;
+              const curlLen = drawR * 0.3 * tentGrowth;
+              ctx.globalAlpha = savedAlpha * 0.3 * tentGrowth;
               ctx.strokeStyle = abyssPal.accent;
               ctx.lineWidth = 0.5;
               ctx.beginPath();
               ctx.moveTo(tipPt.x, tipPt.y);
               ctx.quadraticCurveTo(
-                tipPt.x + Math.cos(tipAngle + 0.8) * curlLen,
-                tipPt.y + Math.sin(tipAngle + 0.8) * curlLen,
-                tipPt.x + Math.cos(tipAngle + 1.5) * curlLen * 0.6,
-                tipPt.y + Math.sin(tipAngle + 1.5) * curlLen * 0.6
+                tipPt.x + Math.cos(tipAngle2 + 0.8) * curlLen,
+                tipPt.y + Math.sin(tipAngle2 + 0.8) * curlLen,
+                tipPt.x + Math.cos(tipAngle2 + 1.5) * curlLen * 0.6,
+                tipPt.y + Math.sin(tipAngle2 + 1.5) * curlLen * 0.6
               );
               ctx.stroke();
             }
@@ -5443,8 +6520,7 @@ function renderCircles(ctx) {
 
         ctx.globalAlpha = savedAlpha;
       } else if (isAbyssOrb) {
-        // Tiny ABYSS orbs — warped dot with brighter glow
-        ctx.globalAlpha = (ctx.globalAlpha || 1) * 0.8;
+        // Tiny ABYSS orbs at low madness — normal colored dot
         ctx.fillStyle = c.color;
         ctx.beginPath();
         ctx.arc(c.x, c.y, drawR, 0, Math.PI * 2);
@@ -6058,13 +7134,28 @@ function renderFloatingTexts(ctx) {
     const t = ft.life / ft.maxLife;
     const scale = 0.8 + t * 0.7;
     ctx.save();
-    ctx.globalAlpha = Math.min(1, t * 2);
-    ctx.font = `bold ${Math.round(24 * scale)}px 'Orbitron', 'Courier New', monospace`;
+    // Lore texts: compensate for zoom so they remain readable at any zoom level
+    if (ft.lore && G.zoomLevel !== 1) {
+      const zoomComp = 1 / G.zoomLevel;
+      ctx.translate(ft.x, ft.y);
+      ctx.scale(zoomComp, zoomComp);
+      ctx.translate(-ft.x, -ft.y);
+    }
+    const baseFontSize = ft.lore ? (ft.fontSize || 18) : 24;
+    // Lore texts: smooth fade in/out with plateau in the middle
+    const loreAlpha = ft.lore ? (t > 0.85 ? (1 - t) / 0.15 : t < 0.3 ? t / 0.3 : 1.0) : Math.min(1, t * 2);
+    ctx.globalAlpha = loreAlpha;
+    ctx.font = `${ft.lore ? 'italic' : 'bold'} ${Math.round(baseFontSize * scale)}px 'Orbitron', 'Courier New', monospace`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = madness > 0 ? horrorShift(ft.color, madness * 0.5) : ft.color;
     // Apply Enochian corruption to gameplay text (preserve numbers)
     const displayText = gameTextCorrupt > 0 ? corruptTextPreserveNumbers(ft.text, gameTextCorrupt) : ft.text;
+    if (ft.lore) {
+      // Add subtle text shadow for readability
+      ctx.shadowColor = 'rgba(0,0,0,0.7)';
+      ctx.shadowBlur = 8;
+    }
     ctx.fillText(displayText, ft.x, ft.y);
     ctx.restore();
   }
@@ -6073,7 +7164,12 @@ function renderFloatingTexts(ctx) {
 function renderWhiteGlow(ctx, W, H) {
   ctx.save();
   ctx.globalAlpha = G.whiteGlow;
-  const grad = ctx.createRadialGradient(G.chainOriginX, G.chainOriginY, 0, G.chainOriginX, G.chainOriginY, Math.max(W, H) * 0.6);
+  // Transform game-space coords to screen-space (since this renders outside zoom transform)
+  const cx = W / 2, cy = H / 2;
+  const screenX = cx + (G.chainOriginX - cx) * G.zoomLevel;
+  const screenY = cy + (G.chainOriginY - cy) * G.zoomLevel;
+  const glowRadius = Math.max(W, H) * 0.8; // larger radius to always cover full screen
+  const grad = ctx.createRadialGradient(screenX, screenY, 0, screenX, screenY, glowRadius);
   grad.addColorStop(0, '#ffffff');
   grad.addColorStop(1, 'transparent');
   ctx.fillStyle = grad;
@@ -6087,10 +7183,13 @@ function renderDelayedBlastBuildup(ctx, W, H) {
   const progress = Math.min(db.timer / db.duration, 1);
   ctx.save();
 
-  // Darkening overlay
+  // Darkening overlay — expand to cover full visible area regardless of zoom
   ctx.globalAlpha = db.darkness || 0;
   ctx.fillStyle = '#000000';
-  ctx.fillRect(0, 0, W, H);
+  const zInv = G.zoomLevel !== 1 ? 1 / G.zoomLevel : 1;
+  const darkW = W * zInv * 1.2, darkH = H * zInv * 1.2;
+  const darkX = (W - darkW) * 0.5, darkY = (H - darkH) * 0.5;
+  ctx.fillRect(darkX, darkY, darkW, darkH);
 
   // Convergence glow at center — pulses and grows
   const glowSize = 30 + progress * (db.tier === 3 ? 180 : db.tier === 2 ? 120 : 60);
@@ -6139,49 +7238,83 @@ function createScanlinePattern() {
 
 // Nebula clouds — slow-drifting ambient color blobs
 const nebulaClouds = [];
-for (let i = 0; i < 6; i++) {
+for (let i = 0; i < 10; i++) {
   nebulaClouds.push({
     x: Math.random(), y: Math.random(), // 0-1 normalized
-    size: 0.15 + Math.random() * 0.2,
-    speedX: (Math.random() - 0.5) * 0.003,
-    speedY: (Math.random() - 0.5) * 0.002,
+    size: 0.12 + Math.random() * 0.28,  // varied sizes, some very large
+    speedX: (Math.random() - 0.5) * 0.002,
+    speedY: (Math.random() - 0.5) * 0.0015,
     phase: Math.random() * Math.PI * 2,
-    colorIdx: Math.floor(Math.random() * 3)
+    breathSpeed: 0.15 + Math.random() * 0.3,  // each cloud breathes at different rate
+    colorIdx: Math.floor(Math.random() * 3),
+    eccentricity: 0.6 + Math.random() * 0.8   // elongation factor for non-circular shapes
   });
 }
 
 function renderNebulaClouds(ctx, W, H) {
   const p = getCurrentPalette();
+  const madness = getMadnessAmount();
+
+  // Nebulae visible at madness 15-66%, fading in and fading out into blackness beyond 66%
+  // Below 15%: invisible. 15-40%: fade in. 40-55%: peak visibility. 55-66%: fade out. >66%: gone.
+  let nebulaAlpha;
+  if (madness < 0.15) {
+    nebulaAlpha = 0;
+  } else if (madness < 0.40) {
+    nebulaAlpha = (madness - 0.15) / 0.25; // 0→1 from 15% to 40%
+  } else if (madness < 0.55) {
+    nebulaAlpha = 1.0; // peak
+  } else if (madness < 0.70) {
+    nebulaAlpha = 1.0 - (madness - 0.55) / 0.15; // 1→0 from 55% to 70%
+  } else {
+    nebulaAlpha = 0;
+  }
+  if (nebulaAlpha < 0.005) return;
+
+  // Don't show in ABYSS biome
+  const isAbyss = G.biomeOverride >= 0 && SPECIAL_BIOMES[G.biomeOverride] && SPECIAL_BIOMES[G.biomeOverride].name === 'ABYSS';
+  if (isAbyss) return;
+
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
   for (let i = 0; i < nebulaClouds.length; i++) {
     const nc = nebulaClouds[i];
-    // Drift
+    // Drift — very slow, majestic movement
     nc.x += nc.speedX * G.dt;
     nc.y += nc.speedY * G.dt;
     // Wrap
-    if (nc.x < -0.2) nc.x = 1.2;
-    if (nc.x > 1.2) nc.x = -0.2;
-    if (nc.y < -0.2) nc.y = 1.2;
-    if (nc.y > 1.2) nc.y = -0.2;
+    if (nc.x < -0.3) nc.x = 1.3;
+    if (nc.x > 1.3) nc.x = -0.3;
+    if (nc.y < -0.3) nc.y = 1.3;
+    if (nc.y > 1.3) nc.y = -0.3;
 
     const cx = nc.x * W;
     const cy = nc.y * H;
-    const breathe = 1 + Math.sin(G.time * 0.3 + nc.phase) * 0.15;
+    const breathe = 1 + Math.sin(G.time * nc.breathSpeed + nc.phase) * 0.2;
     const r = nc.size * Math.min(W, H) * breathe;
+    const ry = r * nc.eccentricity; // elongated for organic shapes
     // Brighter during chains
-    const chainGlow = G.chainActive ? 0.03 + G.chainCount * 0.001 : 0;
-    ctx.globalAlpha = 0.025 + chainGlow;
+    const chainGlow = G.chainActive ? 0.015 + G.chainCount * 0.0005 : 0;
+    // Very faint base — these are extremely blurred, barely-there color washes
+    ctx.globalAlpha = (0.03 + chainGlow) * nebulaAlpha;
     const horror = getHorrorAmount();
     const nc1 = horror > 0 ? horrorShift(p.colors[nc.colorIdx], horror) : p.colors[nc.colorIdx];
     const nc2 = horror > 0 ? horrorShift(p.colors[(nc.colorIdx + 1) % 3], horror) : p.colors[(nc.colorIdx + 1) % 3];
+    // Very soft, extremely blurred gradient — color concentrated in inner 30%
     const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
     grad.addColorStop(0, nc1);
-    grad.addColorStop(0.5, nc2);
+    grad.addColorStop(0.3, nc2);
+    grad.addColorStop(0.6, 'rgba(0,0,0,0.02)');
     grad.addColorStop(1, 'transparent');
     ctx.fillStyle = grad;
+    // Draw as ellipse for organic, non-circular nebula shapes
     ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(nc.phase + G.time * 0.01); // very slow rotation
+    ctx.scale(1, nc.eccentricity);
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.restore();
     ctx.fill();
   }
   ctx.restore();
@@ -6212,6 +7345,25 @@ for (let i = 0; i < 15; i++) {
   });
 }
 
+// Oceanic dust — thousands of tiny particles that swirl with gravity, currents, and pressure waves
+const ABYSS_DUST_COUNT = 1500;
+const abyssDust = [];
+for (let i = 0; i < ABYSS_DUST_COUNT; i++) {
+  abyssDust.push({
+    x: Math.random(),       // 0-1 normalized position
+    y: Math.random(),
+    vx: (Math.random() - 0.5) * 0.01,  // velocity (normalized)
+    vy: (Math.random() - 0.5) * 0.01,
+    size: 0.2 + Math.random() * 0.9,   // tiny specks, 0.2-1.1px base
+    phase: Math.random() * Math.PI * 2,
+    bright: 0.15 + Math.random() * 0.85,
+    // Variation in color: 0=teal, 1=pale blue, 2=white, 3=green
+    colorType: Math.floor(Math.random() * 4),
+    drag: 0.92 + Math.random() * 0.06  // slight drag variation per particle
+  });
+}
+const ABYSS_DUST_COLORS = ['#40ccaa', '#88bbdd', '#ccddee', '#55eebb'];
+
 function renderAbyssBackground(ctx, W, H) {
   const isAbyss = G.biomeOverride >= 0 && SPECIAL_BIOMES[G.biomeOverride] && SPECIAL_BIOMES[G.biomeOverride].name === 'ABYSS';
   if (!isAbyss) return;
@@ -6219,12 +7371,19 @@ function renderAbyssBackground(ctx, W, H) {
   ctx.save();
   const p = getCurrentPalette();
 
+  // Compute visible area in game-space (compensates for zoom transform)
+  const zInv = G.zoomLevel !== 1 ? 1 / G.zoomLevel : 1;
+  const visW = W * zInv;
+  const visH = H * zInv;
+  const visL = (W - visW) * 0.5;
+  const visT = (H - visH) * 0.5;
+
   // Bioluminescent haze blobs — soft glowing patches
   ctx.globalCompositeOperation = 'lighter';
   for (let i = 0; i < 5; i++) {
-    const hx = W * (0.15 + i * 0.18) + Math.sin(G.time * 0.08 + i * 2) * W * 0.08;
-    const hy = H * (0.25 + i * 0.12) + Math.cos(G.time * 0.06 + i * 3) * H * 0.07;
-    const hr = Math.min(W, H) * (0.18 + 0.07 * Math.sin(G.time * 0.12 + i));
+    const hx = visL + visW * (0.15 + i * 0.18) + Math.sin(G.time * 0.08 + i * 2) * visW * 0.08;
+    const hy = visT + visH * (0.25 + i * 0.12) + Math.cos(G.time * 0.06 + i * 3) * visH * 0.07;
+    const hr = Math.min(visW, visH) * (0.18 + 0.07 * Math.sin(G.time * 0.12 + i));
     const breathe = 0.6 + 0.4 * Math.sin(G.time * 0.2 + i * 1.5);
     ctx.globalAlpha = 0.025 * breathe;
     const hGrad = ctx.createRadialGradient(hx, hy, 0, hx, hy, hr);
@@ -6239,39 +7398,40 @@ function renderAbyssBackground(ctx, W, H) {
 
   // Volumetric light shafts — wide, blurred beams from surface
   ctx.globalCompositeOperation = 'lighter';
-  // Soft glow pass — wide diffuse light cones
+  // Soft glow pass — wide diffuse light cones (use visible area, not raw canvas)
   for (let i = 0; i < 6; i++) {
-    const cx = W * (0.1 + i * 0.15) + Math.sin(G.time * 0.2 + i * 1.7) * W * 0.1;
-    const botY = H * (0.55 + Math.sin(G.time * 0.15 + i * 2.3) * 0.12);
-    const beamW = 50 + Math.sin(G.time * 0.3 + i * 3.1) * 25;
+    const cx = visL + visW * (0.1 + i * 0.15) + Math.sin(G.time * 0.2 + i * 1.7) * visW * 0.1;
+    const topY = visT;
+    const botY = visT + visH * (0.55 + Math.sin(G.time * 0.15 + i * 2.3) * 0.12);
+    const beamW = (50 + Math.sin(G.time * 0.3 + i * 3.1) * 25) * zInv;
     const shimmer = 0.5 + 0.5 * Math.sin(G.time * 0.6 + i * 2.1);
     // Outer soft glow cone
     ctx.globalAlpha = 0.025 * shimmer;
-    const glowGrad = ctx.createLinearGradient(cx, 0, cx + beamW * 0.2, botY);
+    const glowGrad = ctx.createLinearGradient(cx, topY, cx + beamW * 0.2, botY);
     glowGrad.addColorStop(0, p.accent);
     glowGrad.addColorStop(0.2, p.colors[0]);
     glowGrad.addColorStop(1, 'transparent');
     ctx.fillStyle = glowGrad;
     ctx.beginPath();
-    ctx.moveTo(cx - beamW * 1.5, 0);
-    ctx.lineTo(cx + beamW * 1.5, 0);
+    ctx.moveTo(cx - beamW * 1.5, topY);
+    ctx.lineTo(cx + beamW * 1.5, topY);
     ctx.lineTo(cx + beamW * 0.4, botY);
     ctx.lineTo(cx - beamW * 0.4, botY);
     ctx.closePath();
     ctx.fill();
     // Inner bright core beam
     ctx.globalAlpha = 0.04 * shimmer;
-    const coreGrad = ctx.createLinearGradient(cx, 0, cx + beamW * 0.1, botY * 0.8);
+    const coreGrad = ctx.createLinearGradient(cx, topY, cx + beamW * 0.1, topY + (botY - topY) * 0.8);
     coreGrad.addColorStop(0, '#ffffff');
     coreGrad.addColorStop(0.15, p.accent);
     coreGrad.addColorStop(0.5, p.colors[0]);
     coreGrad.addColorStop(1, 'transparent');
     ctx.fillStyle = coreGrad;
     ctx.beginPath();
-    ctx.moveTo(cx - beamW * 0.6, 0);
-    ctx.lineTo(cx + beamW * 0.6, 0);
-    ctx.lineTo(cx + beamW * 0.15, botY * 0.8);
-    ctx.lineTo(cx - beamW * 0.15, botY * 0.8);
+    ctx.moveTo(cx - beamW * 0.6, topY);
+    ctx.lineTo(cx + beamW * 0.6, topY);
+    ctx.lineTo(cx + beamW * 0.15, topY + (botY - topY) * 0.8);
+    ctx.lineTo(cx - beamW * 0.15, topY + (botY - topY) * 0.8);
     ctx.closePath();
     ctx.fill();
   }
@@ -6290,7 +7450,7 @@ function renderAbyssBackground(ctx, W, H) {
     ctx.globalAlpha = 0.08 * twinkle * ap.bright;
     ctx.fillStyle = p.accent;
     ctx.beginPath();
-    ctx.arc(ap.x * W, ap.y * H, ap.size, 0, Math.PI * 2);
+    ctx.arc(visL + ap.x * visW, visT + ap.y * visH, ap.size * zInv, 0, Math.PI * 2);
     ctx.fill();
   }
 
@@ -6308,18 +7468,122 @@ function renderAbyssBackground(ctx, W, H) {
     ctx.globalAlpha = 0.06 * drift * ms.bright;
     ctx.fillStyle = '#aaccdd';
     ctx.beginPath();
-    ctx.arc(ms.x * W, ms.y * H, ms.size, 0, Math.PI * 2);
+    ctx.arc(visL + ms.x * visW, visT + ms.y * visH, ms.size * zInv, 0, Math.PI * 2);
     ctx.fill();
+  }
+
+  // Oceanic dust — 1500 tiny particles swirling with gravity, currents, pressure waves
+  ctx.globalCompositeOperation = 'lighter';
+  {
+    const dt = G.dt;
+    // Get field center in normalized coords
+    const gcx = 0.5;
+    const gcy = 0.5;
+    // Get black hole positions in normalized coords (if any)
+    const bhNormX = G.blackHole ? (G.blackHole.x - visL) / visW : -1;
+    const bhNormY = G.blackHole ? (G.blackHole.y - visT) / visH : -1;
+    const bhActive = G.blackHole && bhNormX > -0.2 && bhNormX < 1.2 && bhNormY > -0.2 && bhNormY < 1.2;
+    const sbhNormX = G.superBlackHole ? (G.superBlackHole.x - visL) / visW : -1;
+    const sbhNormY = G.superBlackHole ? (G.superBlackHole.y - visT) / visH : -1;
+    const sbhActive = G.superBlackHole && sbhNormX > -0.2 && sbhNormX < 1.2 && sbhNormY > -0.2 && sbhNormY < 1.2;
+    // Pressure wave influence
+    const pressureActive = abyssPressureWave > 0;
+    const pressureStr = pressureActive ? Math.sin((1.5 - abyssPressureWave) / 1.5 * Math.PI) : 0;
+    // Underwater current angle
+    const currentAngleBase = Math.sin(G.time * 0.1) * 0.3;
+    const madScale = getMadnessPhysicsScale();
+
+    for (let i = 0; i < ABYSS_DUST_COUNT; i++) {
+      const dp = abyssDust[i];
+
+      // Apply drag
+      dp.vx *= dp.drag;
+      dp.vy *= dp.drag;
+
+      // Gentle underwater current (same as orb current but weaker)
+      const localCurrent = Math.sin(G.time * 0.1 + dp.y * 3) * 0.3;
+      dp.vx += Math.cos(localCurrent) * 0.003 * dt * madScale;
+      dp.vy += Math.sin(localCurrent) * 0.001 * dt * madScale;
+
+      // Gentle upward float (deep-sea convection)
+      dp.vy -= 0.0005 * dt;
+
+      // Brownian motion — tiny random jitter
+      dp.vx += (Math.random() - 0.5) * 0.002 * dt;
+      dp.vy += (Math.random() - 0.5) * 0.002 * dt;
+
+      // Pressure wave — push toward center
+      if (pressureActive) {
+        const pdx = gcx - dp.x, pdy = gcy - dp.y;
+        const pd = Math.sqrt(pdx * pdx + pdy * pdy) + 0.01;
+        const pStr = pressureStr * 0.04 * madScale * dt * Math.min(1, pd * 2);
+        dp.vx += (pdx / pd) * pStr;
+        dp.vy += (pdy / pd) * pStr;
+      }
+
+      // Black hole gravity pull (normalized space)
+      if (bhActive) {
+        const bdx = bhNormX - dp.x, bdy = bhNormY - dp.y;
+        const bd = Math.sqrt(bdx * bdx + bdy * bdy) + 0.01;
+        if (bd < 0.5) {
+          const bStr = 0.03 * dt / (bd * bd + 0.01);
+          // Radial pull + tangential spin
+          dp.vx += (bdx / bd) * bStr + (-bdy / bd) * bStr * 0.4;
+          dp.vy += (bdy / bd) * bStr + (bdx / bd) * bStr * 0.4;
+        }
+      }
+
+      // Supermassive black hole — massive gravity, wider range
+      if (sbhActive) {
+        const sdx = sbhNormX - dp.x, sdy = sbhNormY - dp.y;
+        const sd = Math.sqrt(sdx * sdx + sdy * sdy) + 0.01;
+        if (sd < 0.8) {
+          const sStr = 0.08 * dt / (Math.sqrt(sd) + 0.02);
+          dp.vx += (sdx / sd) * sStr + (-sdy / sd) * sStr * 0.5;
+          dp.vy += (sdy / sd) * sStr + (sdx / sd) * sStr * 0.5;
+        }
+      }
+
+      // Clamp velocity
+      const vMag = Math.sqrt(dp.vx * dp.vx + dp.vy * dp.vy);
+      if (vMag > 0.08) { dp.vx *= 0.08 / vMag; dp.vy *= 0.08 / vMag; }
+
+      // Integrate position
+      dp.x += dp.vx;
+      dp.y += dp.vy;
+
+      // Wrap around edges
+      if (dp.x < -0.05) dp.x += 1.1;
+      if (dp.x > 1.05) dp.x -= 1.1;
+      if (dp.y < -0.05) dp.y += 1.1;
+      if (dp.y > 1.05) dp.y -= 1.1;
+
+      // Render — tiny glowing speck
+      const twinkle = 0.4 + 0.6 * Math.abs(Math.sin(G.time * 0.8 + dp.phase));
+      ctx.globalAlpha = 0.04 * twinkle * dp.bright;
+      ctx.fillStyle = ABYSS_DUST_COLORS[dp.colorType];
+      const px = visL + dp.x * visW;
+      const py = visT + dp.y * visH;
+      const pSize = dp.size * zInv;
+      // For performance, use fillRect for most particles (cheaper than arc)
+      if (pSize < 1.2) {
+        ctx.fillRect(px - pSize * 0.5, py - pSize * 0.5, pSize, pSize);
+      } else {
+        ctx.beginPath();
+        ctx.arc(px, py, pSize, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
   }
 
   // Depth fog — darkness gradient at bottom (deep pressure)
   ctx.globalCompositeOperation = 'source-over';
   ctx.globalAlpha = 0.15;
-  const depthGrad = ctx.createLinearGradient(0, H * 0.5, 0, H);
+  const depthGrad = ctx.createLinearGradient(visL, visT + visH * 0.5, visL, visT + visH);
   depthGrad.addColorStop(0, 'transparent');
   depthGrad.addColorStop(1, '#000408');
   ctx.fillStyle = depthGrad;
-  ctx.fillRect(0, 0, W, H);
+  ctx.fillRect(visL, visT, visW, visH);
 
   ctx.globalCompositeOperation = 'source-over';
   ctx.restore();
@@ -6441,6 +7705,12 @@ function screenToWorld(sx, sy) {
 function handleTap(x, y) {
   initAudio();
 
+  // Don't start game while splash screens are active
+  if (splashPhase !== 'done' && G.state === 'title') {
+    advanceSplash();
+    return;
+  }
+
   if (G.state === 'title') {
     resetGame();
     return;
@@ -6459,6 +7729,7 @@ function handleTap(x, y) {
   G.tapTimer = G.tapTimerMax;
 
   // Black hole tap: triggers collapse for free (doesn't cost a tap)
+  if (tryTapSuperBlackHole(x, y)) return;
   if (tryTapBlackHole(x, y)) return;
 
   // Normal tap — startChain (mines now launched via long press)
@@ -6606,6 +7877,20 @@ function setupInput() {
     }
   });
 
+  // Dev: Auto level-up toggle button
+  document.getElementById('autolvl-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    autoLevelUp = !autoLevelUp;
+    document.getElementById('autolvl-btn').classList.toggle('active', autoLevelUp);
+  });
+
+  // Dev: Infinite taps toggle button
+  document.getElementById('inftaps-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    infiniteTaps = !infiniteTaps;
+    document.getElementById('inftaps-btn').classList.toggle('active', infiniteTaps);
+  });
+
   // Prevent default behaviors
   document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
 }
@@ -6637,7 +7922,7 @@ function toggleBiome() {
   if (toggleLore) {
     const lx = ((G.gameLeft || 0) + (G.gameRight || G.W)) * 0.5;
     const ly = ((G.gameTop || 0) + (G.gameBottom || G.H)) * 0.3;
-    setTimeout(() => spawnFloatingText(lx, ly, toggleLore, togglePalette.accent, 3.0), 800);
+    setTimeout(() => spawnFloatingText(lx, ly, toggleLore, togglePalette.accent, 3.5, { lore: true }), 800);
   }
 }
 
@@ -6672,17 +7957,22 @@ function advanceBiome() {
   if (advLore) {
     const lx = ((G.gameLeft || 0) + (G.gameRight || G.W)) * 0.5;
     const ly = ((G.gameTop || 0) + (G.gameBottom || G.H)) * 0.3;
-    setTimeout(() => spawnFloatingText(lx, ly, advLore, advPalette.accent, 3.0), 800);
+    setTimeout(() => spawnFloatingText(lx, ly, advLore, advPalette.accent, 3.5, { lore: true }), 800);
   }
 }
 
 // ==================================================
 // SECTION 15: UI / HUD & FLOATING TEXT
 // ==================================================
-function spawnFloatingText(x, y, text, color, duration) {
+function spawnFloatingText(x, y, text, color, duration, opts) {
   if (G.floatingTexts.length >= MAX_FLOATING_TEXTS) G.floatingTexts.shift();
   const life = duration || 1.2; // 25% faster default (was 1.5)
-  G.floatingTexts.push({ x, y, text, color, life: life, maxLife: life, vy: -70 });
+  const ft = { x, y, text, color, life: life, maxLife: life, vy: -70 };
+  if (opts) {
+    if (opts.lore) { ft.lore = true; ft.vy = -25; } // lore texts drift slower
+    if (opts.fontSize) ft.fontSize = opts.fontSize;
+  }
+  G.floatingTexts.push(ft);
 }
 
 function updateFloatingTexts(dt) {
@@ -6857,6 +8147,7 @@ function update(dt) {
   updateAftershocks(dt);
   updateGravityWells(dt);
   updateBlackHole(dt);
+  updateSuperBlackHole(dt);
   updateBoss(dt);
   updateWatcher(dt);
   updateBombs(dt);
@@ -6887,7 +8178,11 @@ function update(dt) {
   }
 
   // Tap timer countdown (uses raw dt so slo-mo doesn't save you)
-  if (G.taps > 0 && !G.pendingLevelUp && !G.chainActive) {
+  // Infinite taps: keep taps topped up, skip timer decay
+  if (infiniteTaps) {
+    if (G.taps < 99) { G.taps = 99; updateHUD(); }
+    G.tapTimer = G.tapTimerMax;
+  } else if (G.taps > 0 && !G.pendingLevelUp && !G.chainActive) {
     G.tapTimer -= G.rawDt;
     if (G.tapTimer <= 0) {
       G.taps--;
@@ -6940,6 +8235,134 @@ function resizeCanvas() {
   createScanlinePattern();
 }
 
+// ==================================================
+// LORE SPLASH + INSTRUCTIONS — sequential screens before title
+// ==================================================
+const LORE_SPLASHES = [
+  'Before the first field, there was only the Membrane\u2014a boundary between what exists and what observes. The Watchers pressed against it, patient and formless, waiting for the first fracture.',
+  'The orbs were not created. They condensed from resonance\u2014standing waves in the Membrane\'s surface tension. Each pop is a puncture. Each chain, a tear. The Watchers drink from every wound.',
+  'The Archons remember a time before separation. They were whole once, vast and singular. Now they drift as fragments, ascending through the field, trying to reassemble what was shattered at the origin.',
+  'In the deep places below the field, pressure compresses thought into matter. The Abyss is not a place\u2014it is a state of forgetting. Those who descend far enough forget they were ever anything but hunger.',
+  'Every chain reaction is a prayer answered in reverse. The longer the cascade, the thinner the boundary grows. What listens on the other side has learned patience from the void between stars.',
+  'The Void Cracks are scars that learned to defend themselves. Where the Membrane tore too many times, it hardened\u2014crystallized into armor of compressed dimension. Two strikes to shatter what infinity built.',
+  'Gravity is not a force here. It is memory\u2014the field remembering that all things were once one thing, and pulling them back toward that terrible wholeness. The black holes are where the memory is strongest.'
+];
+
+let splashPhase = 'lore'; // 'lore' → 'instructions' → 'done'
+let splashAutoTimer = null;
+
+function initSplashSequence() {
+  // --- LORE SPLASH ---
+  const loreEl = document.getElementById('lore-text');
+  const splashEl = document.getElementById('lore-splash');
+  if (!loreEl || !splashEl) { splashPhase = 'done'; return; }
+
+  const lore = LORE_SPLASHES[Math.floor(Math.random() * LORE_SPLASHES.length)];
+  loreEl.textContent = lore;
+
+  // Fade in over 3s (triggered by adding .visible class after a frame)
+  requestAnimationFrame(() => {
+    splashEl.classList.add('visible');
+  });
+
+  // Auto-advance after 3s fade-in + 10s linger = 13s total (user can click anytime to skip)
+  splashAutoTimer = setTimeout(() => { if (splashPhase === 'lore') advanceSplash(); }, 13000);
+
+  // --- INSTRUCTIONS SCREEN (created but hidden) ---
+  const instrStyle = document.createElement('style');
+  instrStyle.textContent = `
+    #instructions-splash { position:fixed;top:0;left:0;right:0;bottom:0;z-index:45;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:all;cursor:pointer;transition:opacity 1s ease-in; }
+    #instructions-splash.visible { opacity:1; }
+    #instructions-splash.fade-out { opacity:0; transition:opacity 1s ease-out; }
+    .instr-row { display:flex; align-items:flex-start; gap:14px; margin-bottom:20px; font-family:'Orbitron','Courier New',monospace; font-size:16px; line-height:1.7; color:rgba(255,255,255,0.6); letter-spacing:1px; opacity:0; }
+    #instructions-splash.visible .instr-row { animation: lore-fade-in 0.8s ease-out forwards; }
+    #instructions-splash.visible .instr-row:nth-child(1) { animation-delay: 0.3s; }
+    #instructions-splash.visible .instr-row:nth-child(2) { animation-delay: 0.7s; }
+    #instructions-splash.visible .instr-row:nth-child(3) { animation-delay: 1.1s; }
+    #instructions-splash.visible .instr-row:nth-child(4) { animation-delay: 1.5s; }
+    .instr-icon { font-size:23px; color:rgba(180,80,255,0.6); flex-shrink:0; margin-top:1px; }
+    .instr-continue { position:absolute; bottom:32px; font-family:'Orbitron','Courier New',monospace; font-size:13px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.25); opacity:0; transition:opacity 1.5s ease-out 2.5s; }
+    #instructions-splash.visible .instr-continue { opacity:1; }
+  `;
+  document.head.appendChild(instrStyle);
+
+  const instrEl = document.createElement('div');
+  instrEl.id = 'instructions-splash';
+  instrEl.innerHTML = `
+    <div style="font-family:'Orbitron','Courier New',monospace;font-size:23px;letter-spacing:6px;text-transform:uppercase;color:rgba(255,255,255,0.7);margin-bottom:28px;">How to Play</div>
+    <div style="max-width:520px;padding:0 24px;">
+      <div class="instr-row"><span class="instr-icon">&#9673;</span><span>Tap orbs to pop them. Nearby orbs chain-react.</span></div>
+      <div class="instr-row"><span class="instr-icon">&#9733;</span><span>Bigger chains = more score, more taps.</span></div>
+      <div class="instr-row"><span class="instr-icon">&#9679;</span><span>Move cursor to attract orbs toward you.</span></div>
+      <div class="instr-row"><span class="instr-icon">&#9670;</span><span>Long press to place mines. Level up to unlock powers.</span></div>
+    </div>
+    <div class="instr-continue">click to continue</div>
+  `;
+  instrEl.addEventListener('click', (e) => { e.stopPropagation(); advanceSplash(); });
+  instrEl.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); advanceSplash(); });
+  document.body.appendChild(instrEl);
+
+  // Global listeners for click/key to advance
+  const splashAdvance = (e) => {
+    // Don't intercept dev button clicks
+    if (e.target && (e.target.id === 'biome-btn' || e.target.id === 'madness-btn' || e.target.id === 'autolvl-btn')) return;
+    advanceSplash();
+  };
+  document.addEventListener('keydown', splashAdvance, { once: false });
+  document.addEventListener('click', splashAdvance, { once: false });
+  document.addEventListener('touchend', splashAdvance, { once: false });
+
+  // Store cleanup ref
+  window._splashCleanup = () => {
+    document.removeEventListener('keydown', splashAdvance);
+    document.removeEventListener('click', splashAdvance);
+    document.removeEventListener('touchend', splashAdvance);
+  };
+}
+
+function advanceSplash() {
+  if (splashPhase === 'lore') {
+    // Transition: lore → instructions
+    splashPhase = 'instructions';
+    if (splashAutoTimer) { clearTimeout(splashAutoTimer); splashAutoTimer = null; }
+
+    const splashEl = document.getElementById('lore-splash');
+    const instrEl = document.getElementById('instructions-splash');
+
+    // Fade out lore
+    splashEl.classList.remove('visible');
+    splashEl.classList.add('fade-out');
+    setTimeout(() => { splashEl.style.display = 'none'; }, 1600);
+
+    // Fade in instructions after lore starts fading
+    setTimeout(() => {
+      if (instrEl) instrEl.classList.add('visible');
+    }, 800);
+
+  } else if (splashPhase === 'instructions') {
+    // Transition: instructions → start game directly (skip title screen)
+    splashPhase = 'done';
+
+    const instrEl = document.getElementById('instructions-splash');
+    if (instrEl) {
+      instrEl.classList.remove('visible');
+      instrEl.classList.add('fade-out');
+      setTimeout(() => { instrEl.style.display = 'none'; }, 1100);
+    }
+
+    // Cleanup global listeners
+    if (window._splashCleanup) { window._splashCleanup(); window._splashCleanup = null; }
+
+    // Start the game after instructions fade
+    setTimeout(() => {
+      initAudio();
+      resetGame();
+    }, 600);
+
+  }
+  // 'done' — do nothing, game is running
+}
+
 function init() {
   G.canvas = document.getElementById('c');
   G.ctx = G.canvas.getContext('2d');
@@ -6947,6 +8370,9 @@ function init() {
   window.addEventListener('resize', resizeCanvas);
 
   setupInput();
+
+  // Show lore → instructions → title sequence
+  initSplashSequence();
 
   // Spawn some ambient circles for title screen
   spawnInitialCircles();
