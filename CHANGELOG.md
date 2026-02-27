@@ -2,6 +2,31 @@
 
 ---
 
+## Session 6 — 2026-02-27
+
+### Unified 4-Variant Vector Eye System
+- **Orb eyes now use the same 4-variant vector system as Nexus boss eyes**
+- Replaced old 3-type system (manic/glass/sunken) with 4 desaturated vector variants:
+  - **V0 PALE:** Light grey iris (`#8a8a88`), round pupil
+  - **V1 STRIATED:** Mid-grey iris (`#787878`) with 18 radial striation lines, round pupil
+  - **V2 SLIT:** Light grey iris (`#909094`), vertical slit pupil via `ctx.ellipse()`
+  - **V3 CRACKED:** Dark grey iris (`#606060`) with 12 jagged crack lines, horizontal slit pupil
+- Variant assigned per orb: `eyeVariant = c.id % 4`
+- All variants use desaturated grey tones — no warm/golden colors
+- Full LOD tiering preserved (LOD 0: full detail at screenR>=12, LOD 1-3: progressive simplification)
+
+### Outline Removal on Orb Eyes
+- Removed all hard circular outlines (strokes) from orb eye rendering
+- Kept: socket shadow fill, sclera fill, iris fills, internal detail lines (striations, cracks)
+- Removed: sclera outline, limbal ring strokes, pupil outline strokes, extra eye outlines
+- Result: softer, more organic appearance — eyes blend naturally into orb surface
+
+### Extra Eyes Updated
+- Sprouting eyes at 85%+ WT now use 4-variant system: `xeVar = (c.id + xe) % 4`
+- Each extra eye renders per-variant mini iris + pupil detail
+
+---
+
 ## Session 5 — 2026-02-27
 
 ### Terminology Change

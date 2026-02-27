@@ -170,7 +170,8 @@ delayedBlast, tapTimer, tapTimerMax, bombsPlacedThisRound
 ### Default Biome Orbs
 - Normal orbs: solid color circle + highlight gradient
 - At madness >10%: progressive eyeball transformation (dark hole → sclera → veins → iris → full eye)
-- At madness >85%: extra eye orbs (2 per 7.5% above 85%, up to 6 at 100%)
+- 4 vector eye variants per orb (`eyeVariant = c.id % 4`): V0 Pale, V1 Striated, V2 Slit, V3 Cracked — desaturated grey tones, no outlines
+- At madness >85%: extra eye orbs (2 per 7.5% above 85%, up to 6 at 100%) using 4-variant system
 - SC: amorphous eye-cluster entity with pseudopods and blinking eyes
 - SC at madness >60%: grotesque mutation — torn membrane wings, rib cage, extra arms/joints, more eyes, all desaturated (`grotesque` factor 0→1 from 60-100%)
 

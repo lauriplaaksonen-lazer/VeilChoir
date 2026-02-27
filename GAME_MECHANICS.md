@@ -922,7 +922,8 @@ extraEyeCount = madness >= 0.85 ? floor(((madness - 0.85) / 0.075) * 2) + 2 : 1
 ### Visual
 - Extra eyes are smaller than the primary eye
 - Scattered across the orb surface at deterministic angles (seed-based)
-- Each has full iris/pupil/specular detail
+- Each uses the 4-variant vector system: `xeVar = (c.id + eyeIndex) % 4` (V0 Pale, V1 Striated, V2 Slit, V3 Cracked)
+- Desaturated grey tones, no outlines — matches primary eye rendering
 - Only renders on orbs with radius > 7px and eye intensity > 0.4
 
 ---
@@ -956,7 +957,13 @@ Smooth transition for the first visible sign of eye mutation. Replaces the previ
 - Quadratic ease-in: `voidT² * 0.35` alpha — starts imperceptibly
 - Grows from 4% → 18% of orb radius over `ei = 0 → 0.3`
 - Subtle breathing pulse per orb (`sin(time * 1.2 + orbId * 2.7)`)
-- **Pupil fade-in fix:** All 3 eye types (manic/glass/sunken) now multiply pupil alpha by `irisT`, preventing the previous 50-70% opacity jump at threshold
+- **Pupil fade-in fix:** All 4 eye variants (Pale/Striated/Slit/Cracked) multiply pupil alpha by `irisT`, preventing opacity jumps at threshold
+
+### Eye Variant System (Session 6)
+- Replaced old 3-type system (manic/glass/sunken) with 4 desaturated vector variants matching Nexus boss
+- V0 PALE: light grey iris, round pupil | V1 STRIATED: radial line pattern, round pupil
+- V2 SLIT: vertical slit pupil | V3 CRACKED: jagged crack lines, horizontal slit pupil
+- No outlines on orb eyes — softer organic blending into orb surface
 
 ---
 

@@ -178,15 +178,25 @@ Mine Layer upgrade lets first N taps per round place mines instead of popping. M
 
 ## Eyeball Orbs (Madness-Driven)
 
-Normal orbs progressively transform into eyeballs as madness increases (0–100% scale). The transformation is designed to be insidious — the player shouldn't realize what's happening until it's too late:
+Normal orbs progressively transform into eyeballs as madness increases (0–100% scale). The transformation is designed to be insidious — the player shouldn't realize what's happening until it's too late.
 
+### 4 Vector Eye Variants
+Each orb is assigned one of 4 desaturated vector variants (`eyeVariant = c.id % 4`), matching the Nexus boss eye system:
+- **V0 PALE:** Light grey iris (`#8a8a88`), round pupil
+- **V1 STRIATED:** Mid-grey iris (`#787878`) with radial striation lines, round pupil
+- **V2 SLIT:** Light grey iris (`#909094`), vertical slit pupil
+- **V3 CRACKED:** Dark grey iris (`#606060`) with jagged crack lines, horizontal slit pupil
+
+All variants use desaturated grey tones with no outlines — eyes blend organically into the orb surface. LOD tiering: full detail at screenR>=12px, progressively simplified at smaller sizes.
+
+### Transformation Phases
 - **0–10% madness**: Normal colored orbs, no eye features
 - **10–25%**: A dark spot/void appears in the center — looks like a shadow or hole, NOT recognizably an eye. Just "something off"
 - **25–40%**: Fleshy sclera starts emerging around the dark center. Rim/eyelid shadow forms. First faint veins
 - **40–60%**: Iris becomes visible inside the dark spot (seamless transition from void to pupil). Veins spread. The orb is now clearly an eye
-- **60–80%**: Full iris detail with golden-brown fibers. Pupil tracks cursor. Branching red veins
+- **60–80%**: Full iris detail in per-variant desaturated grey. Pupil tracks cursor. Branching red veins
 - **80–100%**: Complete eyeball — specular highlights, dilating pupil during chains, dense vein networks. Every orb is staring at you
-- **85–100%**: Extra eyes sprout — 2 per 7.5% above 85% (2 at 85%, 4 at 92.5%, 6 at 100%). Smaller secondary eyes scattered across the orb surface, each with full iris/pupil detail
+- **85–100%**: Extra eyes sprout — 2 per 7.5% above 85% (2 at 85%, 4 at 92.5%, 6 at 100%). Each extra eye uses the 4-variant system (`xeVar = (c.id + eyeIndex) % 4`)
 
 ---
 

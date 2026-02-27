@@ -48,33 +48,46 @@ canvas { display: block; width: 100%; height: 100%; }
 #inftaps-btn { position: fixed; top: 152px; right: 16px; z-index: 15; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 6px 12px; color: rgba(255,255,255,0.6); font-family: 'Orbitron', 'Courier New', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; pointer-events: all; transition: background 0.15s, border-color 0.15s, color 0.15s; }
 #inftaps-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.9); }
 #inftaps-btn.active { border-color: rgba(255,200,50,0.7); color: #ffc832; text-shadow: 0 0 8px rgba(255,200,50,0.5); }
+#testlvl-btn { position: fixed; top: 184px; right: 16px; z-index: 15; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 6px 12px; color: rgba(255,255,255,0.6); font-family: 'Orbitron', 'Courier New', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; pointer-events: all; transition: background 0.15s, border-color 0.15s, color 0.15s; }
+#testlvl-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.9); }
+#testlvl-btn.active { border-color: rgba(168,60,255,0.7); color: #a83cff; text-shadow: 0 0 8px rgba(168,60,255,0.5); }
+#spawnmbh-btn { position: fixed; top: 216px; right: 16px; z-index: 15; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 6px 12px; color: rgba(255,255,255,0.6); font-family: 'Orbitron', 'Courier New', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; pointer-events: all; transition: background 0.15s, border-color 0.15s, color 0.15s; }
+#spawnmbh-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(96,224,255,0.4); color: #60e0ff; }
 #lore-splash { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 50; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 1.5s ease-out; pointer-events: all; cursor: pointer; }
 #lore-splash.visible { opacity: 1; transition: opacity 3s ease-in; }
 #lore-splash.fade-out { opacity: 0; transition: opacity 1.5s ease-out; }
-#lore-splash .lore-symbol { font-size: 35px; color: rgba(180,80,255,0.4); margin-bottom: 24px; letter-spacing: 12px; font-family: 'Orbitron', 'Courier New', monospace; opacity: 0; transition: opacity 2s ease-out 0.5s; }
+#lore-splash .lore-symbol { font-size: 35px; color: rgba(180,80,255,0.7); margin-bottom: 24px; letter-spacing: 12px; font-family: 'Orbitron', 'Courier New', monospace; opacity: 0; transition: opacity 2s ease-out 0.5s; }
 #lore-splash.visible .lore-symbol { opacity: 1; }
-#lore-splash .lore-text { max-width: 600px; padding: 0 32px; text-align: center; font-family: 'Orbitron', 'Courier New', monospace; font-size: 18px; line-height: 2.0; color: rgba(255,255,255,0.55); letter-spacing: 1px; opacity: 0; transition: opacity 2.5s ease-out 1s; }
-#lore-splash.visible .lore-text { opacity: 1; }
-#lore-splash .lore-attribution { margin-top: 28px; font-family: 'Orbitron', 'Courier New', monospace; font-size: 13px; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.15); opacity: 0; transition: opacity 2s ease-out 2s; }
+#lore-splash .lore-text { max-width: 600px; padding: 0 32px; text-align: center; font-family: 'Orbitron', 'Courier New', monospace; font-size: 18px; line-height: 2.0; color: rgba(255,255,255,0.9); letter-spacing: 1px; }
+#lore-splash .lore-line { display: block; opacity: 0; transform: translateY(6px); }
+#lore-splash.visible .lore-line { animation: lore-fade-in 2s ease-out forwards; }
+#lore-splash .lore-attribution { margin-top: 28px; font-family: 'Orbitron', 'Courier New', monospace; font-size: 13px; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.5); opacity: 0; transition: opacity 2s ease-out 2s; }
 #lore-splash.visible .lore-attribution { opacity: 1; }
-#lore-splash .skip-hint { position: absolute; bottom: 32px; font-family: 'Orbitron', 'Courier New', monospace; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.12); opacity: 0; transition: opacity 1.5s ease-out 4s; }
+#lore-splash .skip-hint { position: absolute; bottom: 32px; font-family: 'Orbitron', 'Courier New', monospace; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.3); opacity: 0; transition: opacity 1.5s ease-out 4s; }
 #lore-splash.visible .skip-hint { opacity: 1; }
 @keyframes lore-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 #changelog-modal { position:fixed;top:0;left:0;right:0;bottom:0;z-index:48;background:rgba(0,0,0,0.92);display:none;flex-direction:column;align-items:center;justify-content:flex-start;opacity:0;transition:opacity 0.8s ease-in;pointer-events:all;overflow:hidden; }
 #changelog-modal.visible { opacity:1; display:flex; }
 #changelog-modal.fade-out { display:flex; opacity:0; transition:opacity 0.6s ease-out; }
-#changelog-inner { width:90%;max-width:520px;margin-top:48px;padding-bottom:100px;overflow-y:auto;max-height:calc(100vh - 120px);-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(180,80,255,0.3) transparent; }
-#changelog-inner::-webkit-scrollbar { width:4px; }
-#changelog-inner::-webkit-scrollbar-track { background:transparent; }
-#changelog-inner::-webkit-scrollbar-thumb { background:rgba(180,80,255,0.3);border-radius:2px; }
-#changelog-title { font-family:'Orbitron','Courier New',monospace;font-size:22px;letter-spacing:6px;text-transform:uppercase;color:rgba(255,255,255,0.8);text-align:center;margin-bottom:28px;padding-top:8px; }
+#changelog-columns { display:flex;gap:32px;width:92%;max-width:1060px;margin-top:48px;padding-bottom:100px;align-items:flex-start;justify-content:center; }
+#changelog-inner, #roadmap-inner { flex:1;max-width:500px;overflow-y:auto;max-height:calc(100vh - 120px);-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:rgba(180,80,255,0.3) transparent; }
+#changelog-inner::-webkit-scrollbar, #roadmap-inner::-webkit-scrollbar { width:4px; }
+#changelog-inner::-webkit-scrollbar-track, #roadmap-inner::-webkit-scrollbar-track { background:transparent; }
+#changelog-inner::-webkit-scrollbar-thumb, #roadmap-inner::-webkit-scrollbar-thumb { background:rgba(180,80,255,0.3);border-radius:2px; }
+#changelog-title, #roadmap-title { font-family:'Orbitron','Courier New',monospace;font-size:22px;letter-spacing:6px;text-transform:uppercase;color:rgba(255,255,255,0.95);text-align:center;margin-bottom:28px;padding-top:8px; }
+#roadmap-title { color:rgba(80,220,255,0.95); }
 .cl-section { margin-bottom:22px; }
-.cl-section-title { font-family:'Orbitron','Courier New',monospace;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:rgba(180,80,255,0.7);margin-bottom:10px; }
-.cl-item { font-family:'Orbitron','Courier New',monospace;font-size:13px;line-height:1.8;color:rgba(255,255,255,0.55);letter-spacing:0.5px;padding-left:16px;position:relative;margin-bottom:4px; }
-.cl-item::before { content:'›';position:absolute;left:0;color:rgba(180,80,255,0.5); }
+.cl-section-title { font-family:'Orbitron','Courier New',monospace;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:rgba(180,80,255,0.9);margin-bottom:10px; }
+.cl-item { font-family:'Orbitron','Courier New',monospace;font-size:13px;line-height:1.8;color:rgba(255,255,255,0.85);letter-spacing:0.5px;padding-left:16px;position:relative;margin-bottom:4px; }
+.cl-item::before { content:'›';position:absolute;left:0;color:rgba(180,80,255,0.75); }
+.rm-section { margin-bottom:22px; }
+.rm-section-title { font-family:'Orbitron','Courier New',monospace;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:rgba(80,220,255,0.85);margin-bottom:10px; }
+.rm-item { font-family:'Orbitron','Courier New',monospace;font-size:13px;line-height:1.8;color:rgba(255,255,255,0.7);letter-spacing:0.5px;padding-left:16px;position:relative;margin-bottom:4px; }
+.rm-item::before { content:'○';position:absolute;left:0;color:rgba(80,220,255,0.55);font-size:11px; }
+@media (max-width:700px) { #changelog-columns { flex-direction:column;align-items:center; } #changelog-inner, #roadmap-inner { max-width:90%;max-height:calc(50vh - 80px); } }
 #changelog-continue { position:fixed;bottom:0;left:0;right:0;z-index:49;display:none;justify-content:center;padding:20px 0 32px 0;background:linear-gradient(0deg, rgba(0,0,0,0.95) 60%, transparent);pointer-events:all; }
 #changelog-continue.visible { display:flex; }
-#changelog-continue button { font-family:'Orbitron','Courier New',monospace;font-size:14px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.75);background:rgba(180,80,255,0.15);border:1px solid rgba(180,80,255,0.35);border-radius:8px;padding:12px 36px;cursor:pointer;transition:background 0.15s,border-color 0.15s,color 0.15s; }
+#changelog-continue button { font-family:'Orbitron','Courier New',monospace;font-size:14px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.92);background:rgba(180,80,255,0.15);border:1px solid rgba(180,80,255,0.35);border-radius:8px;padding:12px 36px;cursor:pointer;transition:background 0.15s,border-color 0.15s,color 0.15s; }
 #changelog-continue button:hover { background:rgba(180,80,255,0.3);border-color:rgba(180,80,255,0.6);color:#fff; }
 </style>
 </head>
@@ -95,6 +108,8 @@ canvas { display: block; width: 100%; height: 100%; }
 <button id="madness-btn" title="Toggle full madness [M]">Madness</button>
 <button id="autolvl-btn" title="Auto level up">Auto LvL</button>
 <button id="inftaps-btn" title="Infinite taps">&#8734; Taps</button>
+<button id="testlvl-btn" title="Toggle test level">Test</button>
+<button id="spawnmbh-btn" title="Spawn mini black hole">&#9899; BH</button>
 
 <div id="xp-bar-wrap"><div id="xp-bar-fill"></div></div>
 <div id="hud" style="display:none;">
@@ -196,7 +211,7 @@ const PALETTES = [
   { // Level 1-3: Deep violet + hot pink + warm gold + emerald
     name: 'PHASE I',
     bgTop: '#0d0018', bgBot: '#1a0028',
-    colors: ['#b24dff', '#ff3c8e', '#ffd84d', '#4dffb2'],
+    colors: ['#a83cff', '#ff2d7e', '#ffcc33', '#3dffa0'],
     accent: '#e040fb',
     baseNote: 240,
     oscType: 'sine'
@@ -252,6 +267,14 @@ const SPECIAL_BIOMES = [
                   '#00fff5', '#ff6ec7', '#b0ff00', '#ea80fc', '#84ffff'],
     // cyan, teal, lime, violet, hot pink, gold, deep purple, aqua, neon pink, chartreuse, lavender, ice
     vividAccent: '#e0ff80'  // bright warm accent at full saturation
+  },
+  { // TESTLEVEL — 100% copy of Biome 1 (PHASE I) for experimentation
+    name: 'TESTLEVEL',
+    bgTop: '#0d0018', bgBot: '#1a0028',
+    colors: ['#a83cff', '#ff2d7e', '#ffcc33', '#3dffa0'],
+    accent: '#e040fb',
+    baseNote: 240,
+    oscType: 'sine'
   }
 ];
 
@@ -401,10 +424,17 @@ const G = {
   bridges: [],               // Phase 6: gravity bridges between same-color orbs
   bridgeCheckTimer: 0,       // timer for bridge proximity checks (every 0.3s)
   wtMilestones: { 50: false, 75: false, 90: false }, // World Transparency milestone triggers
-  wtBanner: null             // active WT milestone banner { text, subtext, timer, duration, color }
+  wtBanner: null,            // active WT milestone banner { text, subtext, timer, duration, color }
+  miniBlackHoles: [],        // mini black hole entities (spawned at 75%+ madness)
+  miniBlackHoleTimer: 0,     // spawn interval timer for mini black holes
+  gravityInvertFactor: 1.0,  // smooth gravity direction (-1 to 1, 1=normal)
+  gravityInvertSwitchCooldown: 0, // min hold time before next state change
+  wormhole: null             // wormhole entity for B1 level ending
 };
 
 function resetGame() {
+  // Preserve circles spawned during instructions screen to avoid teleport on game start
+  const preservedCircles = G.circles && G.circles.length > 0 ? G.circles : null;
   G.state = 'playing';
   G.taps = BASE_TAPS;
   G.score = 0;
@@ -440,6 +470,8 @@ function resetGame() {
   G.blackHoleTimer = 0;
   G.superBlackHole = null;
   G.superBlackHoleTimer = 0;
+  G.miniBlackHoles = [];
+  G.miniBlackHoleTimer = 0;
   G.watcher = { opacity: 0, eyeGlow: 0, reachAmount: 0, breathPhase: 0 };
   G.horrorBoost = 0;
   G.biomeIndex = 0;
@@ -467,6 +499,12 @@ function resetGame() {
   G.wtMilestones = { 50: false, 75: false, 90: false };
   G.wtBanner = null;
   G.marbleMode = 0; // timer in seconds, >0 = marble physics active
+  G.gravityInvertTimer = 0; // >0 = gravity inverted (shadow ball prism trigger)
+  G.prismClusterActive = false; // true while shadow ball cluster is dense enough
+  G.prismCooldown = 0; // cooldown after prism deactivates before it can trigger again
+  G.gravityInvertFactor = 1.0;
+  G.gravityInvertSwitchCooldown = 0;
+  G.wormhole = null;
   // Compute game boundaries immediately so spawning uses correct area
   const resetHalfW = G.W / (2 * G.zoomLevel);
   const resetHalfH = G.H / (2 * G.zoomLevel);
@@ -487,7 +525,12 @@ function resetGame() {
   abyssBeatAccum = 0;
   abyssBeatsSinceLast = 0;
   shadowSpawnTimer = 0;
-  spawnInitialCircles();
+  // If circles already exist from instructions phase, keep them (no teleport)
+  if (preservedCircles && preservedCircles.length > 0) {
+    G.circles = preservedCircles;
+  } else {
+    spawnInitialCircles();
+  }
   document.getElementById('hud').style.display = 'flex';
   document.getElementById('xp-bar-wrap').style.display = 'block';
   document.getElementById('xp-bar-fill').style.width = '0%';
@@ -559,6 +602,39 @@ function playPhantomSound() {
   gain.connect(G.audioCtx.destination);
   osc.start(now);
   osc.stop(now + 0.2);
+}
+
+function playRiftDamageSound() {
+  if (!G.audioCtx) return;
+  const now = G.audioCtx.currentTime;
+  // Electric crackle — high square wave with rapid frequency jitter
+  const osc1 = G.audioCtx.createOscillator();
+  const gain1 = G.audioCtx.createGain();
+  osc1.type = 'square';
+  osc1.frequency.setValueAtTime(1200 + Math.random() * 800, now);
+  osc1.frequency.exponentialRampToValueAtTime(300, now + 0.06);
+  osc1.frequency.setValueAtTime(900 + Math.random() * 600, now + 0.065);
+  osc1.frequency.exponentialRampToValueAtTime(200, now + 0.12);
+  gain1.gain.setValueAtTime(0.06, now);
+  gain1.gain.setValueAtTime(0.03, now + 0.04);
+  gain1.gain.setValueAtTime(0.05, now + 0.065);
+  gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+  osc1.connect(gain1);
+  gain1.connect(G.audioCtx.destination);
+  osc1.start(now);
+  osc1.stop(now + 0.18);
+  // Zap layer — higher sawtooth burst
+  const osc2 = G.audioCtx.createOscillator();
+  const gain2 = G.audioCtx.createGain();
+  osc2.type = 'sawtooth';
+  osc2.frequency.setValueAtTime(2400 + Math.random() * 1200, now);
+  osc2.frequency.exponentialRampToValueAtTime(600, now + 0.08);
+  gain2.gain.setValueAtTime(0.03, now);
+  gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+  osc2.connect(gain2);
+  gain2.connect(G.audioCtx.destination);
+  osc2.start(now);
+  osc2.stop(now + 0.12);
 }
 
 function playSCPopSound(chainIndex) {
@@ -729,6 +805,138 @@ function playDelayedBlastExplosion(tier) {
     ring.start(now);
     ring.stop(now + 0.5);
   }
+}
+
+// ==================================================
+// BPGE AMBIENT SOUND — breathing whoosh tied to gravity
+// ==================================================
+// Continuous synthesized wind/breathing that intensifies with World Transparency.
+// Silent at WT 0-40%, fades in from WT40% to full at WT100%.
+// Uses filtered noise + sub drone, modulated by slow LFO for organic breathing rhythm.
+
+function initBPGEAmbient() {
+  if (!G.audioCtx || G.bpgeAmbient) return;
+  const ctx = G.audioCtx;
+
+  // --- Noise source: looped white noise buffer ---
+  const bufLen = ctx.sampleRate * 2; // 2 seconds, looped
+  const noiseBuf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+  const nd = noiseBuf.getChannelData(0);
+  for (let i = 0; i < bufLen; i++) nd[i] = Math.random() * 2 - 1;
+  const noise = ctx.createBufferSource();
+  noise.buffer = noiseBuf;
+  noise.loop = true;
+
+  // Bandpass filter — shapes noise into airy whoosh
+  const bpFilter = ctx.createBiquadFilter();
+  bpFilter.type = 'bandpass';
+  bpFilter.frequency.value = 200;
+  bpFilter.Q.value = 2.5;
+
+  // Noise gain
+  const noiseGain = ctx.createGain();
+  noiseGain.gain.value = 0;
+
+  noise.connect(bpFilter);
+  bpFilter.connect(noiseGain);
+
+  // --- Sub drone: deep sine for presence ---
+  const sub = ctx.createOscillator();
+  sub.type = 'sine';
+  sub.frequency.value = 32;
+  const subGain = ctx.createGain();
+  subGain.gain.value = 0;
+  sub.connect(subGain);
+
+  // --- Mid tone: triangle for body ---
+  const mid = ctx.createOscillator();
+  mid.type = 'triangle';
+  mid.frequency.value = 65;
+  const midGain = ctx.createGain();
+  midGain.gain.value = 0;
+  mid.connect(midGain);
+
+  // --- Master gain (overall volume control) ---
+  const masterGain = ctx.createGain();
+  masterGain.gain.value = 0;
+  noiseGain.connect(masterGain);
+  subGain.connect(masterGain);
+  midGain.connect(masterGain);
+  masterGain.connect(ctx.destination);
+
+  // --- LFO: slow breathing rhythm modulating master volume ---
+  const lfo = ctx.createOscillator();
+  lfo.type = 'sine';
+  lfo.frequency.value = 0.15; // very slow breathing
+  const lfoGain = ctx.createGain();
+  lfoGain.gain.value = 0; // depth controlled by update
+  lfo.connect(lfoGain);
+  lfoGain.connect(masterGain.gain); // modulates the gain AudioParam
+
+  // Start all continuous sources
+  const now = ctx.currentTime;
+  noise.start(now);
+  sub.start(now);
+  mid.start(now);
+  lfo.start(now);
+
+  G.bpgeAmbient = {
+    noise, bpFilter, noiseGain,
+    sub, subGain,
+    mid, midGain,
+    masterGain,
+    lfo, lfoGain
+  };
+}
+
+function updateBPGEAmbient() {
+  if (!G.audioCtx) return;
+  if (!G.bpgeAmbient) {
+    initBPGEAmbient();
+    if (!G.bpgeAmbient) return;
+  }
+
+  const a = G.bpgeAmbient;
+  const madness = getMadnessAmount();
+  const now = G.audioCtx.currentTime;
+
+  // Intensity: 0 at WT<=40%, linear ramp to 1 at WT100%
+  const intensity = Math.max(0, (madness - 0.4) / 0.6);
+
+  // Smooth ramp (avoid clicks)
+  const rampTime = 0.15;
+
+  // Master volume: gentle at low intensity, fuller at high
+  // Quadratic curve for gradual onset
+  const vol = intensity * intensity * 0.14;
+  a.masterGain.gain.setTargetAtTime(vol, now, rampTime);
+
+  // LFO depth: breathing becomes more pronounced with madness
+  // At low intensity: subtle. At high: dramatic swells.
+  const lfoDepth = intensity * 0.06;
+  a.lfoGain.gain.setTargetAtTime(lfoDepth, now, rampTime);
+
+  // LFO speed: breathing quickens with madness (0.12 Hz → 0.38 Hz)
+  const lfoFreq = 0.12 + intensity * 0.26;
+  a.lfo.frequency.setTargetAtTime(lfoFreq, now, rampTime);
+
+  // Noise layer: louder with intensity, filter sweeps higher
+  a.noiseGain.gain.setTargetAtTime(0.5 + intensity * 0.5, now, rampTime);
+  // Bandpass center: 150 Hz (low whoosh) → 500 Hz (sharper, more present)
+  const bpFreq = 150 + intensity * 350;
+  a.bpFilter.frequency.setTargetAtTime(bpFreq, now, rampTime);
+  // Q narrows at higher intensity for more focused sound
+  a.bpFilter.Q.setTargetAtTime(2.0 + intensity * 3.0, now, rampTime);
+
+  // Sub drone: fades in gently
+  a.subGain.gain.setTargetAtTime(0.3 + intensity * 0.7, now, rampTime);
+  // Sub pitch drops slightly at high madness for weight
+  a.sub.frequency.setTargetAtTime(32 - intensity * 8, now, rampTime);
+
+  // Mid tone: present in mid-to-high range
+  a.midGain.gain.setTargetAtTime(intensity * 0.4, now, rampTime);
+  // Mid frequency rises with intensity
+  a.mid.frequency.setTargetAtTime(65 + intensity * 30, now, rampTime);
 }
 
 // ==================================================
@@ -915,6 +1123,40 @@ function biomeColorShift(hex, madnessAmount) {
   return horrorShift(hex, madnessAmount);
 }
 
+// Brighten orb colors at WT <80% — counteracts early desaturation, keeps field vivid
+function orbBrighten(hex, madness) {
+  if (madness >= 0.80) return hex; // no boost above 80%
+  // Boost: 20% at 0% WT, fading to 0% at 80% WT (was 33% — too washed-out)
+  const boost = 0.20 * (1 - madness / 0.80);
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  const nr = Math.min(255, Math.round(r + (255 - r) * boost));
+  const ng = Math.min(255, Math.round(g + (255 - g) * boost));
+  const nb = Math.min(255, Math.round(b + (255 - b) * boost));
+  return '#' + ((1<<24)|(nr<<16)|(ng<<8)|nb).toString(16).slice(1);
+}
+
+// Golden/fiery color shift for spell effects at WT >75%
+// Gradually blends any color toward warm gold/fire tones
+function fireShift(hex, madness) {
+  if (madness <= 0.40) return hex;
+  const t = Math.min(1, (madness - 0.40) / 0.60); // 0→1 from 40%→100% WT — gradual ramp
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  // Quadratic ease-in: barely tinted at 40-55%, golden by ~70%, intense fire by 100%
+  const eased = t * t;
+  const fireR = 255;
+  const fireG = Math.round(160 - eased * 80); // 160→80 (gold→deep orange)
+  const fireB = Math.round(48 - eased * 20);  // 48→28
+  const blend = eased * 0.65; // max 65% shift — keeps some original hue character
+  const nr = Math.round(r + (fireR - r) * blend);
+  const ng = Math.round(g + (fireG - g) * blend);
+  const nb = Math.round(b + (fireB - b) * blend);
+  return '#' + ((1<<24)|(nr<<16)|(ng<<8)|nb).toString(16).slice(1);
+}
+
 function shuffle(arr) {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -1074,17 +1316,26 @@ function createCircle(x, y) {
   let sizeMin = 1.0; // multiplier for minimum size
   let sizeBase = 1.0; // multiplier for base radius — makes default orbs bigger
   if (madSizeAmt > 0.50) {
-    // From 50-100%: base orb size gradually grows up to 1.85× (85% bigger at full madness)
+    // From 50-100%: base orb size gradually grows up to 2.2× (was 1.85×)
     const growFrac = Math.min(1, (madSizeAmt - 0.50) / 0.50);
-    sizeBase = 1.0 + growFrac * 0.85; // 1.0× → 1.85× base radius
-    sizeVar = 4 + growFrac * 12; // wider random range as madness grows
+    sizeBase = 1.0 + growFrac * 1.2; // 1.0× → 2.2× base radius
+    sizeVar = 4 + growFrac * 16; // wider random range as madness grows
   }
   if (madSizeAmt > 0.66) {
     const madSizeFrac = Math.min(1, (madSizeAmt - 0.66) / 0.34); // 0-1 from 66% to 100% madness
-    sizeVar = 14 + madSizeFrac * 16; // up to +30px random range
+    sizeVar = 18 + madSizeFrac * 24; // up to +42px random range (was +30)
     sizeMin = 1.0 - madSizeFrac * 0.7; // down to 0.3× base size for micro orbs
   }
-  const baseR = BASE_CIRCLE_RADIUS * sizeBase * sizeMin + Math.random() * sizeVar;
+  // At >85% WT: orbs gain 2x mass (doubled radius for ~15% of new orbs)
+  let massMult = 1.0;
+  if (madSizeAmt > 0.85) {
+    const massFrac = Math.min(1, (madSizeAmt - 0.85) / 0.15); // 0→1 from 85%→100%
+    // 15% chance scaling to 30% at full WT for a 2x mass (1.41x radius) orb
+    if (Math.random() < 0.15 + massFrac * 0.15) {
+      massMult = 1.41; // sqrt(2) ≈ 2x area/mass
+    }
+  }
+  const baseR = BASE_CIRCLE_RADIUS * sizeBase * sizeMin * massMult + Math.random() * sizeVar;
   let r = Math.max(3, baseR); // minimum 3px radius — allows micro orbs
   if (isVolatile) r *= 1.3;
   // Void Crack orbs: RARE special armored orbs from level 3+ (flat 3% chance)
@@ -1357,6 +1608,9 @@ function updateCircles(dt) {
       }
     }
 
+    // DARK PRISM: smooth gravity direction (-1 to 1, lerped in updateShadowBalls)
+    const gravDir = G.gravityInvertFactor;
+
     // Gravitational swirl — orbital motion around field center + gentle attractors
     // Each orb feels a pull toward a slowly-shifting attractor point
     // but also gets a tangential push, creating swirling orbits
@@ -1368,8 +1622,8 @@ function updateCircles(dt) {
     const adx = attractX - c.x;
     const ady = attractY - c.y;
     const aDist = Math.sqrt(adx * adx + ady * ady) + 1;
-    // Gravitational pull (inverse distance, capped)
-    const gravStr = Math.min(35, 800 / aDist) * dt;
+    // Gravitational pull (inverse distance, capped) — inverted during Dark Prism
+    const gravStr = Math.min(35, 800 / aDist) * dt * gravDir;
     // Tangential component (perpendicular to radial) — creates orbiting
     const tangentX = -ady / aDist;
     const tangentY = adx / aDist;
@@ -1380,13 +1634,14 @@ function updateCircles(dt) {
 
     // MADNESS CENTER PULL — above 75% madness, orbs feel increasing gravity toward field center
     // "Reality collapses inward" — everything slowly drawn to the void's center
+    // DARK PRISM: gravity inverts — orbs pushed outward from center
     const centerMadness = getMadnessAmount();
     if (centerMadness > 0.75) {
       const centerStr = (centerMadness - 0.75) / 0.25; // 0→1 from 75-100%
       const cdx = gcx - c.x, cdy = gcy - c.y;
       const cDist = Math.sqrt(cdx * cdx + cdy * cdy) + 1;
       // Gradual pull: reaches 60 force units at full madness, inverse-sqrt falloff
-      const centerPull = centerStr * 60 * (1 / Math.sqrt(cDist / 50 + 1)) * dt;
+      const centerPull = centerStr * 60 * (1 / Math.sqrt(cDist / 50 + 1)) * dt * gravDir;
       c.x += (cdx / cDist) * centerPull;
       c.y += (cdy / cDist) * centerPull;
     }
@@ -1417,10 +1672,10 @@ function updateCircles(dt) {
       const speedBoost = 1 + Math.min(1.5, cursorSpeed / 400);
       const madPhys = getMadnessPhysicsScale();
       const madness = getMadnessAmount();
-      // Cursor REACH: 5× at 0% madness → 12× at 100% madness (wider field)
-      const cursorReachMult = 5.0 + madness * 7.0;
-      // Cursor STRENGTH: 1.0× base, up to 2.0× at full madness
-      const cursorStrMult = 1.0 + madness * 1.0;
+      // Cursor REACH: 5× at 0% madness → 9× at 100% madness (was 12× — too aggressive)
+      const cursorReachMult = 5.0 + madness * 4.0;
+      // Cursor STRENGTH: 1.0× base, up to 1.5× at full madness (was 2.0× — too snappy)
+      const cursorStrMult = 1.0 + madness * 0.5;
       // Shrink effective distance to extend reach
       const effDist = cDist / cursorReachMult;
       // 1/d falloff with soft floor — smooth gradient, no harsh snap nearby
@@ -1428,7 +1683,10 @@ function updateCircles(dt) {
       // Mid-range (effDist ~50-150): noticeable drift toward cursor
       // Far orbs (effDist ~200+): still subtly drawn in
       const pullBase = 262 * speedBoost * madPhys * cursorStrMult;
-      const cursorPull = Math.min(15 * speedBoost * madPhys * cursorStrMult, pullBase / (effDist + 40)) * dt;
+      const basePull = Math.min(20 * speedBoost * madPhys * cursorStrMult, pullBase / (effDist + 28)) * dt * gravDir;
+      // Close-range bonus: extra pull when within 80px of cursor
+      const closeBonus = cDist < 80 ? (1 - cDist / 80) * 8 * dt * gravDir * madPhys : 0;
+      const cursorPull = basePull + closeBonus;
       c.x += (cdx / cDist) * cursorPull;
       c.y += (cdy / cDist) * cursorPull;
 
@@ -1521,6 +1779,7 @@ function updateCircles(dt) {
               }
               c.scTethers = [];
             }
+            c.scSigilTethers = [];
           }
         } else {
           c.scFade = 1;
@@ -1549,12 +1808,15 @@ function updateCircles(dt) {
             c.scTimer = 0;
             c.scLifespan = 2.1 + Math.random() * 3.4;
             c.scFade = 0;
-            // Trigger marble mode — orbs become bouncy solids
-            G.marbleMode = 4.0;
-            // Phase 5: Form tethers to 2-4 nearby orbs
+            // Trigger marble mode — orbs become bouncy solids (8s base, stacks up to 3x = 24s max)
+            const MARBLE_BASE = 8.0;
+            const MARBLE_MAX = MARBLE_BASE * 3;
+            G.marbleMode = Math.min(MARBLE_MAX, G.marbleMode + MARBLE_BASE);
+            // Phase 5: Form tethers to 4-7 nearby orbs (was 2-4)
             c.scTethers = [];
-            const tetherCount = 2 + Math.floor(Math.random() * 3); // 2-4
-            const tetherRange = 180 + c.radius * 2;
+            c.scSigilTethers = []; // extra tethers to sigils (bombs)
+            const tetherCount = 4 + Math.floor(Math.random() * 4); // 4-7
+            const tetherRange = 260 + c.radius * 2; // wider reach (was 180)
             const candidates = [];
             for (let j = 0; j < G.circles.length; j++) {
               const o = G.circles[j];
@@ -1569,6 +1831,15 @@ function updateCircles(dt) {
               const o = candidates[j].orb;
               o.tethered = true;
               c.scTethers.push({ orbId: o.id, pulsePhase: Math.random() * Math.PI * 2 });
+            }
+            // Archon seeks sigils (bombs) — forms extra Enochian-style tethers
+            const sigilRange = 350;
+            for (let j = 0; j < G.bombs.length; j++) {
+              const bomb = G.bombs[j];
+              const bd = dist(c.x, c.y, bomb.x, bomb.y);
+              if (bd < sigilRange) {
+                c.scSigilTethers.push({ bombIdx: j, pulsePhase: Math.random() * Math.PI * 2, glyphSeed: Math.random() * 100 });
+              }
             }
           }
           c.scCooldown = 3.4 + Math.random() * 8.5;
@@ -2160,6 +2431,8 @@ function spawnParticle(x, y, type, color, config) {
 function spawnPopParticles(x, y, color) {
   const biome = getCurrentBiome();
   const count = 12;
+  // Golden/fiery shift at high WT
+  color = fireShift(color, getMadnessAmount());
 
   // Generic sparks
   for (let i = 0; i < count; i++) {
@@ -2681,6 +2954,7 @@ function damageRiftWall(explosionX, explosionY, blastR) {
     if (d < blastR) {
       w.hp--;
       w.hitFlash = 1.0;
+      playRiftDamageSound();
       if (w.hp <= 0) {
         shatterRiftWall(w, i);
       }
@@ -2695,148 +2969,80 @@ function renderRiftWalls(ctx) {
 
     const hpFrac = w.hp / w.maxHp;
     const pulse = 0.5 + 0.5 * Math.sin(w.phase);
-    const slowPulse = 0.5 + 0.5 * Math.sin(w.phase * 0.3);
-    const baseAlpha = w.alpha * (0.5 + pulse * 0.15) * (0.5 + hpFrac * 0.5);
-    const flashAdd = w.hitFlash > 0 ? w.hitFlash * 0.5 : 0;
+    const baseAlpha = w.alpha * (0.6 + hpFrac * 0.4);
+    const hit = w.hitFlash > 0 ? w.hitFlash : 0;
     const dx = w.x2 - w.x1, dy = w.y2 - w.y1;
     const wallLen = Math.sqrt(dx * dx + dy * dy) || 1;
-    const nx = -(dy / wallLen), ny = dx / wallLen; // perpendicular
+    const nx = -(dy / wallLen), ny = dx / wallLen;
 
-    // === LAYER 1: Wide ambient void glow — the rift distorts space around it ===
-    ctx.globalAlpha = baseAlpha * 0.15;
-    ctx.globalCompositeOperation = 'lighter';
-    for (let side = -1; side <= 1; side += 2) {
-      const glowWidth = (20 + slowPulse * 8) * side;
-      ctx.strokeStyle = '#2a0845';
-      ctx.lineWidth = 28 + pulse * 6;
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(w.x1 + nx * glowWidth, w.y1 + ny * glowWidth);
-      ctx.lineTo(w.x2 + nx * glowWidth, w.y2 + ny * glowWidth);
-      ctx.stroke();
-    }
-    ctx.globalCompositeOperation = 'source-over';
-
-    // === LAYER 2: Canyon walls — jagged rocky edges on both sides ===
-    const jagSegments = Math.max(8, Math.floor(wallLen / 18));
-    for (let side = -1; side <= 1; side += 2) {
-      ctx.globalAlpha = baseAlpha * (0.5 + flashAdd * 0.3);
-      ctx.beginPath();
-      for (let s = 0; s <= jagSegments; s++) {
-        const t = s / jagSegments;
-        const baseX = w.x1 + dx * t;
-        const baseY = w.y1 + dy * t;
-        // Seeded jaggedness — each segment has unique rocky offset
-        const jagSeed = (w.phase * 0.2 + s * 7.13 + i * 3.7) * 1;
-        const jagAmt = (5 + Math.sin(jagSeed) * 3 + Math.sin(jagSeed * 2.3) * 2) * side;
-        const breathe = Math.sin(w.phase * 0.8 + t * 4) * 1.2 * side;
-        const px = baseX + nx * (jagAmt + breathe);
-        const py = baseY + ny * (jagAmt + breathe);
-        if (s === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-      }
-      // Canyon edge glow — purple-pink energy along the rim
-      const edgeGrad = ctx.createLinearGradient(
-        w.x1 + nx * side * 10, w.y1 + ny * side * 10,
-        w.x1 + nx * side * 2, w.y1 + ny * side * 2
-      );
-      edgeGrad.addColorStop(0, 'rgba(0,0,0,0)');
-      edgeGrad.addColorStop(0.5, w.hitFlash > 0.3 ? '#ff5050' : '#6a1a9a');
-      edgeGrad.addColorStop(1, w.hitFlash > 0.3 ? '#ff8888' : '#b040ff');
-      ctx.strokeStyle = edgeGrad;
-      ctx.lineWidth = 2.5 + pulse * 1;
-      ctx.stroke();
+    // Build a jagged crack path (reused for all layers)
+    const segs = Math.max(6, Math.floor(wallLen / 25));
+    const crackPath = [];
+    for (let s = 0; s <= segs; s++) {
+      const t = s / segs;
+      const bx = w.x1 + dx * t;
+      const by = w.y1 + dy * t;
+      // Seeded zig-zag perpendicular to line
+      const seed = i * 3.7 + s * 7.13;
+      const jag = (s === 0 || s === segs) ? 0 :
+        (Math.sin(seed) * 4 + Math.sin(seed * 2.3) * 2.5 + Math.sin(w.phase * 0.6 + t * 5) * 1.5);
+      crackPath.push({ x: bx + nx * jag, y: by + ny * jag });
     }
 
-    // === LAYER 3: Dark void interior — the canyon depth ===
-    ctx.globalAlpha = baseAlpha * 0.7;
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 8 + pulse * 3;
-    ctx.lineCap = 'round';
+    // --- Layer 1: Soft outer glow ---
+    ctx.save();
+    ctx.globalAlpha = baseAlpha * 0.12;
+    ctx.strokeStyle = hit > 0.2 ? '#ff4040' : '#8040c0';
+    ctx.lineWidth = 20 + pulse * 6;
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     ctx.beginPath();
-    ctx.moveTo(w.x1, w.y1);
-    ctx.lineTo(w.x2, w.y2);
+    ctx.moveTo(crackPath[0].x, crackPath[0].y);
+    for (let s = 1; s < crackPath.length; s++) ctx.lineTo(crackPath[s].x, crackPath[s].y);
     ctx.stroke();
+    ctx.restore();
 
-    // Deep purple interior gradient over the void
-    ctx.globalAlpha = baseAlpha * 0.35;
-    ctx.strokeStyle = '#1a0030';
-    ctx.lineWidth = 5 + pulse * 2;
+    // --- Layer 2: Dark crack interior ---
+    ctx.save();
+    ctx.globalAlpha = baseAlpha * 0.85;
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 4 + pulse * 1.5;
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     ctx.beginPath();
-    ctx.moveTo(w.x1, w.y1);
-    ctx.lineTo(w.x2, w.y2);
+    ctx.moveTo(crackPath[0].x, crackPath[0].y);
+    for (let s = 1; s < crackPath.length; s++) ctx.lineTo(crackPath[s].x, crackPath[s].y);
     ctx.stroke();
+    ctx.restore();
 
-    // === LAYER 4: Energy veins inside the canyon — flickering light deep within ===
-    ctx.globalAlpha = baseAlpha * 0.5 * hpFrac + flashAdd * 0.4;
-    const veinCount = 2 + Math.floor(hpFrac * 3);
-    for (let v = 0; v < veinCount; v++) {
-      const vSeed = i * 5.3 + v * 11.7;
-      const vt1 = (0.1 + ((vSeed * 37) % 80) / 100);
-      const vt2 = Math.min(0.95, vt1 + 0.15 + ((vSeed * 53) % 30) / 100);
-      const vx1 = w.x1 + dx * vt1 + nx * (Math.sin(w.phase * 1.5 + vSeed) * 2);
-      const vy1 = w.y1 + dy * vt1 + ny * (Math.sin(w.phase * 1.5 + vSeed) * 2);
-      const vx2 = w.x1 + dx * vt2 + nx * (Math.sin(w.phase * 1.8 + vSeed * 2) * 2);
-      const vy2 = w.y1 + dy * vt2 + ny * (Math.sin(w.phase * 1.8 + vSeed * 2) * 2);
-      ctx.strokeStyle = w.hitFlash > 0.3 ? '#ff6666' : '#c060ff';
-      ctx.lineWidth = 0.6 + Math.sin(w.phase * 3 + vSeed) * 0.4;
-      ctx.beginPath();
-      ctx.moveTo(vx1, vy1);
-      const cpx = (vx1 + vx2) / 2 + nx * Math.sin(w.phase * 2 + vSeed) * 3;
-      const cpy = (vy1 + vy2) / 2 + ny * Math.sin(w.phase * 2 + vSeed) * 3;
-      ctx.quadraticCurveTo(cpx, cpy, vx2, vy2);
-      ctx.stroke();
-    }
+    // --- Layer 3: Bright energy edge (thinner, on top of dark crack) ---
+    ctx.save();
+    ctx.globalAlpha = baseAlpha * (0.4 + hpFrac * 0.4 + hit * 0.5);
+    ctx.strokeStyle = hit > 0.2 ? '#ff6060' : `hsl(${270 + pulse * 20}, 70%, ${55 + pulse * 10}%)`;
+    ctx.lineWidth = 1.5 + pulse * 0.8;
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(crackPath[0].x, crackPath[0].y);
+    for (let s = 1; s < crackPath.length; s++) ctx.lineTo(crackPath[s].x, crackPath[s].y);
+    ctx.stroke();
+    ctx.restore();
 
-    // === LAYER 5: Sparks & debris being pulled into the rift ===
-    const sparkChance = 0.4 + hpFrac * 0.3;
-    if (Math.random() < sparkChance) {
-      for (let sp = 0; sp < 2; sp++) {
-        const t = Math.random();
-        const sparkDist = (8 + Math.random() * 15) * (Math.random() < 0.5 ? 1 : -1);
-        const sx = w.x1 + dx * t + nx * sparkDist + (Math.random() - 0.5) * 4;
-        const sy = w.y1 + dy * t + ny * sparkDist + (Math.random() - 0.5) * 4;
-        ctx.globalAlpha = (0.3 + Math.random() * 0.5) * baseAlpha;
-        ctx.fillStyle = ['#d080ff', '#a040dd', '#ff80c0', '#8030aa'][Math.floor(Math.random() * 4)];
-        ctx.beginPath();
-        ctx.arc(sx, sy, 0.5 + Math.random() * 1.5, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    // === LAYER 6: End-point flares — energy bleeds from where the rift terminates ===
-    for (let ep = 0; ep < 2; ep++) {
-      const ex = ep === 0 ? w.x1 : w.x2, ey = ep === 0 ? w.y1 : w.y2;
-      ctx.globalAlpha = baseAlpha * (0.25 + pulse * 0.15);
-      const flareR = 6 + pulse * 4;
-      const flareGrad = ctx.createRadialGradient(ex, ey, 0, ex, ey, flareR);
-      flareGrad.addColorStop(0, w.hitFlash > 0.3 ? 'rgba(255,100,100,0.8)' : 'rgba(180,60,255,0.8)');
-      flareGrad.addColorStop(0.5, w.hitFlash > 0.3 ? 'rgba(255,60,60,0.3)' : 'rgba(120,30,200,0.3)');
-      flareGrad.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = flareGrad;
-      ctx.beginPath();
-      ctx.arc(ex, ey, flareR, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    // === HP pips at midpoint ===
+    // --- HP pips along the crack midpoint ---
     const mx = (w.x1 + w.x2) / 2, my = (w.y1 + w.y2) / 2;
-    ctx.globalAlpha = w.alpha * 0.7;
+    ctx.globalAlpha = w.alpha * 0.8;
+    const pipSpacing = 8;
     for (let h = 0; h < w.maxHp; h++) {
-      const offset = (h - (w.maxHp - 1) / 2) * 7;
-      const along = (dx / wallLen) * offset;
-      const px = mx + nx * 16 + along;
-      const py = my + ny * 16 + (dy / wallLen) * offset;
-      ctx.fillStyle = h < w.hp ? '#b040ff' : '#201030';
-      ctx.beginPath();
-      ctx.arc(px, py, 2.5, 0, Math.PI * 2);
-      ctx.fill();
+      const offset = (h - (w.maxHp - 1) / 2) * pipSpacing;
+      const px = mx + (dx / wallLen) * offset + nx * 12;
+      const py = my + (dy / wallLen) * offset + ny * 12;
       if (h < w.hp) {
-        ctx.globalAlpha = w.alpha * 0.3;
-        ctx.fillStyle = '#d080ff';
+        ctx.fillStyle = hit > 0.2 ? '#ff8080' : '#c070ff';
         ctx.beginPath();
-        ctx.arc(px, py, 4, 0, Math.PI * 2);
+        ctx.arc(px, py, 2.5, 0, Math.PI * 2);
         ctx.fill();
-        ctx.globalAlpha = w.alpha * 0.7;
+      } else {
+        ctx.fillStyle = '#201030';
+        ctx.beginPath();
+        ctx.arc(px, py, 2, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
   }
@@ -3045,11 +3251,11 @@ function renderBridges(ctx) {
 // SECTION 9b: SHADOW BALLS — Dark phantom orbs at 70%+ madness
 // Non-interactive, follow gravity chaotically, can feed black holes
 // ==================================================
-const SHADOW_BALL_MIN_MADNESS = 0.55;  // madness threshold to start spawning (was 0.70)
-const SHADOW_BALL_MAX_COUNT = 400;     // max shadow balls on field (was 40 — 10× more)
-const SHADOW_BALL_SIZE_MIN = 2;        // smallest shadow ball radius (was 3)
-const SHADOW_BALL_SIZE_MAX = 12;       // largest shadow ball radius (was 9)
-const SHADOW_BALL_SPAWN_RATE = 0.03;   // seconds between spawn attempts (was 0.15 — 5× faster)
+const SHADOW_BALL_MIN_MADNESS = 0.55;  // madness threshold to start spawning
+const SHADOW_BALL_MAX_COUNT = 600;     // more numerous — swarm of tiny dark motes
+const SHADOW_BALL_SIZE_MIN = 1.5;      // smaller scale
+const SHADOW_BALL_SIZE_MAX = 6;        // was 12 — much smaller now
+const SHADOW_BALL_SPAWN_RATE = 0.02;   // fast spawning to fill the swarm
 let shadowSpawnTimer = 0;
 
 function createShadowBall() {
@@ -3073,7 +3279,8 @@ function createShadowBall() {
     driftAngle: Math.random() * Math.PI * 2,
     alive: true,
     alpha: 0,   // fade in
-    life: 0
+    life: 0,
+    stretchX: 1, stretchY: 1, stretchAngle: 0  // velocity-based elongation
   };
 }
 
@@ -3155,16 +3362,16 @@ function updateShadowBalls(dt) {
     sb.x += Math.cos(sb.driftAngle) * driftSpeed * dt;
     sb.y += Math.sin(sb.driftAngle) * driftSpeed * dt;
 
-    // Cursor gravity — pulled toward cursor (1.3× normal strength, same reach, 1/d falloff)
+    // Cursor gravity — moderate pull so shadow balls gather near cursor (enables Dark Prism)
     if (G.cursorX > 0 && G.cursorY > 0) {
       const cdx = G.cursorX - sb.x;
       const cdy = G.cursorY - sb.y;
       const cDist = Math.sqrt(cdx * cdx + cdy * cdy) + 1;
-      const cursorReachMult = 5.0 + madness * 7.0;
-      const cursorStrMult = (1.0 + madness * 1.0) * 1.3;
+      const cursorReachMult = 8.0 + madness * 6.0;
+      const cursorStrMult = (0.7 + madness * 0.5);
       const effDist = cDist / cursorReachMult;
-      const pullBase = 700 * madPhys * cursorStrMult;
-      const cursorPull = Math.min(40 * madPhys * cursorStrMult, pullBase / (effDist + 40)) * dt;
+      const pullBase = 350 * madPhys * cursorStrMult;
+      const cursorPull = Math.min(25 * madPhys * cursorStrMult, pullBase / (effDist + 25)) * dt;
       sb.x += (cdx / cDist) * cursorPull;
       sb.y += (cdy / cDist) * cursorPull;
     }
@@ -3194,11 +3401,41 @@ function updateShadowBalls(dt) {
       sb.vy += (pdy / pd) * pushStr;
     }
 
+    // Strong repulsion — shadow balls push hard to stay spread out
+    const repelRange = 80 + sb.radius * 6;
+    let repelChecks = 0;
+    for (let j = Math.max(0, i - 10); j < Math.min(G.shadowBalls.length, i + 10) && repelChecks < 6; j++) {
+      if (j === i) continue;
+      const other = G.shadowBalls[j];
+      if (!other.alive) continue;
+      const cdx = other.x - sb.x, cdy = other.y - sb.y;
+      const cd = Math.sqrt(cdx * cdx + cdy * cdy);
+      if (cd < repelRange && cd > 1) {
+        repelChecks++;
+        const rnx = cdx / cd, rny = cdy / cd;
+        const repelF = (1 - cd / repelRange) * 80 * dt;
+        sb.vx -= rnx * repelF;
+        sb.vy -= rny * repelF;
+      }
+    }
+
     // Apply velocity with strong damping (shadow balls are floaty)
     sb.x += sb.vx * dt;
     sb.y += sb.vy * dt;
     sb.vx *= 0.92;
     sb.vy *= 0.92;
+
+    // Velocity-based stretch — strong elongation in movement direction
+    const sbSpeed = Math.sqrt(sb.vx * sb.vx + sb.vy * sb.vy);
+    const stretchAmt = Math.min(1.8, sbSpeed / 60); // much stronger: up to 180% elongation
+    if (sbSpeed > 3) {
+      sb.stretchAngle = Math.atan2(sb.vy, sb.vx);
+      sb.stretchX = 1 + stretchAmt;
+      sb.stretchY = 1 / (1 + stretchAmt * 0.7); // conserve area roughly
+    } else {
+      sb.stretchX += (1 - sb.stretchX) * 4 * dt; // relax back to circle
+      sb.stretchY += (1 - sb.stretchY) * 4 * dt;
+    }
 
     // --- BLACK HOLE GRAVITY + FEEDING ---
     for (let bhi = 0; bhi < G.blackHoles.length; bhi++) {
@@ -3206,9 +3443,9 @@ function updateShadowBalls(dt) {
       const dx = bh.x - sb.x;
       const dy = bh.y - sb.y;
       const d = Math.sqrt(dx * dx + dy * dy);
-      if (d < bh.gravityRadius * madPhys && d > 3) {
-        // Stronger pull than normal orbs (1.5×) — shadow balls are drawn to darkness
-        const accel = bh.strength * madPhys * 1.5 * dt / Math.max(d, 20);
+      if (d < bh.gravityRadius * madPhys * 1.5 && d > 3) {
+        // Much stronger pull than normal orbs (3×) — shadow balls are deeply drawn to black holes
+        const accel = bh.strength * madPhys * 3.0 * dt / Math.max(d, 20);
         const nx = dx / d, ny = dy / d;
         sb.vx += nx * accel;
         sb.vy += ny * accel;
@@ -3251,8 +3488,8 @@ function updateShadowBalls(dt) {
       const dx = sbh.x - sb.x;
       const dy = sbh.y - sb.y;
       const d = Math.sqrt(dx * dx + dy * dy);
-      if (d < sbh.gravityRadius * madPhys && d > 3) {
-        const pullStr = sbh.strength * madPhys * 1.5 * dt / Math.max(Math.sqrt(d) * 4, 10);
+      if (d < sbh.gravityRadius * madPhys * 1.5 && d > 3) {
+        const pullStr = sbh.strength * madPhys * 3.0 * dt / Math.max(Math.sqrt(d) * 4, 10);
         const nx = dx / d, ny = dy / d;
         sb.vx += nx * pullStr;
         sb.vy += ny * pullStr;
@@ -3301,64 +3538,130 @@ function updateShadowBalls(dt) {
       G.shadowBalls.splice(i, 1);
     }
   }
+
+  // --- HIDDEN MECHANIC: Shadow Ball Prism — detect dense stacking ---
+  // When enough shadow balls cluster tightly, they form a "dark prism" that inverts gravity.
+  // Activation has a 2s cooldown after deactivation to prevent hectic toggling.
+  // Once active, stays on for at least 3s grace period after cluster disperses.
+
+  // Tick cooldown
+  if (G.prismCooldown > 0) G.prismCooldown = Math.max(0, G.prismCooldown - dt);
+
+  let clusterDetected = false;
+  if (G.shadowBalls.length >= 8 && G.prismCooldown <= 0) {
+    const PRISM_RADIUS = 25;
+    const PRISM_THRESHOLD = 7;
+    const step = Math.max(1, Math.floor(G.shadowBalls.length / 30));
+    for (let i = 0; i < G.shadowBalls.length; i += step) {
+      const probe = G.shadowBalls[i];
+      let clusterCount = 0;
+      for (let j = 0; j < G.shadowBalls.length; j++) {
+        if (j === i) continue;
+        const cdx = G.shadowBalls[j].x - probe.x;
+        const cdy = G.shadowBalls[j].y - probe.y;
+        if (cdx * cdx + cdy * cdy < PRISM_RADIUS * PRISM_RADIUS) {
+          clusterCount++;
+          if (clusterCount >= PRISM_THRESHOLD) break;
+        }
+      }
+      if (clusterCount >= PRISM_THRESHOLD) {
+        clusterDetected = true;
+        if (!G.prismClusterActive) {
+          // First trigger — visual burst + shake
+          spawnFloatingText(probe.x, probe.y - 20, 'DARK PRISM', '#c080ff');
+          for (let j = 0; j < G.shadowBalls.length; j++) {
+            const cdx2 = G.shadowBalls[j].x - probe.x;
+            const cdy2 = G.shadowBalls[j].y - probe.y;
+            const cd = Math.sqrt(cdx2 * cdx2 + cdy2 * cdy2) + 1;
+            if (cd < PRISM_RADIUS * 3) {
+              G.shadowBalls[j].vx += (cdx2 / cd) * 120;
+              G.shadowBalls[j].vy += (cdy2 / cd) * 120;
+            }
+          }
+          G.shakeAmount = Math.max(G.shakeAmount, 8);
+        }
+        break;
+      }
+    }
+  }
+
+  // Manage prism state: active while cluster exists, 3s grace after disengage, 2s cooldown after off
+  if (clusterDetected) {
+    G.prismClusterActive = true;
+    G.gravityInvertTimer = 3.0; // 3s grace period while cluster held
+  } else {
+    if (G.prismClusterActive) G.prismClusterActive = false;
+    // Grace period: count down after cluster breaks
+    if (G.gravityInvertTimer > 0) {
+      G.gravityInvertTimer = Math.max(0, G.gravityInvertTimer - dt);
+      // When grace fully expires, start cooldown
+      if (G.gravityInvertTimer <= 0) {
+        G.prismCooldown = 2.0; // 2s cooldown before it can trigger again
+      }
+    }
+  }
+
+  // --- Smooth gravity inversion factor (ease in/out) ---
+  const invertTarget = G.gravityInvertTimer > 0 ? -1 : 1;
+  // Minimum hold time: prevent rapid flip-flopping
+  if (G.gravityInvertSwitchCooldown > 0) {
+    G.gravityInvertSwitchCooldown -= dt;
+  }
+  // Detect state direction change — start cooldown
+  const currentSign = G.gravityInvertFactor >= 0 ? 1 : -1;
+  if (currentSign !== Math.sign(invertTarget) && G.gravityInvertSwitchCooldown <= 0) {
+    G.gravityInvertSwitchCooldown = 1.8;
+  }
+  // Lerp toward target (~0.4-0.5s transition)
+  G.gravityInvertFactor += (invertTarget - G.gravityInvertFactor) * dt * 2.5;
+  G.gravityInvertFactor = Math.max(-1, Math.min(1, G.gravityInvertFactor));
 }
 
 function renderShadowBalls(ctx) {
   if (G.shadowBalls.length === 0) return;
 
   ctx.save();
+
+  // Shadow orbs grow during gravity inversion
+  const sbInvertEffect = Math.max(0, -G.gravityInvertFactor); // 0 normal, 1 fully inverted
   for (let i = 0; i < G.shadowBalls.length; i++) {
     const sb = G.shadowBalls[i];
-    const alpha = sb.alpha * 0.7; // always somewhat translucent
+    const r = sb.radius * (1.0 + 0.3 * sbInvertEffect);
+    const a = sb.alpha * 0.85;
 
-    // Dark core — pure black with slight dark purple edge
-    ctx.globalAlpha = alpha;
-    const grad = ctx.createRadialGradient(sb.x, sb.y, 0, sb.x, sb.y, sb.radius);
-    grad.addColorStop(0, '#000000');
-    grad.addColorStop(0.6, '#050510');
-    grad.addColorStop(1, 'rgba(15, 10, 30, 0)');
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(sb.x, sb.y, sb.radius * 1.4, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Inner solid black circle
-    ctx.globalAlpha = alpha * 0.9;
-    ctx.fillStyle = '#000000';
-    ctx.beginPath();
-    ctx.arc(sb.x, sb.y, sb.radius * 0.8, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Subtle dark shimmer ring — barely visible
-    ctx.globalAlpha = alpha * 0.25;
-    ctx.strokeStyle = '#1a1030';
-    ctx.lineWidth = 0.5;
-    ctx.beginPath();
-    ctx.arc(sb.x, sb.y, sb.radius + Math.sin(sb.life * 3 + sb.phase) * 1.5, 0, Math.PI * 2);
-    ctx.stroke();
-
-    // ABYSS: at high saturation, shadow balls get a faint bioluminescent corona
-    const sbIsAbyss = G.biomeOverride >= 0 && SPECIAL_BIOMES[G.biomeOverride] && SPECIAL_BIOMES[G.biomeOverride].name === 'ABYSS';
-    if (sbIsAbyss) {
-      const sbSat = getAbyssSaturation();
-      if (sbSat > 0.3) {
-        const coronaAlpha = (sbSat - 0.3) * 0.15; // very subtle, max 0.105
-        ctx.globalCompositeOperation = 'lighter';
-        ctx.globalAlpha = alpha * coronaAlpha;
-        const vivid = SPECIAL_BIOMES[G.biomeOverride].vividColors;
-        const coronaColor = vivid[i % vivid.length];
-        const cGrad = ctx.createRadialGradient(sb.x, sb.y, sb.radius * 0.6, sb.x, sb.y, sb.radius * 2);
-        cGrad.addColorStop(0, 'transparent');
-        cGrad.addColorStop(0.5, coronaColor);
-        cGrad.addColorStop(1, 'transparent');
-        ctx.fillStyle = cGrad;
-        ctx.beginPath();
-        ctx.arc(sb.x, sb.y, sb.radius * 2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalCompositeOperation = 'source-over';
+    if (sb.stretchX > 1.05) {
+      ctx.save();
+      ctx.translate(sb.x, sb.y);
+      ctx.rotate(sb.stretchAngle);
+      ctx.scale(sb.stretchX, sb.stretchY);
+      // 1px feathered edge via radial gradient
+      if (r > 2) {
+        const g = ctx.createRadialGradient(0, 0, Math.max(0, r - 1), 0, 0, r + 0.5);
+        g.addColorStop(0, `rgba(0,0,0,${a})`);
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g;
+      } else {
+        ctx.fillStyle = `rgba(0,0,0,${a})`;
       }
+      ctx.beginPath();
+      ctx.arc(0, 0, r + 0.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    } else {
+      if (r > 2) {
+        const g = ctx.createRadialGradient(sb.x, sb.y, Math.max(0, r - 1), sb.x, sb.y, r + 0.5);
+        g.addColorStop(0, `rgba(0,0,0,${a})`);
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g;
+      } else {
+        ctx.fillStyle = `rgba(0,0,0,${a})`;
+      }
+      ctx.beginPath();
+      ctx.arc(sb.x, sb.y, r + 0.5, 0, Math.PI * 2);
+      ctx.fill();
     }
   }
+
   ctx.restore();
 }
 
@@ -4722,22 +5025,42 @@ function renderBlackHole(ctx) {
     }
   } else {
     // === DEFAULT: Black Hole ===
+    // Fire shift: violet → golden/fiery between WT 50-80%
+    const mad = getMadnessAmount();
+    const fireT = mad <= 0.50 ? 0 : Math.min(1, (mad - 0.50) / 0.30);
+    const ft = fireT * fireT; // quadratic ease-in
+    // Lerp helper: blend two hex colors
+    const lerpHex = (a, b, t) => {
+      const ar = parseInt(a.slice(1,3),16), ag = parseInt(a.slice(3,5),16), ab = parseInt(a.slice(5,7),16);
+      const br = parseInt(b.slice(1,3),16), bg = parseInt(b.slice(3,5),16), bb = parseInt(b.slice(5,7),16);
+      const nr = Math.round(ar + (br - ar) * t), ng = Math.round(ag + (bg - ag) * t), nb = Math.round(ab + (bb - ab) * t);
+      return '#' + ((1<<24)|(nr<<16)|(ng<<8)|nb).toString(16).slice(1);
+    };
+
+    // Colors that shift: violet → golden/fiery
+    const fieldCol    = lerpHex('#6030ff', '#ff8020', ft);
+    const innerCol    = lerpHex('#050008', '#0a0400', ft);
+    const edgeCol     = lerpHex('#180030', '#301800', ft);
+    const rimCol      = lerpHex('#7040aa', '#aa7020', ft);
+    const progressCol = lerpHex('#c080ff', '#ffa040', ft);
+    const pulseCol    = lerpHex('#e0a0ff', '#ffcc44', ft);
+
     // Subtle gravity field hint
     ctx.globalAlpha = alpha * 0.025;
     const fieldGrad = ctx.createRadialGradient(bh.x, bh.y, r, bh.x, bh.y, bh.gravityRadius * 0.6);
-    fieldGrad.addColorStop(0, '#6030ff');
+    fieldGrad.addColorStop(0, fieldCol);
     fieldGrad.addColorStop(1, 'transparent');
     ctx.fillStyle = fieldGrad;
     ctx.beginPath();
     ctx.arc(bh.x, bh.y, bh.gravityRadius * 0.6, 0, Math.PI * 2);
     ctx.fill();
 
-    // Event horizon — black center with soft violet edge
+    // Event horizon — black center with shifting edge color
     ctx.globalAlpha = alpha * 0.9;
     const horizonGrad = ctx.createRadialGradient(bh.x, bh.y, 0, bh.x, bh.y, r);
     horizonGrad.addColorStop(0, '#000000');
-    horizonGrad.addColorStop(0.6, '#050008');
-    horizonGrad.addColorStop(0.85, '#180030');
+    horizonGrad.addColorStop(0.6, innerCol);
+    horizonGrad.addColorStop(0.85, edgeCol);
     horizonGrad.addColorStop(1, 'transparent');
     ctx.fillStyle = horizonGrad;
     ctx.beginPath();
@@ -4746,13 +5069,14 @@ function renderBlackHole(ctx) {
 
     // Star dust — tiny particles spiraling inside the event horizon
     if (bh.dust) {
-      const dustColors = ['#ffffff', '#aaccff', '#ffd080', '#c0a0ff'];
+      const dustColorsBase = ['#ffffff', '#aaccff', '#ffd080', '#c0a0ff'];
+      const dustColorsFire = ['#ffffff', '#ffe0a0', '#ffaa30', '#ff8800'];
       for (let s = 0; s < bh.dust.length; s++) {
         const d = bh.dust[s];
         const dx = bh.x + Math.cos(d.angle) * d.dist * r;
         const dy = bh.y + Math.sin(d.angle) * d.dist * r;
         ctx.globalAlpha = alpha * d.dist * 0.8;
-        ctx.fillStyle = dustColors[s % dustColors.length];
+        ctx.fillStyle = lerpHex(dustColorsBase[s % 4], dustColorsFire[s % 4], ft);
         ctx.beginPath();
         ctx.arc(dx, dy, d.size, 0, Math.PI * 2);
         ctx.fill();
@@ -4761,7 +5085,7 @@ function renderBlackHole(ctx) {
 
     // Thin bright edge
     ctx.globalAlpha = alpha * 0.35;
-    ctx.strokeStyle = '#7040aa';
+    ctx.strokeStyle = rimCol;
     ctx.lineWidth = 0.8;
     ctx.beginPath();
     ctx.arc(bh.x, bh.y, r * 0.8, 0, Math.PI * 2);
@@ -4773,14 +5097,14 @@ function renderBlackHole(ctx) {
       const arcStart = -Math.PI / 2; // 12 o'clock
       const arcEnd = arcStart + progress * Math.PI * 2;
       ctx.globalAlpha = alpha * 0.7;
-      ctx.strokeStyle = '#c080ff';
+      ctx.strokeStyle = progressCol;
       ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.arc(bh.x, bh.y, r * 0.9, arcStart, arcEnd);
       ctx.stroke();
       // Dim track behind the progress
       ctx.globalAlpha = alpha * 0.1;
-      ctx.strokeStyle = '#7040aa';
+      ctx.strokeStyle = rimCol;
       ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.arc(bh.x, bh.y, r * 0.9, arcEnd, arcStart + Math.PI * 2);
@@ -4792,7 +5116,7 @@ function renderBlackHole(ctx) {
       const pulseT = bh.pulseTime * 3;
       const pulseAlpha = 0.15 + 0.15 * Math.sin(pulseT);
       ctx.globalAlpha = alpha * pulseAlpha;
-      ctx.strokeStyle = '#e0a0ff';
+      ctx.strokeStyle = pulseCol;
       ctx.lineWidth = 2;
       const pulseR = r * (1.5 + 0.3 * Math.sin(pulseT * 0.7));
       ctx.beginPath();
@@ -4911,12 +5235,33 @@ function renderSuperBlackHole(ctx) {
     }
   } else {
     // === DEFAULT: Supermassive Black Hole ===
+    // Fire shift: violet/red → golden/fiery between WT 50-80%
+    const mad = getMadnessAmount();
+    const fireT = mad <= 0.50 ? 0 : Math.min(1, (mad - 0.50) / 0.30);
+    const ft = fireT * fireT;
+    const lerpHex = (a, b, t) => {
+      const ar = parseInt(a.slice(1,3),16), ag = parseInt(a.slice(3,5),16), ab = parseInt(a.slice(5,7),16);
+      const br = parseInt(b.slice(1,3),16), bg = parseInt(b.slice(3,5),16), bb = parseInt(b.slice(5,7),16);
+      const nr = Math.round(ar + (br - ar) * t), ng = Math.round(ag + (bg - ag) * t), nb = Math.round(ab + (bb - ab) * t);
+      return '#' + ((1<<24)|(nr<<16)|(ng<<8)|nb).toString(16).slice(1);
+    };
+
+    // Colors that shift: red-violet → golden/fiery
+    const distInner  = lerpHex('#ff1040', '#ff8020', ft);
+    const distOuter  = lerpHex('#6020a0', '#aa6010', ft);
+    const ringCol    = lerpHex('#a040ff', '#cc8020', ft);
+    const voidMid1   = lerpHex('#020004', '#040200', ft);
+    const voidMid2   = lerpHex('#0a0015', '#0f0800', ft);
+    const voidEdge   = lerpHex('#200030', '#302000', ft);
+    const edgeCol    = lerpHex('#ff4060', '#ffaa30', ft);
+    const pulseCol   = lerpHex('#ff6080', '#ffcc44', ft);
+
     // Massive gravity distortion field — pulsing, ominous
     const distPulse = 0.7 + 0.3 * Math.sin(sbh.distortionPhase * 2);
     ctx.globalAlpha = alpha * 0.04 * distPulse;
     const distGrad = ctx.createRadialGradient(sbh.x, sbh.y, r * 0.5, sbh.x, sbh.y, sbh.gravityRadius * 0.7);
-    distGrad.addColorStop(0, '#ff1040');
-    distGrad.addColorStop(0.4, '#6020a0');
+    distGrad.addColorStop(0, distInner);
+    distGrad.addColorStop(0.4, distOuter);
     distGrad.addColorStop(1, 'transparent');
     ctx.fillStyle = distGrad;
     ctx.beginPath();
@@ -4925,7 +5270,7 @@ function renderSuperBlackHole(ctx) {
 
     // Distortion rings — concentric pulsing rings
     ctx.globalAlpha = alpha * 0.06;
-    ctx.strokeStyle = '#a040ff';
+    ctx.strokeStyle = ringCol;
     ctx.lineWidth = 1.2;
     for (let ring = 1; ring <= 4; ring++) {
       const ringR = r * (1.5 + ring * 0.8) + Math.sin(sbh.distortionPhase + ring) * r * 0.15;
@@ -4940,21 +5285,23 @@ function renderSuperBlackHole(ctx) {
     ctx.globalAlpha = alpha * 0.95;
     const voidGrad = ctx.createRadialGradient(sbh.x, sbh.y, 0, sbh.x, sbh.y, r);
     voidGrad.addColorStop(0, '#000000');
-    voidGrad.addColorStop(0.4, '#020004');
-    voidGrad.addColorStop(0.7, '#0a0015');
-    voidGrad.addColorStop(0.9, '#200030');
+    voidGrad.addColorStop(0.4, voidMid1);
+    voidGrad.addColorStop(0.7, voidMid2);
+    voidGrad.addColorStop(0.9, voidEdge);
     voidGrad.addColorStop(1, 'transparent');
     ctx.fillStyle = voidGrad;
     ctx.beginPath();
     ctx.arc(sbh.x, sbh.y, r, 0, Math.PI * 2);
     ctx.fill();
 
-    // Inner accretion glow — red/violet ring at the edge of the void
+    // Inner accretion glow — shifts from red/violet to orange/gold
+    const accrInner = ft < 0.5 ? '#ff204080' : '#ff802080';
+    const accrOuter = ft < 0.5 ? '#a030ff40' : '#cc801040';
     ctx.globalAlpha = alpha * 0.25;
     const accrGrad = ctx.createRadialGradient(sbh.x, sbh.y, r * 0.6, sbh.x, sbh.y, r * 1.3);
     accrGrad.addColorStop(0, 'transparent');
-    accrGrad.addColorStop(0.5, '#ff204080');
-    accrGrad.addColorStop(0.8, '#a030ff40');
+    accrGrad.addColorStop(0.5, accrInner);
+    accrGrad.addColorStop(0.8, accrOuter);
     accrGrad.addColorStop(1, 'transparent');
     ctx.fillStyle = accrGrad;
     ctx.beginPath();
@@ -4963,23 +5310,24 @@ function renderSuperBlackHole(ctx) {
 
     // Star dust — larger, more dramatic particles spiraling in
     if (sbh.dust) {
-      const dustColors = ['#ffffff', '#ff8090', '#ffcc60', '#c0a0ff', '#80ddff'];
+      const dustColorsBase = ['#ffffff', '#ff8090', '#ffcc60', '#c0a0ff', '#80ddff'];
+      const dustColorsFire = ['#ffffff', '#ffaa40', '#ffcc30', '#ff8800', '#ffe080'];
       for (let s = 0; s < sbh.dust.length; s++) {
         const d = sbh.dust[s];
         const px = sbh.x + Math.cos(d.angle) * d.dist * r * 1.5;
         const py = sbh.y + Math.sin(d.angle) * d.dist * r * 1.5;
         const pAlpha = alpha * d.dist * 0.7;
         ctx.globalAlpha = pAlpha;
-        ctx.fillStyle = dustColors[d.color % dustColors.length];
+        ctx.fillStyle = lerpHex(dustColorsBase[d.color % 5], dustColorsFire[d.color % 5], ft);
         ctx.beginPath();
         ctx.arc(px, py, d.size, 0, Math.PI * 2);
         ctx.fill();
       }
     }
 
-    // Hot bright edge — red/white glow ring
+    // Hot bright edge
     ctx.globalAlpha = alpha * 0.45;
-    ctx.strokeStyle = '#ff4060';
+    ctx.strokeStyle = edgeCol;
     ctx.lineWidth = 1.5 + Math.sin(sbh.distortionPhase * 1.5) * 0.5;
     ctx.beginPath();
     ctx.arc(sbh.x, sbh.y, r * 0.85, 0, Math.PI * 2);
@@ -4990,7 +5338,7 @@ function renderSuperBlackHole(ctx) {
       const pulseT = sbh.pulseTime * 2.5;
       const pulseAlpha = 0.2 + 0.2 * Math.sin(pulseT);
       ctx.globalAlpha = alpha * pulseAlpha;
-      ctx.strokeStyle = '#ff6080';
+      ctx.strokeStyle = pulseCol;
       ctx.lineWidth = 3;
       const pulseR = r * (1.8 + 0.5 * Math.sin(pulseT * 0.6));
       ctx.beginPath();
@@ -5009,6 +5357,189 @@ function renderSuperBlackHole(ctx) {
   }
 
   ctx.restore();
+}
+
+// ==================================================
+// MINI BLACK HOLES — Gravitational Needles
+// Tiny visual (4-6px), massive gravity (6000), small pull radius (~150px)
+// Objects mostly slingshot past because the target is so small.
+// Spawns 3x less often than supermassives, only at 75%+ madness.
+// ==================================================
+const MINI_BH_SPAWN_MIN = 90;   // seconds (SBH is 30-50, so 3x rarer)
+const MINI_BH_SPAWN_MAX = 150;
+const MINI_BH_STRENGTH = 6000;
+const MINI_BH_GRAV_RADIUS = 150;
+const MINI_BH_VISUAL_RADIUS = 5;
+const MINI_BH_LIFETIME_MIN = 4;
+const MINI_BH_LIFETIME_MAX = 7;
+
+function updateMiniBlackHoles(dt) {
+  if (!G.miniBlackHoles) return;
+  const madness = getMadnessAmount();
+  if (madness < 0.75) return;
+
+  // Spawn logic — max 1 at a time
+  if (G.miniBlackHoles.length < 1) {
+    G.miniBlackHoleTimer += dt;
+    const interval = MINI_BH_SPAWN_MIN + Math.random() * (MINI_BH_SPAWN_MAX - MINI_BH_SPAWN_MIN);
+    if (G.miniBlackHoleTimer >= interval) {
+      G.miniBlackHoleTimer = 0;
+      const margin = 60;
+      const gw = G.gameW || G.W, gh = G.gameH || G.H;
+      const gL = G.gameLeft || 0, gT = G.gameTop || 0;
+      const mbh = {
+        x: gL + margin + Math.random() * (gw - margin * 2),
+        y: gT + margin + Math.random() * (gh - margin * 2),
+        radius: MINI_BH_VISUAL_RADIUS,
+        gravityRadius: MINI_BH_GRAV_RADIUS,
+        strength: MINI_BH_STRENGTH,
+        life: MINI_BH_LIFETIME_MIN + Math.random() * (MINI_BH_LIFETIME_MAX - MINI_BH_LIFETIME_MIN),
+        maxLife: 0,
+        fadeIn: 0,
+        phase: Math.random() * Math.PI * 2,
+        dust: []
+      };
+      mbh.maxLife = mbh.life;
+      // Small dust ring
+      for (let di = 0; di < 8; di++) {
+        mbh.dust.push({
+          angle: Math.random() * Math.PI * 2,
+          dist: 0.3 + Math.random() * 0.5,
+          size: 0.3 + Math.random() * 0.6,
+          speed: 0.8 + Math.random() * 1.5
+        });
+      }
+      G.miniBlackHoles.push(mbh);
+      spawnFloatingText(mbh.x, mbh.y - 20, 'GRAVITATIONAL NEEDLE', '#60e0ff', 1.5, { fontSize: 11 });
+    }
+  }
+
+  if (G.miniBlackHoles.length === 0) return;
+
+  const phys = getMadnessPhysicsScale();
+
+  for (let mi = G.miniBlackHoles.length - 1; mi >= 0; mi--) {
+    const mbh = G.miniBlackHoles[mi];
+    mbh.phase += dt * 3.0; // fast spin
+
+    // Dust update
+    for (let di = 0; di < mbh.dust.length; di++) {
+      const d = mbh.dust[di];
+      d.angle += d.speed * dt * 5;
+      d.dist -= dt * 0.3;
+      if (d.dist < 0.05) {
+        d.dist = 0.5 + Math.random() * 0.3;
+        d.angle = Math.random() * Math.PI * 2;
+      }
+    }
+
+    if (mbh.fadeIn < 1) mbh.fadeIn = Math.min(1, mbh.fadeIn + dt / 0.6);
+
+    mbh.life -= dt;
+    if (mbh.life <= 0) {
+      G.miniBlackHoles.splice(mi, 1);
+      continue;
+    }
+
+    const fadeOut = mbh.life < 1.0 ? mbh.life : 1;
+    const fadeMult = mbh.fadeIn * fadeOut;
+
+    // Gravity pull on orbs — very strong but tiny swallow zone (objects fly past)
+    for (let i = 0; i < G.circles.length; i++) {
+      const c = G.circles[i];
+      if (c.popped || !c.alive) continue;
+      const dx = mbh.x - c.x;
+      const dy = mbh.y - c.y;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d > mbh.gravityRadius * phys || d < 2) continue;
+
+      // 1/d falloff (not 1/d²) for strong close pull, still felt at range
+      const accel = mbh.strength * phys * fadeMult * dt / Math.max(d, 8);
+      const nx = dx / d;
+      const ny = dy / d;
+      c.vx += nx * accel;
+      c.vy += ny * accel;
+      // Strong tangential spin — makes orbits more visible
+      const tangent = accel * 0.7;
+      c.vx += (-ny) * tangent;
+      c.vy += (nx) * tangent;
+
+      // Swallow only if orb somehow hits dead center (very unlikely at high speed)
+      if (d < 3) {
+        c.alive = false;
+        c.popped = true;
+        spawnPopParticles(c.x, c.y, c.color);
+      }
+    }
+  }
+}
+
+function renderMiniBlackHoles(ctx) {
+  if (!G.miniBlackHoles || G.miniBlackHoles.length === 0) return;
+  for (let mi = 0; mi < G.miniBlackHoles.length; mi++) {
+    const mbh = G.miniBlackHoles[mi];
+    const fadeOut = mbh.life < 1.0 ? mbh.life : 1;
+    const alpha = mbh.fadeIn * fadeOut;
+    const r = mbh.radius;
+
+    ctx.save();
+
+    // Gravity distortion ring — faint pulsing circle showing pull range
+    const pulseR = mbh.gravityRadius * (0.8 + 0.2 * Math.sin(mbh.phase * 2));
+    ctx.globalAlpha = alpha * 0.04;
+    ctx.strokeStyle = '#60e0ff';
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    ctx.arc(mbh.x, mbh.y, pulseR, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Bright accretion ring — very small, fast spinning
+    ctx.globalAlpha = alpha * 0.3;
+    ctx.strokeStyle = '#80d0ff';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    const ringR = r * 3;
+    const segments = 4;
+    for (let s = 0; s < segments; s++) {
+      const a = mbh.phase * 2 + (s / segments) * Math.PI * 2;
+      ctx.arc(mbh.x, mbh.y, ringR, a, a + Math.PI * 0.35);
+      ctx.moveTo(mbh.x + Math.cos(a + Math.PI * 0.5) * ringR, mbh.y + Math.sin(a + Math.PI * 0.5) * ringR);
+    }
+    ctx.stroke();
+
+    // Dust particles — fast spinning dots
+    for (let di = 0; di < mbh.dust.length; di++) {
+      const d = mbh.dust[di];
+      const px = mbh.x + Math.cos(d.angle) * d.dist * r * 4;
+      const py = mbh.y + Math.sin(d.angle) * d.dist * r * 4;
+      ctx.globalAlpha = alpha * d.dist * 0.5;
+      ctx.fillStyle = '#a0e8ff';
+      ctx.beginPath();
+      ctx.arc(px, py, d.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Core — intense bright point
+    ctx.globalAlpha = alpha * 0.9;
+    const coreGrad = ctx.createRadialGradient(mbh.x, mbh.y, 0, mbh.x, mbh.y, r);
+    coreGrad.addColorStop(0, '#ffffff');
+    coreGrad.addColorStop(0.4, '#80d0ff');
+    coreGrad.addColorStop(0.8, '#2060a0');
+    coreGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = coreGrad;
+    ctx.beginPath();
+    ctx.arc(mbh.x, mbh.y, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Bright center dot
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(mbh.x, mbh.y, r * 0.3, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  }
 }
 
 function updateChainLinks(dt) {
@@ -5388,6 +5919,210 @@ function playBossDeathSound() {
   hi.stop(now + 0.9);
 }
 
+// --- Wormhole: B1 Level Ending at Peak Madness ---
+// After enough boss kills at near-max madness, a wormhole tears open and consumes the field.
+function trySpawnWormhole() {
+  if (G.wormhole) return;
+  if (G.biomeOverride !== -1) return;        // B1 only (not ABYSS, not TESTLEVEL)
+  if (G.bossKillCount < 4) return;           // need 2 full boss cycles (4 kills)
+  if (getMadnessAmount() < 0.95) return;     // near-peak madness
+  if (G.boss) return;                         // not during a boss fight
+
+  const gcx = ((G.gameLeft || 0) + (G.gameRight || G.W)) * 0.5;
+  const gcy = ((G.gameTop || 0) + (G.gameBottom || G.H)) * 0.5;
+
+  G.wormhole = {
+    x: gcx, y: gcy,
+    radius: 0,
+    maxRadius: 120,
+    phase: 0,
+    timer: 0,
+    growDuration: 4.0,
+    consumeTimer: 0,
+    consumeTimeout: 12.0,
+    particles: [],
+    orbsConsumed: 0,
+    active: false,
+    completed: false
+  };
+  for (let i = 0; i < 40; i++) {
+    G.wormhole.particles.push({
+      angle: Math.random() * Math.PI * 2,
+      dist: 0.3 + Math.random() * 1.0,
+      speed: 1.5 + Math.random() * 2.5,
+      size: 1 + Math.random() * 2,
+      alpha: 0.3 + Math.random() * 0.5
+    });
+  }
+  spawnFloatingText(gcx, gcy - 40, 'THE MEMBRANE TEARS', '#d060ff', 3.0, { fontSize: 16 });
+  G.shakeAmount = Math.max(G.shakeAmount, 12);
+}
+
+function updateWormhole(dt) {
+  if (!G.wormhole) return;
+  const w = G.wormhole;
+  w.timer += dt;
+  w.phase += dt * 2.5;
+
+  // Growth phase (ease-in quadratic)
+  if (w.timer < w.growDuration) {
+    const t = w.timer / w.growDuration;
+    w.radius = w.maxRadius * t * t;
+    // Gentle gravity preview during growth
+    for (let i = 0; i < G.circles.length; i++) {
+      const c = G.circles[i];
+      if (!c.alive || c.popped) continue;
+      const dx = w.x - c.x, dy = w.y - c.y;
+      const d = Math.sqrt(dx * dx + dy * dy) + 1;
+      const pullStr = 30 * t * (1 / Math.sqrt(d / 50 + 1)) * dt;
+      c.x += (dx / d) * pullStr;
+      c.y += (dy / d) * pullStr;
+    }
+    // Update particles
+    for (let p of w.particles) {
+      p.angle += p.speed * dt;
+    }
+    return;
+  }
+
+  w.active = true;
+  w.consumeTimer += dt;
+
+  // Strong gravity well — pull intensifies over time
+  const pullMult = Math.min(3, w.consumeTimer / 3);
+  for (let i = 0; i < G.circles.length; i++) {
+    const c = G.circles[i];
+    if (!c.alive || c.popped) continue;
+    const dx = w.x - c.x, dy = w.y - c.y;
+    const d = Math.sqrt(dx * dx + dy * dy) + 1;
+    const pullStr = 200 * pullMult * (1 / Math.sqrt(d / 30 + 1)) * dt;
+    c.x += (dx / d) * pullStr;
+    c.y += (dy / d) * pullStr;
+    // Consume orbs near center
+    if (d < w.radius * 0.4) {
+      c.alive = false;
+      c.popped = true;
+      w.orbsConsumed++;
+      spawnPopParticles(c.x, c.y, c.color);
+    }
+  }
+
+  // Also suck in shadow balls
+  if (G.shadowBalls) {
+    for (let i = G.shadowBalls.length - 1; i >= 0; i--) {
+      const sb = G.shadowBalls[i];
+      const dx = w.x - sb.x, dy = w.y - sb.y;
+      const d = Math.sqrt(dx * dx + dy * dy) + 1;
+      sb.x += (dx / d) * 150 * pullMult * dt;
+      sb.y += (dy / d) * 150 * pullMult * dt;
+      if (d < w.radius * 0.5) G.shadowBalls.splice(i, 1);
+    }
+  }
+
+  // Update particles (spiral inward)
+  for (let p of w.particles) {
+    p.angle += p.speed * dt;
+    p.dist = Math.max(0.05, p.dist - dt * 0.12);
+    if (p.dist < 0.1) {
+      p.dist = 0.5 + Math.random() * 0.5;
+      p.angle = Math.random() * Math.PI * 2;
+    }
+  }
+
+  // Screen shake during consumption
+  G.shakeAmount = Math.max(G.shakeAmount, 3 + pullMult * 2);
+
+  // Check completion
+  let aliveCount = 0;
+  for (let i = 0; i < G.circles.length; i++) {
+    if (G.circles[i].alive && !G.circles[i].popped) aliveCount++;
+  }
+  if ((aliveCount === 0 || w.consumeTimer >= w.consumeTimeout) && !w.completed) {
+    w.completed = true;
+    G.shakeAmount = Math.max(G.shakeAmount, 18);
+    spawnFloatingText(w.x, w.y, 'REALITY CONSUMED', '#ffffff', 2.5, { fontSize: 18 });
+    // Delayed biome advance for dramatic effect
+    setTimeout(() => {
+      G.wormhole = null;
+      advanceBiome();
+      spawnInitialCircles();
+    }, 1500);
+  }
+}
+
+function renderWormhole(ctx) {
+  if (!G.wormhole) return;
+  const w = G.wormhole;
+  const progress = Math.min(1, w.timer / w.growDuration);
+  ctx.save();
+
+  // Outer distortion ring
+  ctx.globalAlpha = 0.35 * progress;
+  ctx.strokeStyle = '#a040ff';
+  ctx.lineWidth = 3 + Math.sin(w.phase) * 1.5;
+  ctx.beginPath();
+  ctx.arc(w.x, w.y, w.radius * 1.3, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Second ring (wider, fainter)
+  ctx.globalAlpha = 0.12 * progress;
+  ctx.strokeStyle = '#6020c0';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(w.x, w.y, w.radius * 1.7 + Math.sin(w.phase * 1.3) * 8, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Dark center void
+  ctx.globalAlpha = 0.92 * progress;
+  const voidGrad = ctx.createRadialGradient(w.x, w.y, 0, w.x, w.y, w.radius);
+  voidGrad.addColorStop(0, 'rgba(0,0,0,1)');
+  voidGrad.addColorStop(0.4, 'rgba(10,0,30,0.9)');
+  voidGrad.addColorStop(0.7, 'rgba(60,15,120,0.4)');
+  voidGrad.addColorStop(0.9, 'rgba(100,30,180,0.15)');
+  voidGrad.addColorStop(1, 'rgba(140,50,220,0)');
+  ctx.fillStyle = voidGrad;
+  ctx.beginPath();
+  ctx.arc(w.x, w.y, w.radius, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Swirling particles
+  for (let p of w.particles) {
+    const px = w.x + Math.cos(p.angle) * w.radius * p.dist;
+    const py = w.y + Math.sin(p.angle) * w.radius * p.dist;
+    ctx.globalAlpha = p.alpha * progress * (0.5 + 0.5 * Math.sin(w.phase + p.angle));
+    ctx.fillStyle = p.dist > 0.6 ? '#c080ff' : '#ffffff';
+    ctx.beginPath();
+    ctx.arc(px, py, p.size * progress, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Inner accretion ring (visible once active)
+  if (w.active) {
+    ctx.globalAlpha = 0.25 + Math.sin(w.phase * 2) * 0.1;
+    ctx.strokeStyle = '#e0a0ff';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(w.x, w.y, w.radius * 0.3, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Spinning radial streaks
+    ctx.globalAlpha = 0.15;
+    for (let s = 0; s < 6; s++) {
+      const a = w.phase * 1.5 + (s / 6) * Math.PI * 2;
+      const innerR = w.radius * 0.2;
+      const outerR = w.radius * 0.85;
+      ctx.strokeStyle = s % 2 === 0 ? '#d080ff' : '#8040c0';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(w.x + Math.cos(a) * innerR, w.y + Math.sin(a) * innerR);
+      ctx.lineTo(w.x + Math.cos(a + 0.15) * outerR, w.y + Math.sin(a + 0.15) * outerR);
+      ctx.stroke();
+    }
+  }
+
+  ctx.restore();
+}
+
 // --- Boss Spawning (madness-gated) ---
 // Phase 1: spawns at ~50% madness (half-madness) — normal boss
 // Phase 2: spawns at ~90% madness (peak) — erratic, bizarre variant
@@ -5400,7 +6135,7 @@ function trySpawnBoss(dt) {
   // Determine which boss phase we're in
   // bossSpawnPhase: 0=waiting for first, 1=killed first waiting for peak, 2=both killed → cycle
   const phase = G.bossKillCount % 2; // 0=next is mid-madness, 1=next is peak-madness
-  const madnessThreshold = phase === 0 ? 0.15 : 0.65;
+  const madnessThreshold = phase === 0 ? 0.35 : 0.75;
 
   if (madness < madnessThreshold) return;
 
@@ -5427,16 +6162,19 @@ function trySpawnBoss(dt) {
   else { sx = bL - 60; sy = bT + Math.random() * (bB - bT); }
 
   // Generate eye phases — peak boss has MORE eyes, erratic blink
-  const baseEyeCount = bossType === 'nexus' ? (6 + Math.floor(Math.random() * 5)) : 2;
-  const eyeCount = isPeakBoss ? baseEyeCount + 6 : baseEyeCount;
+  const baseEyeCount = bossType === 'nexus' ? (12 + Math.floor(Math.random() * 8)) : 2;
+  const eyeCount = isPeakBoss ? baseEyeCount + 10 : baseEyeCount;
   const eyePhases = [];
   for (let i = 0; i < eyeCount; i++) {
     eyePhases.push({
-      angle: (i / eyeCount) * Math.PI * 2 + Math.random() * 0.5,
-      dist: isPeakBoss ? (0.2 + Math.random() * 0.5) : (0.3 + Math.random() * 0.35),
-      size: isPeakBoss ? (0.08 + Math.random() * 0.15) : (0.12 + Math.random() * 0.08),
+      angle: (i / eyeCount) * Math.PI * 2 + Math.random() * 0.8,
+      dist: isPeakBoss ? (0.1 + Math.random() * 0.55) : (0.1 + Math.random() * 0.5),
+      size: isPeakBoss ? (0.06 + Math.random() * 0.12) : (0.07 + Math.random() * 0.09),
       blinkPhase: Math.random() * 10,
-      blinkSpeed: isPeakBoss ? (1.5 + Math.random() * 3.0) : (0.8 + Math.random() * 0.6)
+      blinkSpeed: isPeakBoss ? (1.5 + Math.random() * 3.0) : (0.8 + Math.random() * 0.6),
+      reflectAngle: Math.random() * Math.PI * 2,
+      eyeVariant: Math.floor(Math.random() * 4), // 0-3: four distinct eye styles
+      mouthVariant: Math.floor(Math.random() * 4) // 0-3: four distinct mouth styles (used when erratic)
     });
   }
 
@@ -5994,6 +6732,13 @@ function damageBoss(explosionX, explosionY, blastRadius, orbRadius) {
 
   if (dmg <= 0) return; // too small to hurt boss
 
+  // Void amplification: as WT rises, explosions carry void energy that hurts bosses more
+  // Scales from +0% at 0% WT to +75% at 100% WT
+  const voidMadness = getMadnessAmount();
+  if (voidMadness > 0) {
+    dmg = Math.ceil(dmg * (1 + voidMadness * 0.75));
+  }
+
   // Leviathan bloat: 3× damage during bloated state!
   let bloatBurst = false;
   if (b.type === 'leviathan' && b.bloatState === 'bloated') {
@@ -6129,12 +6874,12 @@ function renderNexusBoss(ctx, b) {
     ctx.globalAlpha = (ctx.globalAlpha || 1) * (1 - b.hitFlash * 0.3);
   }
 
-  // Layer 0: Ominous aura
-  ctx.globalAlpha = (ctx.globalAlpha || 1) * 0.15;
+  // Layer 0: Ominous aura — dark, subtle
+  ctx.globalAlpha = (ctx.globalAlpha || 1) * 0.12;
   const auraR = r * 2.5;
   const auraGrad = ctx.createRadialGradient(b.x, b.y, r * 0.5, b.x, b.y, auraR);
-  auraGrad.addColorStop(0, '#6020a0');
-  auraGrad.addColorStop(0.5, '#300060');
+  auraGrad.addColorStop(0, '#200040');
+  auraGrad.addColorStop(0.5, '#0a0018');
   auraGrad.addColorStop(1, 'transparent');
   ctx.fillStyle = auraGrad;
   ctx.beginPath();
@@ -6142,66 +6887,634 @@ function renderNexusBoss(ctx, b) {
   ctx.fill();
   ctx.globalAlpha = b.hitFlash > 0 ? (1 - b.hitFlash * 0.3) : 1;
 
-  // Layer 1: Central mass — blobby polygon
-  const bodyPts = 16;
-  ctx.fillStyle = b.hitFlash > 0.5 ? '#ffffff' : '#1a0830';
-  const bodyGrad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, r);
-  bodyGrad.addColorStop(0, b.hitFlash > 0.5 ? '#ffffff' : '#2a0840');
-  bodyGrad.addColorStop(0.6, '#180030');
-  bodyGrad.addColorStop(1, '#0a0015');
-  ctx.fillStyle = bodyGrad;
-  ctx.beginPath();
-  for (let p = 0; p <= bodyPts; p++) {
+  // Layer 1: Central mass — pure black, smooth wobbly tentacle edges
+  const bodyPts = 24;
+  // Build smooth control points with tentacle-like protrusions
+  const bodyPoints = [];
+  for (let p = 0; p < bodyPts; p++) {
     const angle = (p / bodyPts) * Math.PI * 2;
-    const wobble = Math.sin(angle * 3 + b.phase * 1.5) * 0.08 +
-                   Math.sin(angle * 5 + b.phase * 0.7) * 0.05;
-    const pr = r * (0.85 + wobble);
-    const px = b.x + Math.cos(angle) * pr;
-    const py = b.y + Math.sin(angle) * pr;
-    if (p === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    // Layered wobble: slow organic + tentacle bulges
+    const wobble = Math.sin(angle * 3 + b.phase * 1.2) * 0.10 +
+                   Math.sin(angle * 5 + b.phase * 0.6) * 0.06 +
+                   Math.sin(angle * 2 - b.phase * 0.9) * 0.12;
+    // Every ~4th point extends further for tentacle-like protrusions
+    const tentacle = (Math.sin(angle * 3.5 + b.phase * 0.4) > 0.5) ? 0.12 : 0;
+    const pr = r * (0.82 + wobble + tentacle);
+    bodyPoints.push({
+      x: b.x + Math.cos(angle) * pr,
+      y: b.y + Math.sin(angle) * pr
+    });
+  }
+  // Draw smooth closed bezier curve through the points
+  ctx.fillStyle = b.hitFlash > 0.5 ? '#ffffff' : '#010002';
+  ctx.beginPath();
+  ctx.moveTo(
+    (bodyPoints[bodyPts - 1].x + bodyPoints[0].x) / 2,
+    (bodyPoints[bodyPts - 1].y + bodyPoints[0].y) / 2
+  );
+  for (let p = 0; p < bodyPts; p++) {
+    const curr = bodyPoints[p];
+    const next = bodyPoints[(p + 1) % bodyPts];
+    const mx = (curr.x + next.x) / 2;
+    const my = (curr.y + next.y) / 2;
+    ctx.quadraticCurveTo(curr.x, curr.y, mx, my);
   }
   ctx.closePath();
   ctx.fill();
 
-  // Layer 2: Eyes
-  for (let e = 0; e < b.eyePhases.length; e++) {
-    const eye = b.eyePhases[e];
-    const eAngle = eye.angle + b.phase * 0.1;
-    const ex = b.x + Math.cos(eAngle) * r * eye.dist;
-    const ey = b.y + Math.sin(eAngle) * r * eye.dist;
-    const eR = r * eye.size;
-
-    // Blink
-    const blink = Math.sin(b.phase * eye.blinkSpeed + eye.blinkPhase);
-    if (blink < -0.85) continue; // fully closed
-
-    const openness = blink < -0.5 ? (blink + 0.85) / 0.35 : 1;
-
-    // Sclera
-    ctx.fillStyle = '#e8ddd0';
-    ctx.globalAlpha = (b.hitFlash > 0.5 ? 0.3 : 0.9) * openness;
+  // Layer 1b: Sparkling star effects inside body
+  ctx.save();
+  ctx.clip(); // clip to body shape
+  if (!b._stars) {
+    b._stars = [];
+    for (let s = 0; s < 30; s++) {
+      b._stars.push({
+        ox: (Math.random() - 0.5) * 1.4, oy: (Math.random() - 0.5) * 1.4,
+        size: 0.5 + Math.random() * 1.5,
+        twinkleSpeed: 1.5 + Math.random() * 3,
+        twinklePhase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+  for (let s = 0; s < b._stars.length; s++) {
+    const star = b._stars[s];
+    const sx = b.x + star.ox * r * 0.65;
+    const sy = b.y + star.oy * r * 0.65;
+    const twinkle = 0.3 + 0.7 * Math.max(0, Math.sin(b.phase * star.twinkleSpeed + star.twinklePhase));
+    ctx.globalAlpha = twinkle * 0.7;
+    ctx.fillStyle = '#ffffff';
     ctx.beginPath();
-    ctx.ellipse(ex, ey, eR, eR * openness, 0, 0, Math.PI * 2);
+    ctx.arc(sx, sy, star.size, 0, Math.PI * 2);
     ctx.fill();
+    // Tiny glow around brighter stars
+    if (twinkle > 0.7 && star.size > 1) {
+      ctx.globalAlpha = (twinkle - 0.7) * 0.4;
+      ctx.beginPath();
+      ctx.arc(sx, sy, star.size * 2.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  ctx.restore();
+  ctx.globalAlpha = b.hitFlash > 0 ? (1 - b.hitFlash * 0.3) : 1;
 
-    // Iris — looks toward cursor
-    const lookDx = G.cursorX - ex, lookDy = G.cursorY - ey;
-    const lookD = Math.sqrt(lookDx * lookDx + lookDy * lookDy) + 1;
-    const lookStr = eR * 0.3;
-    const irisX = ex + (lookDx / lookD) * lookStr;
-    const irisY = ey + (lookDy / lookD) * lookStr * openness;
-    const irisR = eR * 0.5;
-    ctx.fillStyle = '#8b6914';
-    ctx.globalAlpha = 0.95 * openness;
-    ctx.beginPath();
-    ctx.arc(irisX, irisY, irisR, 0, Math.PI * 2);
-    ctx.fill();
+  // Layer 2: Features — eyes (regular) or mouths (peak/erratic boss)
+  if (b.erratic) {
+    // === PEAK BOSS: Mass of hungry mouths — 4 vector variants ===
+    for (let e = 0; e < b.eyePhases.length; e++) {
+      const m = b.eyePhases[e];
+      const mAngle = m.angle + b.phase * 0.08;
+      const mx = b.x + Math.cos(mAngle) * r * m.dist;
+      const my = b.y + Math.sin(mAngle) * r * m.dist;
+      const mR = r * m.size * 1.3; // mouths larger than eyes
+      const mv = m.mouthVariant || 0;
 
-    // Pupil
-    ctx.fillStyle = '#000000';
-    ctx.beginPath();
-    ctx.arc(irisX, irisY, irisR * 0.45, 0, Math.PI * 2);
-    ctx.fill();
+      // Chewing/open cycle
+      const chew = Math.sin(b.phase * m.blinkSpeed + m.blinkPhase);
+      const openAmt = 0.3 + 0.7 * Math.max(0, chew);
+      const faceAngle = Math.atan2(my - b.y, mx - b.x) + Math.sin(b.phase * 0.5 + m.blinkPhase) * 0.3;
+      const baseAlpha = b.hitFlash > 0.5 ? 0.4 : 0.95;
+
+      ctx.save();
+      ctx.translate(mx, my);
+      ctx.rotate(faceAngle);
+
+      if (mv === 0) {
+        // --- M0: FANGED — Elongated predatory jaw, prominent canines ---
+        // Outer lip shape — elongated horizontal ellipse
+        ctx.globalAlpha = baseAlpha;
+        ctx.fillStyle = '#1a0510';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, mR * 1.15, mR * 0.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Lip contour strokes — double line for fleshy look
+        ctx.strokeStyle = '#3a0818';
+        ctx.lineWidth = 1.2;
+        ctx.globalAlpha = 0.7;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, mR * 1.12, mR * 0.48, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.strokeStyle = '#5a1028';
+        ctx.lineWidth = 0.5;
+        ctx.globalAlpha = 0.4;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, mR * 1.05, mR * 0.42, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        // Inner throat void
+        const innerH = mR * 0.35 * openAmt;
+        ctx.fillStyle = '#0a0002';
+        ctx.globalAlpha = 0.95;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, mR * 0.85, innerH, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Teeth — 4 large fangs (canines) + smaller teeth between
+        if (openAmt > 0.3) {
+          const ta = Math.min(1, (openAmt - 0.3) / 0.25);
+          ctx.globalAlpha = 0.92 * ta;
+          // Four prominent canines
+          const fangH = mR * 0.38 * openAmt;
+          const fangW = mR * 0.07;
+          const fangPositions = [-0.7, -0.25, 0.25, 0.7]; // x positions as fraction of mR
+          for (let f = 0; f < 4; f++) {
+            const fx = fangPositions[f] * mR;
+            const isOuter = f === 0 || f === 3;
+            const fH = isOuter ? fangH * 0.85 : fangH;
+            const fW = isOuter ? fangW * 0.8 : fangW;
+            // Top fang (pointing down) — curved shape
+            ctx.fillStyle = '#e8ddd0';
+            ctx.beginPath();
+            ctx.moveTo(fx - fW, -innerH * 0.7);
+            ctx.quadraticCurveTo(fx - fW * 0.3, -innerH * 0.7 + fH * 0.6, fx, -innerH * 0.7 + fH);
+            ctx.quadraticCurveTo(fx + fW * 0.3, -innerH * 0.7 + fH * 0.6, fx + fW, -innerH * 0.7);
+            ctx.fill();
+            // Fang edge highlight
+            ctx.strokeStyle = '#c0b8a8';
+            ctx.lineWidth = 0.4;
+            ctx.beginPath();
+            ctx.moveTo(fx - fW * 0.5, -innerH * 0.7);
+            ctx.quadraticCurveTo(fx, -innerH * 0.7 + fH * 0.7, fx + fW * 0.2, -innerH * 0.7 + fH * 0.3);
+            ctx.stroke();
+            // Bottom fang (pointing up) — shorter
+            ctx.fillStyle = '#ddd5c8';
+            ctx.beginPath();
+            ctx.moveTo(fx - fW * 0.8, innerH * 0.7);
+            ctx.quadraticCurveTo(fx, innerH * 0.7 - fH * 0.65, fx + fW * 0.8, innerH * 0.7);
+            ctx.fill();
+          }
+          // Small teeth between fangs
+          ctx.fillStyle = '#d0c8c0';
+          ctx.globalAlpha = 0.7 * ta;
+          for (let t = 0; t < 7; t++) {
+            const tx = -mR * 0.55 + (t / 6) * mR * 1.1;
+            const tH = mR * 0.08 * (0.6 + 0.4 * Math.sin(t * 3.1 + m.blinkPhase));
+            ctx.beginPath();
+            ctx.moveTo(tx - mR * 0.025, -innerH * 0.65);
+            ctx.lineTo(tx, -innerH * 0.65 + tH);
+            ctx.lineTo(tx + mR * 0.025, -innerH * 0.65);
+            ctx.fill();
+          }
+        }
+        // Wet gleam along upper lip
+        ctx.globalAlpha = 0.3;
+        ctx.strokeStyle = '#cc6060';
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();
+        ctx.ellipse(0, -mR * 0.22, mR * 0.5, mR * 0.06, 0, Math.PI * 0.8, Math.PI * 0.2, true);
+        ctx.stroke();
+
+      } else if (mv === 1) {
+        // --- M1: SCREAMER — Wide circular gaping maw, drool strands ---
+        // Wide circular outer shape
+        ctx.globalAlpha = baseAlpha;
+        ctx.fillStyle = '#180510';
+        ctx.beginPath();
+        ctx.arc(0, 0, mR * 0.95, 0, Math.PI * 2);
+        ctx.fill();
+        // Lip ring — thick fleshy stroke
+        ctx.strokeStyle = '#3a0a18';
+        ctx.lineWidth = 2.0;
+        ctx.globalAlpha = 0.8;
+        ctx.beginPath();
+        ctx.arc(0, 0, mR * 0.9, 0, Math.PI * 2);
+        ctx.stroke();
+        // Inner ring detail
+        ctx.strokeStyle = '#50122a';
+        ctx.lineWidth = 0.8;
+        ctx.globalAlpha = 0.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, mR * 0.82, 0, Math.PI * 2);
+        ctx.stroke();
+        // Throat abyss — dark void with ridged palate
+        const throatR = mR * 0.7 * openAmt;
+        ctx.fillStyle = '#050001';
+        ctx.globalAlpha = 0.95;
+        ctx.beginPath();
+        ctx.arc(0, 0, throatR, 0, Math.PI * 2);
+        ctx.fill();
+        // Palate ridges (horizontal lines across throat)
+        ctx.strokeStyle = '#2a0008';
+        ctx.lineWidth = 0.6;
+        ctx.globalAlpha = 0.4 * openAmt;
+        for (let pr = 0; pr < 5; pr++) {
+          const py = -throatR * 0.6 + (pr / 4) * throatR * 0.8;
+          const pw = Math.sqrt(Math.max(0, throatR * throatR - py * py)) * 0.7;
+          ctx.beginPath();
+          ctx.moveTo(-pw, py);
+          ctx.quadraticCurveTo(0, py + throatR * 0.05, pw, py);
+          ctx.stroke();
+        }
+        // Scattered irregular teeth around the rim
+        if (openAmt > 0.35) {
+          const ta = Math.min(1, (openAmt - 0.35) / 0.2);
+          ctx.fillStyle = '#e0d8d0';
+          ctx.globalAlpha = 0.85 * ta;
+          const teethN = 10 + Math.floor(mR / 2);
+          for (let t = 0; t < teethN; t++) {
+            const tAngle = (t / teethN) * Math.PI * 2 + m.blinkPhase * 0.3;
+            const tLen = mR * (0.12 + 0.08 * Math.sin(t * 2.7 + m.blinkPhase));
+            const tW = mR * 0.04;
+            const tBase = mR * 0.78;
+            ctx.beginPath();
+            ctx.moveTo(Math.cos(tAngle) * tBase + Math.cos(tAngle + 1.57) * tW,
+                       Math.sin(tAngle) * tBase + Math.sin(tAngle + 1.57) * tW);
+            ctx.lineTo(Math.cos(tAngle) * (tBase - tLen * openAmt),
+                       Math.sin(tAngle) * (tBase - tLen * openAmt));
+            ctx.lineTo(Math.cos(tAngle) * tBase - Math.cos(tAngle + 1.57) * tW,
+                       Math.sin(tAngle) * tBase - Math.sin(tAngle + 1.57) * tW);
+            ctx.fill();
+          }
+        }
+        // Drool strands — thin lines hanging from top teeth
+        ctx.strokeStyle = '#886068';
+        ctx.lineWidth = 0.5;
+        ctx.globalAlpha = 0.35 * openAmt;
+        for (let d = 0; d < 3; d++) {
+          const dx = -mR * 0.3 + d * mR * 0.3;
+          const dLen = mR * (0.3 + 0.2 * Math.sin(b.phase * 1.5 + d * 2.1));
+          ctx.beginPath();
+          ctx.moveTo(dx, -throatR * 0.6);
+          ctx.quadraticCurveTo(dx + Math.sin(b.phase * 2 + d) * mR * 0.08, -throatR * 0.3 + dLen * 0.5,
+                               dx + Math.sin(b.phase * 1.3 + d) * mR * 0.05, -throatR * 0.3 + dLen);
+          ctx.stroke();
+        }
+
+      } else if (mv === 2) {
+        // --- M2: SERRATED — Crooked irregular teeth rows, gums exposed ---
+        // Outer gum shape — irregular fleshy mass
+        ctx.globalAlpha = baseAlpha;
+        ctx.fillStyle = '#200810';
+        ctx.beginPath();
+        // Wobbling gum outline
+        for (let g = 0; g <= 24; g++) {
+          const ga = (g / 24) * Math.PI * 2;
+          const gWob = 1 + Math.sin(ga * 3 + m.blinkPhase) * 0.06 + Math.sin(ga * 7) * 0.03;
+          const gx = Math.cos(ga) * mR * 0.95 * gWob;
+          const gy = Math.sin(ga) * mR * 0.52 * gWob;
+          if (g === 0) ctx.moveTo(gx, gy); else ctx.lineTo(gx, gy);
+        }
+        ctx.closePath();
+        ctx.fill();
+        // Gum tissue strokes — veiny texture
+        ctx.strokeStyle = '#4a1525';
+        ctx.lineWidth = 0.6;
+        ctx.globalAlpha = 0.5;
+        for (let v = 0; v < 6; v++) {
+          const vx = -mR * 0.6 + (v / 5) * mR * 1.2;
+          ctx.beginPath();
+          ctx.moveTo(vx, -mR * 0.35);
+          ctx.quadraticCurveTo(vx + Math.sin(v * 1.7) * mR * 0.06, 0, vx, mR * 0.35);
+          ctx.stroke();
+        }
+        // Inner dark void
+        const innerH = mR * 0.3 * openAmt;
+        ctx.fillStyle = '#080002';
+        ctx.globalAlpha = 0.95;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, mR * 0.7, innerH, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Crooked teeth — deliberately irregular sizes, angles, spacing
+        if (openAmt > 0.3) {
+          const ta = Math.min(1, (openAmt - 0.3) / 0.25);
+          ctx.globalAlpha = 0.9 * ta;
+          // Irregular teeth with per-tooth seeded properties
+          const seed = m.blinkPhase;
+          for (let row = 0; row < 2; row++) {
+            const ySign = row === 0 ? -1 : 1;
+            const baseY = innerH * 0.7 * ySign;
+            const teethN = 6 + Math.floor(mR / 4);
+            for (let t = 0; t < teethN; t++) {
+              const tSeed = seed + t * 7.31 + row * 13.7;
+              const tSkew = Math.sin(tSeed) * 0.25; // angular skew
+              const tScale = 0.5 + Math.abs(Math.sin(tSeed * 1.3)) * 0.7; // size variation
+              const tGap = Math.sin(tSeed * 2.1) * mR * 0.02; // position jitter
+              const tx = -mR * 0.6 + (t / (teethN - 1)) * mR * 1.2 + tGap;
+              const tH = mR * 0.18 * tScale * openAmt;
+              const tW = mR * 0.05 * (0.6 + tScale * 0.6);
+              // Tooth body — slightly yellowish irregular shape
+              const shade = Math.floor(200 + Math.sin(tSeed * 3.7) * 30);
+              ctx.fillStyle = `rgb(${shade},${shade - 15},${shade - 30})`;
+              ctx.save();
+              ctx.translate(tx, baseY);
+              ctx.rotate(tSkew * 0.3);
+              ctx.beginPath();
+              ctx.moveTo(-tW, 0);
+              ctx.lineTo(-tW * 0.4, -ySign * tH * 0.6);
+              ctx.lineTo(tW * 0.1, -ySign * tH);
+              ctx.lineTo(tW * 0.5, -ySign * tH * 0.7);
+              ctx.lineTo(tW, 0);
+              ctx.fill();
+              // Tooth outline
+              ctx.strokeStyle = '#807060';
+              ctx.lineWidth = 0.3;
+              ctx.globalAlpha = 0.4 * ta;
+              ctx.stroke();
+              ctx.globalAlpha = 0.9 * ta;
+              ctx.restore();
+            }
+          }
+        }
+        // Gum line accent
+        ctx.strokeStyle = '#6a2038';
+        ctx.lineWidth = 0.8;
+        ctx.globalAlpha = 0.5;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, mR * 0.88, mR * 0.46, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+      } else {
+        // --- M3: ABYSSAL MAW — Concentric tooth rings, deep spiraling void ---
+        // Outer dark ring
+        ctx.globalAlpha = baseAlpha;
+        ctx.fillStyle = '#120008';
+        ctx.beginPath();
+        ctx.arc(0, 0, mR, 0, Math.PI * 2);
+        ctx.fill();
+        // Multiple concentric fleshy rings
+        const ringColors = ['#1e0510', '#150308', '#0c0204', '#060001'];
+        for (let ri = 0; ri < 4; ri++) {
+          const rr = mR * (0.85 - ri * 0.15) * (0.5 + openAmt * 0.5);
+          ctx.fillStyle = ringColors[ri];
+          ctx.globalAlpha = 0.9;
+          ctx.beginPath();
+          ctx.arc(0, 0, rr, 0, Math.PI * 2);
+          ctx.fill();
+          // Ring contour stroke
+          ctx.strokeStyle = '#3a0815';
+          ctx.lineWidth = 0.6;
+          ctx.globalAlpha = 0.4;
+          ctx.beginPath();
+          ctx.arc(0, 0, rr, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        // Central void
+        ctx.fillStyle = '#020000';
+        ctx.globalAlpha = 1;
+        ctx.beginPath();
+        ctx.arc(0, 0, mR * 0.25 * openAmt, 0, Math.PI * 2);
+        ctx.fill();
+        // Concentric tooth rings — each ring has teeth pointing inward
+        if (openAmt > 0.3) {
+          const ta = Math.min(1, (openAmt - 0.3) / 0.25);
+          ctx.fillStyle = '#d8d0c5';
+          ctx.globalAlpha = 0.85 * ta;
+          // 3 rings of teeth at different radii
+          for (let ring = 0; ring < 3; ring++) {
+            const ringR = mR * (0.8 - ring * 0.18);
+            const teethN = 8 + ring * 4;
+            const toothLen = mR * (0.1 - ring * 0.015) * openAmt;
+            // Rotate each ring differently over time for spiral effect
+            const ringRot = b.phase * (0.15 + ring * 0.1) * (ring % 2 === 0 ? 1 : -1);
+            for (let t = 0; t < teethN; t++) {
+              const tAngle = (t / teethN) * Math.PI * 2 + m.blinkPhase + ringRot;
+              const tW = Math.PI / teethN * 0.35;
+              // Tooth points inward
+              ctx.beginPath();
+              ctx.moveTo(Math.cos(tAngle - tW) * ringR, Math.sin(tAngle - tW) * ringR);
+              ctx.lineTo(Math.cos(tAngle) * (ringR - toothLen), Math.sin(tAngle) * (ringR - toothLen));
+              ctx.lineTo(Math.cos(tAngle + tW) * ringR, Math.sin(tAngle + tW) * ringR);
+              ctx.fill();
+            }
+            // Ring gets darker tooth color deeper in
+            const shade = 200 - ring * 25;
+            ctx.fillStyle = `rgb(${shade},${shade - 10},${shade - 20})`;
+          }
+        }
+        // Subtle spiral lines — flesh folds pulling inward
+        ctx.strokeStyle = '#3a0a12';
+        ctx.lineWidth = 0.5;
+        ctx.globalAlpha = 0.3;
+        for (let sp = 0; sp < 6; sp++) {
+          const sAngle = (sp / 6) * Math.PI * 2 + b.phase * 0.1;
+          ctx.beginPath();
+          for (let si = 0; si < 20; si++) {
+            const t = si / 19;
+            const spiralR = mR * (0.9 - t * 0.65);
+            const spiralA = sAngle + t * 1.5;
+            const sx = Math.cos(spiralA) * spiralR;
+            const sy = Math.sin(spiralA) * spiralR;
+            if (si === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+          }
+          ctx.stroke();
+        }
+      }
+
+      ctx.restore();
+    }
+  } else {
+    // === REGULAR BOSS: 4 desaturated vector-style eye variants ===
+    for (let e = 0; e < b.eyePhases.length; e++) {
+      const eye = b.eyePhases[e];
+      const eAngle = eye.angle + b.phase * 0.1;
+      const ex = b.x + Math.cos(eAngle) * r * eye.dist;
+      const ey = b.y + Math.sin(eAngle) * r * eye.dist;
+      const eR = r * eye.size;
+      const variant = eye.eyeVariant || 0;
+
+      // Blink
+      const blink = Math.sin(b.phase * eye.blinkSpeed + eye.blinkPhase);
+      if (blink < -0.85) continue;
+      const openness = blink < -0.5 ? (blink + 0.85) / 0.35 : 1;
+      const baseAlpha = b.hitFlash > 0.5 ? 0.4 : 0.95;
+
+      // Iris tracking
+      const lookDx = G.cursorX - ex, lookDy = G.cursorY - ey;
+      const lookD = Math.sqrt(lookDx * lookDx + lookDy * lookDy) + 1;
+      const lookStr = eR * 0.22;
+      const irisX = ex + (lookDx / lookD) * lookStr;
+      const irisY = ey + (lookDy / lookD) * lookStr * openness;
+      const refAngle = eye.reflectAngle || 0;
+      const faceAngle = Math.atan2(ey - b.y, ex - b.x);
+
+      // --- Shared: Socket shadow ring (vector stroke) ---
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 1.2;
+      ctx.globalAlpha = 0.4 * openness;
+      ctx.beginPath();
+      ctx.ellipse(ex, ey, eR * 1.12, eR * 1.08 * openness, faceAngle, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // --- Shared: Sclera — flat off-white fill + crisp outline ---
+      const scleraShade = variant === 0 ? '#d8d8d5' : variant === 1 ? '#ccccc8' : variant === 2 ? '#d2d2d6' : '#c8c5c2';
+      ctx.fillStyle = scleraShade;
+      ctx.globalAlpha = baseAlpha * openness;
+      ctx.beginPath();
+      ctx.ellipse(ex, ey, eR, eR * openness, 0, 0, Math.PI * 2);
+      ctx.fill();
+      // Sclera outline
+      ctx.strokeStyle = '#3a3a3a';
+      ctx.lineWidth = 0.8;
+      ctx.globalAlpha = 0.7 * openness;
+      ctx.beginPath();
+      ctx.ellipse(ex, ey, eR * 0.98, eR * 0.98 * openness, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // --- Veins (thin vector lines) ---
+      const veinCount = variant === 1 ? 6 : variant === 3 ? 7 : 4;
+      ctx.strokeStyle = '#555';
+      ctx.lineWidth = 0.4;
+      ctx.globalAlpha = 0.2 * openness;
+      for (let v = 0; v < veinCount; v++) {
+        const va = eye.blinkPhase + v * (Math.PI * 2 / veinCount);
+        ctx.beginPath();
+        ctx.moveTo(ex + Math.cos(va) * eR * 0.45, ey + Math.sin(va) * eR * 0.35 * openness);
+        ctx.quadraticCurveTo(
+          ex + Math.cos(va + 0.2) * eR * 0.7, ey + Math.sin(va + 0.1) * eR * 0.55 * openness,
+          ex + Math.cos(va + 0.05) * eR * 0.95, ey + Math.sin(va - 0.08) * eR * 0.88 * openness
+        );
+        ctx.stroke();
+      }
+
+      // --- Per-variant iris + pupil (vector style) ---
+      if (variant === 0) {
+        // V0: PALE — light grey iris, round pupil, minimal
+        const iR = eR * 0.48;
+        // Iris fill — flat light grey
+        ctx.fillStyle = '#8a8a88';
+        ctx.globalAlpha = 0.9 * openness;
+        ctx.beginPath();
+        ctx.arc(irisX, irisY, iR, 0, Math.PI * 2);
+        ctx.fill();
+        // Limbal ring stroke
+        ctx.strokeStyle = '#404040';
+        ctx.lineWidth = 1.0;
+        ctx.globalAlpha = 0.8 * openness;
+        ctx.beginPath();
+        ctx.arc(irisX, irisY, iR, 0, Math.PI * 2);
+        ctx.stroke();
+        // Pupil
+        ctx.fillStyle = '#0a0a0a';
+        ctx.globalAlpha = openness;
+        ctx.beginPath();
+        ctx.arc(irisX, irisY, iR * 0.42, 0, Math.PI * 2);
+        ctx.fill();
+
+      } else if (variant === 1) {
+        // V1: STRIATED — mid-grey iris with radial line pattern, round pupil
+        const iR = eR * 0.52;
+        // Iris fill — mid grey
+        ctx.fillStyle = '#787878';
+        ctx.globalAlpha = 0.9 * openness;
+        ctx.beginPath();
+        ctx.arc(irisX, irisY, iR, 0, Math.PI * 2);
+        ctx.fill();
+        // Radial striations (vector lines)
+        ctx.strokeStyle = '#a0a0a0';
+        ctx.lineWidth = 0.5;
+        ctx.globalAlpha = 0.45 * openness;
+        for (let s = 0; s < 18; s++) {
+          const sa = (s / 18) * Math.PI * 2 + eye.blinkPhase * 0.1;
+          ctx.beginPath();
+          ctx.moveTo(irisX + Math.cos(sa) * iR * 0.28, irisY + Math.sin(sa) * iR * 0.28);
+          ctx.lineTo(irisX + Math.cos(sa) * iR * 0.88, irisY + Math.sin(sa) * iR * 0.88);
+          ctx.stroke();
+        }
+        // Heavy limbal ring
+        ctx.strokeStyle = '#2a2a2a';
+        ctx.lineWidth = 1.4;
+        ctx.globalAlpha = 0.85 * openness;
+        ctx.beginPath();
+        ctx.arc(irisX, irisY, iR, 0, Math.PI * 2);
+        ctx.stroke();
+        // Pupil
+        ctx.fillStyle = '#060606';
+        ctx.globalAlpha = openness;
+        ctx.beginPath();
+        ctx.arc(irisX, irisY, iR * 0.35, 0, Math.PI * 2);
+        ctx.fill();
+
+      } else if (variant === 2) {
+        // V2: SLIT — light grey iris, vertical slit pupil
+        const iR = eR * 0.55;
+        // Iris fill — pale grey
+        ctx.fillStyle = '#909094';
+        ctx.globalAlpha = 0.9 * openness;
+        ctx.beginPath();
+        ctx.arc(irisX, irisY, iR, 0, Math.PI * 2);
+        ctx.fill();
+        // Concentric iris rings (vector)
+        ctx.strokeStyle = '#606068';
+        ctx.lineWidth = 0.4;
+        ctx.globalAlpha = 0.35 * openness;
+        for (let ring = 1; ring <= 3; ring++) {
+          ctx.beginPath();
+          ctx.arc(irisX, irisY, iR * (0.3 + ring * 0.2), 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        // Limbal ring
+        ctx.strokeStyle = '#303038';
+        ctx.lineWidth = 1.2;
+        ctx.globalAlpha = 0.8 * openness;
+        ctx.beginPath();
+        ctx.arc(irisX, irisY, iR, 0, Math.PI * 2);
+        ctx.stroke();
+        // Vertical slit pupil
+        ctx.fillStyle = '#080808';
+        ctx.globalAlpha = openness;
+        ctx.beginPath();
+        ctx.ellipse(irisX, irisY, iR * 0.1, iR * 0.68, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Slit outline
+        ctx.strokeStyle = '#1a1a1a';
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();
+        ctx.ellipse(irisX, irisY, iR * 0.12, iR * 0.7, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+      } else {
+        // V3: CRACKED — dark grey iris with crack lines, horizontal slit pupil
+        const iR = eR * 0.53;
+        // Iris fill — darker grey
+        ctx.fillStyle = '#606060';
+        ctx.globalAlpha = 0.9 * openness;
+        ctx.beginPath();
+        ctx.arc(irisX, irisY, iR, 0, Math.PI * 2);
+        ctx.fill();
+        // Crack lines (vector)
+        ctx.strokeStyle = '#2a2a2a';
+        ctx.lineWidth = 0.6;
+        ctx.globalAlpha = 0.5 * openness;
+        for (let s = 0; s < 12; s++) {
+          const sa = (s / 12) * Math.PI * 2 + eye.blinkPhase * 0.15;
+          const jag = Math.sin(s * 3.7) * iR * 0.08;
+          ctx.beginPath();
+          ctx.moveTo(irisX + Math.cos(sa) * iR * 0.2, irisY + Math.sin(sa) * iR * 0.2);
+          ctx.lineTo(irisX + Math.cos(sa + 0.1) * iR * 0.55 + jag, irisY + Math.sin(sa - 0.08) * iR * 0.55);
+          ctx.lineTo(irisX + Math.cos(sa) * iR * 0.85, irisY + Math.sin(sa) * iR * 0.85);
+          ctx.stroke();
+        }
+        // Thick limbal ring
+        ctx.strokeStyle = '#1a1a1a';
+        ctx.lineWidth = 1.6;
+        ctx.globalAlpha = 0.85 * openness;
+        ctx.beginPath();
+        ctx.arc(irisX, irisY, iR, 0, Math.PI * 2);
+        ctx.stroke();
+        // Horizontal slit pupil
+        ctx.fillStyle = '#050505';
+        ctx.globalAlpha = openness;
+        ctx.beginPath();
+        ctx.ellipse(irisX, irisY, iR * 0.55, iR * 0.12, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#1a1a1a';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.ellipse(irisX, irisY, iR * 0.57, iR * 0.14, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // --- Shared: Specular highlight (crisp vector dot) ---
+      const rx = ex + Math.cos(refAngle) * eR * 0.22;
+      const ry = ey + Math.sin(refAngle) * eR * 0.18 * openness;
+      ctx.fillStyle = '#ffffff';
+      ctx.globalAlpha = 0.65 * openness;
+      ctx.beginPath();
+      ctx.arc(rx, ry, eR * 0.09, 0, Math.PI * 2);
+      ctx.fill();
+      // Smaller secondary highlight
+      ctx.globalAlpha = 0.25 * openness;
+      ctx.beginPath();
+      ctx.arc(rx + eR * 0.18, ry + eR * 0.1, eR * 0.04, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
   ctx.globalAlpha = 1;
 
@@ -6623,9 +7936,13 @@ function render() {
   // Layer 4c: Black hole + supermassive black hole
   renderBlackHole(ctx);
   renderSuperBlackHole(ctx);
+  renderMiniBlackHoles(ctx);
 
   // Layer 4d: Boss entity
   renderBoss(ctx);
+
+  // Layer 4e: Wormhole (B1 level ending)
+  renderWormhole(ctx);
 
   // Layer 5: Background particles
   renderParticleLayer(ctx, 'bg');
@@ -6659,6 +7976,9 @@ function render() {
 
   // Layer 8: Foreground particles
   renderParticleLayer(ctx, 'fg');
+
+  // Layer 8b: TESTLEVEL lighting engine — darkness, point light at cursor, orb shadows
+  renderTestLevelLighting(ctx, W, H);
 
   // Layer 9: Floating texts
   renderFloatingTexts(ctx);
@@ -6707,6 +8027,58 @@ function render() {
       ctx.shadowBlur = 12;
       ctx.fillRect(0, barY, W * timerT, barH);
     }
+    ctx.restore();
+  }
+
+  // Layer 14b: Dark Prism gravity inversion indicator (smooth)
+  const invertVisual = Math.max(0, 0.5 - G.gravityInvertFactor); // 0 normal → 1 fully inverted
+  if (invertVisual > 0.01 || G.prismClusterActive) {
+    ctx.save();
+    const effectStrength = G.prismClusterActive ? Math.max(invertVisual, 0.3) : invertVisual;
+    const pulse = 0.6 + 0.4 * Math.sin(G.time * 5);
+    // Screen-wide purple tint overlay (scales with inversion)
+    ctx.globalAlpha = 0.15 * pulse * effectStrength;
+    ctx.fillStyle = '#3a0a5e';
+    ctx.fillRect(0, 0, W, H);
+    // Vignette-style edge glow
+    ctx.globalAlpha = 0.3 * pulse * effectStrength;
+    const vig = ctx.createRadialGradient(W/2, H/2, Math.min(W,H)*0.25, W/2, H/2, Math.max(W,H)*0.7);
+    vig.addColorStop(0, 'transparent');
+    vig.addColorStop(1, '#2a0040');
+    ctx.fillStyle = vig;
+    ctx.fillRect(0, 0, W, H);
+    // Purple radial pulse from field center
+    if (effectStrength > 0.3) {
+      const gcx = ((G.gameLeft || 0) + (G.gameRight || G.W)) * 0.5;
+      const gcy = ((G.gameTop || 0) + (G.gameBottom || G.H)) * 0.5;
+      const pulseR = 80 + Math.sin(G.time * 3) * 40 + effectStrength * 200;
+      ctx.globalAlpha = 0.08 * effectStrength * pulse;
+      const radPulse = ctx.createRadialGradient(gcx, gcy, 0, gcx, gcy, pulseR);
+      radPulse.addColorStop(0, '#b040ff');
+      radPulse.addColorStop(0.5, '#6020a0');
+      radPulse.addColorStop(1, 'transparent');
+      ctx.fillStyle = radPulse;
+      ctx.beginPath();
+      ctx.arc(gcx, gcy, pulseR, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Large centered banner text
+    ctx.globalAlpha = 0.95;
+    ctx.font = '700 22px Orbitron, monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#d0a0ff';
+    ctx.shadowColor = '#a050ff';
+    ctx.shadowBlur = 20;
+    const label = G.prismClusterActive ? 'DARK PRISM ACTIVE' : 'DARK PRISM [' + G.gravityInvertTimer.toFixed(1) + 's]';
+    ctx.fillText(label, W / 2, 128);
+    ctx.shadowBlur = 0;
+    // Thin top/bottom edge lines
+    ctx.globalAlpha = 0.3 * pulse * effectStrength;
+    ctx.strokeStyle = '#a050ff';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(W, 0); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, H); ctx.lineTo(W, H); ctx.stroke();
     ctx.restore();
   }
 
@@ -6928,24 +8300,38 @@ function renderGalaxyBackground(ctx, W, H) {
   const MIN_PLAYBACK = 0.07; // Chrome minimum safe playback rate
   const basePlaybackRate = MIN_PLAYBACK + vidMadness * 0.18; // 0.07 → 0.25
 
+  // Dark Prism: reverse video playback by manually decrementing currentTime
+  const prismReverse = G.gravityInvertFactor < 0;
+
   // Smooth loop transition: slow down further near the end of the video
   // and apply a brief opacity dip at the loop seam
   let loopFade = 1.0;
   if (hasVideo && galaxyBgVideo.duration > 0) {
-    const timeLeft = galaxyBgVideo.duration - galaxyBgVideo.currentTime;
-    const timeFromStart = galaxyBgVideo.currentTime;
-    let targetRate = basePlaybackRate;
-    // Near end (last 1.5s): ramp down for smooth loop
-    if (timeLeft < 1.5) {
-      targetRate = Math.max(MIN_PLAYBACK, basePlaybackRate * (timeLeft / 1.5));
-      if (timeLeft < 0.5) loopFade = timeLeft / 0.5;
+    if (prismReverse) {
+      // Reverse: pause native playback and manually step backwards
+      try { galaxyBgVideo.playbackRate = MIN_PLAYBACK; } catch(e) {}
+      const reverseStep = basePlaybackRate * 3 * G.dt; // 3x speed in reverse for visible effect
+      galaxyBgVideo.currentTime = Math.max(0.1, galaxyBgVideo.currentTime - reverseStep);
+      // Wrap around to end if we hit the start
+      if (galaxyBgVideo.currentTime <= 0.2) {
+        galaxyBgVideo.currentTime = galaxyBgVideo.duration - 0.5;
+      }
+    } else {
+      const timeLeft = galaxyBgVideo.duration - galaxyBgVideo.currentTime;
+      const timeFromStart = galaxyBgVideo.currentTime;
+      let targetRate = basePlaybackRate;
+      // Near end (last 1.5s): ramp down for smooth loop
+      if (timeLeft < 1.5) {
+        targetRate = Math.max(MIN_PLAYBACK, basePlaybackRate * (timeLeft / 1.5));
+        if (timeLeft < 0.5) loopFade = timeLeft / 0.5;
+      }
+      // Near start (first 0.5s): fade back in, ramp speed up
+      else if (timeFromStart < 0.5) {
+        loopFade = timeFromStart / 0.5;
+        targetRate = MIN_PLAYBACK + (basePlaybackRate - MIN_PLAYBACK) * Math.min(1, timeFromStart / 1.0);
+      }
+      try { galaxyBgVideo.playbackRate = Math.max(MIN_PLAYBACK, targetRate); } catch(e) {}
     }
-    // Near start (first 0.5s): fade back in, ramp speed up
-    else if (timeFromStart < 0.5) {
-      loopFade = timeFromStart / 0.5;
-      targetRate = MIN_PLAYBACK + (basePlaybackRate - MIN_PLAYBACK) * Math.min(1, timeFromStart / 1.0);
-    }
-    try { galaxyBgVideo.playbackRate = Math.max(MIN_PLAYBACK, targetRate); } catch(e) {}
   }
 
   const w = G.watcher;
@@ -7587,7 +8973,8 @@ function renderChainLinks(ctx) {
 
       ctx.save();
       ctx.globalAlpha = 0.25 + progress * 0.55;
-      ctx.fillStyle = linkMadness > 0 ? biomeColorShift(link.color, linkMadness * 0.5) : link.color;
+      const linkBaseColor = linkMadness > 0 ? biomeColorShift(link.color, linkMadness * 0.5) : link.color;
+      ctx.fillStyle = fireShift(linkBaseColor, linkMadness);
 
       const srcR = (8 + progress * 6) * Math.min(1, len / 40);
       const tgtR = (7 + progress * 7) * Math.min(1, len / 40);
@@ -8055,6 +9442,27 @@ function renderCircles(ctx) {
     const drawR = r * spawnScale;
     if (drawR < 1) continue;
 
+    // === LOD (Level of Detail) — scale rendering complexity by screen pixel size ===
+    // screenR = how big the orb actually appears on screen (accounting for zoom)
+    const screenR = drawR * (G.zoomLevel || 1);
+    // LOD 0: Full detail (screenR >= 12px)
+    // LOD 1: Medium — skip veins, extra eyes, speculars, tentacle ridges (screenR >= 6px)
+    // LOD 2: Simple — base fill + basic eye, no gradients, no trails (screenR >= 3px)
+    // LOD 3: Dot — just a colored fill, no save/restore (screenR < 3px)
+    const lod = screenR >= 12 ? 0 : screenR >= 6 ? 1 : screenR >= 3 ? 2 : 3;
+
+    // Brighten orb color at WT <80% — keeps field vivid longer
+    const orbColor = orbBrighten(c.color, getMadnessAmount());
+
+    // LOD 3: minimal dot — skip save/restore entirely
+    if (lod === 3) {
+      ctx.fillStyle = orbColor;
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, drawR, 0, Math.PI * 2);
+      ctx.fill();
+      continue;
+    }
+
     ctx.save();
 
     // Merge animation: being absorbed into another orb — smooth stretch + gooey bridge + fade
@@ -8136,8 +9544,8 @@ function renderCircles(ctx) {
       ctx.globalAlpha = Math.max(0.2, (ctx.globalAlpha || 1) * (1 - depthFade));
     }
 
-    // Motion blur trail — very subtle, only at high speed
-    if (c.trail && c.trail.length > 1) {
+    // Motion blur trail — very subtle, only at high speed (LOD 0-1 only)
+    if (lod <= 1 && c.trail && c.trail.length > 1) {
       const baseAlpha = ctx.globalAlpha || 1;
       const trailAlpha = baseAlpha * 0.07;
       // Connecting streak line from oldest trail to current position
@@ -8171,15 +9579,15 @@ function renderCircles(ctx) {
       }
     }
 
-    // Velocity-based deformation — teardrop stretch like a falling water drop
+    // Velocity-based deformation — fluid stretch along movement direction (LOD 0-1 only)
     const speed = Math.sqrt(c.vx * c.vx + c.vy * c.vy);
-    const deformThreshold = 40; // min speed before deformation kicks in
-    if (speed > deformThreshold && (c.mergeTarget === null || c.mergeTarget === undefined)) {
-      const deformAmount = Math.min(0.15, (speed - deformThreshold) / 1200); // subtle, max 15%
+    const deformThreshold = 20; // lower threshold — stretch starts at modest speeds
+    if (lod <= 1 && speed > deformThreshold && (c.mergeTarget === null || c.mergeTarget === undefined)) {
+      const deformAmount = Math.min(0.35, (speed - deformThreshold) / 400); // more visible, max 35%
       const velAngle = Math.atan2(c.vy, c.vx);
       ctx.translate(c.x, c.y);
       ctx.rotate(velAngle);
-      ctx.scale(1 + deformAmount, 1 - deformAmount * 0.6); // stretch along velocity, squash perpendicular
+      ctx.scale(1 + deformAmount, 1 / (1 + deformAmount * 0.7)); // stretch + squash (area-preserving)
       ctx.rotate(-velAngle);
       ctx.translate(-c.x, -c.y);
     }
@@ -8196,11 +9604,13 @@ function renderCircles(ctx) {
       }
       // Phase 5: Render Archon tethers — pulsing energy lines to tethered orbs
       if (c.scTethers && c.scTethers.length > 0) {
+        const tetheredPositions = []; // collect positions for inter-tether web
         for (let t = 0; t < c.scTethers.length; t++) {
           const teth = c.scTethers[t];
           const orb = findCircleById(teth.orbId);
           if (!orb || !orb.alive || orb.popped) continue;
 
+          tetheredPositions.push({ x: orb.x, y: orb.y, r: orb.radius, pulse: teth.pulsePhase });
           const pulse = 0.5 + 0.5 * Math.sin(teth.pulsePhase);
           const scColor = c.color || '#ffcc00';
 
@@ -8239,6 +9649,127 @@ function renderCircles(ctx) {
           ctx.arc(mx, my, 1.5 + pulse, 0, Math.PI * 2);
           ctx.fill();
         }
+
+        // Inter-tether web — connect tethered orbs to each other (sigil-like geometry)
+        if (tetheredPositions.length >= 2) {
+          const scColor = c.color || '#ffcc00';
+          for (let a = 0; a < tetheredPositions.length; a++) {
+            for (let bb = a + 1; bb < tetheredPositions.length; bb++) {
+              const pa = tetheredPositions[a], pb = tetheredPositions[bb];
+              const interDist = Math.sqrt((pa.x - pb.x) * (pa.x - pb.x) + (pa.y - pb.y) * (pa.y - pb.y));
+              if (interDist > 300) continue; // skip very distant pairs
+              const interPulse = 0.5 + 0.5 * Math.sin(pa.pulse + pb.pulse + G.time * 2);
+              // Thin connecting line between tethered orbs
+              ctx.globalAlpha = 0.08 + interPulse * 0.08;
+              ctx.strokeStyle = scColor;
+              ctx.lineWidth = 0.6 + interPulse * 0.5;
+              ctx.beginPath();
+              ctx.moveTo(pa.x, pa.y);
+              // Slight curve through midpoint for organic feel
+              const midX = (pa.x + pb.x) / 2 + Math.sin(pa.pulse * 0.7 + G.time) * 8;
+              const midY = (pa.y + pb.y) / 2 + Math.cos(pb.pulse * 0.5 + G.time) * 8;
+              ctx.quadraticCurveTo(midX, midY, pb.x, pb.y);
+              ctx.stroke();
+              // Tiny glyph node at midpoint — Enochian-style mark
+              const gx = midX, gy = midY;
+              ctx.globalAlpha = 0.15 + interPulse * 0.15;
+              ctx.fillStyle = '#ffe080';
+              // Glyph shape: small diamond
+              const gs = 2 + interPulse;
+              ctx.beginPath();
+              ctx.moveTo(gx, gy - gs);
+              ctx.lineTo(gx + gs * 0.7, gy);
+              ctx.lineTo(gx, gy + gs);
+              ctx.lineTo(gx - gs * 0.7, gy);
+              ctx.closePath();
+              ctx.fill();
+            }
+          }
+        }
+
+        // Sigil tethers — Enochian-style connections to nearby bombs
+        if (c.scSigilTethers && c.scSigilTethers.length > 0) {
+          for (let t = c.scSigilTethers.length - 1; t >= 0; t--) {
+            const st = c.scSigilTethers[t];
+            if (st.bombIdx >= G.bombs.length) { c.scSigilTethers.splice(t, 1); continue; }
+            const bomb = G.bombs[st.bombIdx];
+            if (!bomb) { c.scSigilTethers.splice(t, 1); continue; }
+            st.pulsePhase += 0.016 * 4.0;
+            const sp = 0.5 + 0.5 * Math.sin(st.pulsePhase);
+            const bdx = bomb.x - c.x, bdy = bomb.y - c.y;
+            const bd = Math.sqrt(bdx * bdx + bdy * bdy) + 1;
+
+            // Sigil tether beam — angular, rune-like path with sharp bends
+            ctx.globalAlpha = 0.2 + sp * 0.25;
+            ctx.strokeStyle = '#c0a0ff';
+            ctx.lineWidth = 1.0 + sp * 0.8;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(c.x, c.y);
+            // 3 angular waypoints — creates angular/rune-like geometry
+            const perpX = -bdy / bd, perpY = bdx / bd;
+            const seg = bd / 4;
+            const bendAmt = 12 + Math.sin(st.glyphSeed * 3.7) * 8;
+            const wx1x = c.x + bdx * 0.25 + perpX * bendAmt * Math.sin(st.glyphSeed);
+            const wx1y = c.y + bdy * 0.25 + perpY * bendAmt * Math.sin(st.glyphSeed);
+            const wx2x = c.x + bdx * 0.5 + perpX * bendAmt * Math.cos(st.glyphSeed * 1.7);
+            const wx2y = c.y + bdy * 0.5 + perpY * bendAmt * Math.cos(st.glyphSeed * 1.7);
+            const wx3x = c.x + bdx * 0.75 - perpX * bendAmt * Math.sin(st.glyphSeed * 2.3);
+            const wx3y = c.y + bdy * 0.75 - perpY * bendAmt * Math.sin(st.glyphSeed * 2.3);
+            ctx.lineTo(wx1x, wx1y);
+            ctx.lineTo(wx2x, wx2y);
+            ctx.lineTo(wx3x, wx3y);
+            ctx.lineTo(bomb.x, bomb.y);
+            ctx.stroke();
+            // Inner core line
+            ctx.globalAlpha = 0.3 + sp * 0.3;
+            ctx.strokeStyle = '#e0c0ff';
+            ctx.lineWidth = 0.4 + sp * 0.4;
+            ctx.beginPath();
+            ctx.moveTo(c.x, c.y);
+            ctx.lineTo(wx1x, wx1y); ctx.lineTo(wx2x, wx2y); ctx.lineTo(wx3x, wx3y);
+            ctx.lineTo(bomb.x, bomb.y);
+            ctx.stroke();
+            // Glyph marks at each waypoint — small angular symbols
+            const glyphs = [{x: wx1x, y: wx1y}, {x: wx2x, y: wx2y}, {x: wx3x, y: wx3y}];
+            for (let g = 0; g < glyphs.length; g++) {
+              const gp = glyphs[g];
+              const gs = 3 + sp * 2;
+              const ga = st.glyphSeed * (g + 1) * 2.1 + G.time * 0.5;
+              ctx.globalAlpha = 0.25 + sp * 0.2;
+              ctx.strokeStyle = '#d0b0ff';
+              ctx.lineWidth = 0.6;
+              // Angular glyph: cross + angle marks
+              ctx.beginPath();
+              ctx.moveTo(gp.x - gs, gp.y); ctx.lineTo(gp.x + gs, gp.y);
+              ctx.moveTo(gp.x, gp.y - gs); ctx.lineTo(gp.x, gp.y + gs);
+              // Diagonal tick marks
+              const tick = gs * 0.6;
+              ctx.moveTo(gp.x + Math.cos(ga) * tick, gp.y + Math.sin(ga) * tick);
+              ctx.lineTo(gp.x + Math.cos(ga + Math.PI) * tick, gp.y + Math.sin(ga + Math.PI) * tick);
+              ctx.stroke();
+              // Dot at center
+              ctx.fillStyle = '#e0c0ff';
+              ctx.globalAlpha = 0.4 + sp * 0.3;
+              ctx.beginPath();
+              ctx.arc(gp.x, gp.y, 1.2 + sp * 0.5, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            // Hexagonal glow ring around sigil target
+            ctx.globalAlpha = 0.15 + sp * 0.2;
+            ctx.strokeStyle = '#c0a0ff';
+            ctx.lineWidth = 1.0;
+            ctx.beginPath();
+            for (let h = 0; h <= 6; h++) {
+              const ha = (h / 6) * Math.PI * 2 - Math.PI / 6;
+              const hx = bomb.x + Math.cos(ha) * (14 + sp * 4);
+              const hy = bomb.y + Math.sin(ha) * (14 + sp * 4);
+              if (h === 0) ctx.moveTo(hx, hy); else ctx.lineTo(hx, hy);
+            }
+            ctx.stroke();
+          }
+        }
+
         ctx.globalAlpha = 1;
       }
     } else {
@@ -8314,8 +9845,8 @@ function renderCircles(ctx) {
           ctx.fill();
         }
 
-        // Inner void — flat dark center, appears from 30% bodyWarp
-        if (bodyWarp > 0.3) {
+        // Inner void — flat dark center, appears from 30% bodyWarp (LOD 0-1)
+        if (lod <= 1 && bodyWarp > 0.3) {
           const voidAlpha = (bodyWarp - 0.3) / 0.7;
           ctx.globalAlpha = savedAlpha * 0.3 * voidAlpha;
           const voidR = drawR * (0.2 + Math.sin(G.time * 1.5 + seed) * 0.06);
@@ -8325,8 +9856,8 @@ function renderCircles(ctx) {
           ctx.fill();
         }
 
-        // Bioluminescent edge glow — flat ring stroke, fades in with bodyWarp
-        if (bodyWarp > 0.2) {
+        // Bioluminescent edge glow — flat ring stroke, fades in with bodyWarp (LOD 0 only)
+        if (lod === 0 && bodyWarp > 0.2) {
           const glowAlpha = (bodyWarp - 0.2) / 0.8;
           ctx.globalAlpha = savedAlpha * 0.3 * glowAlpha;
           ctx.globalCompositeOperation = 'lighter';
@@ -8338,8 +9869,8 @@ function renderCircles(ctx) {
           ctx.globalCompositeOperation = 'source-over';
         }
 
-        // Stress lines — appear from 40% bodyWarp
-        if (drawR > 6 && bodyWarp > 0.4) {
+        // Stress lines — appear from 40% bodyWarp (LOD 0 only)
+        if (lod === 0 && drawR > 6 && bodyWarp > 0.4) {
           const lineAlpha = (bodyWarp - 0.4) / 0.6;
           ctx.globalAlpha = savedAlpha * 0.15 * lineAlpha;
           ctx.strokeStyle = satAccent;
@@ -8363,8 +9894,8 @@ function renderCircles(ctx) {
           }
         }
 
-        // === WRITHING TENTACLES — sprout gradually with tentGrowth ===
-        if (drawR > 4 && tentGrowth > 0) {
+        // === WRITHING TENTACLES — sprout gradually with tentGrowth === (LOD 0-1 only)
+        if (lod <= 1 && drawR > 4 && tentGrowth > 0) {
           // Number of tentacles grows: 1 at first, up to 3-6 at full madness
           const maxTents = 3 + (c.id % 4);
           const visibleTents = Math.max(1, Math.ceil(maxTents * tentGrowth));
@@ -8400,15 +9931,19 @@ function renderCircles(ctx) {
 
             // Draw tentacle body
             ctx.globalAlpha = savedAlpha * (isThick ? 0.7 : 0.5) * tentGrowth;
-            const tentGrad2 = ctx.createLinearGradient(
-              c.x + Math.cos(tentAngle) * drawR * 0.7,
-              c.y + Math.sin(tentAngle) * drawR * 0.7,
-              tentPts[segments].x, tentPts[segments].y
-            );
-            tentGrad2.addColorStop(0, c.color);
-            tentGrad2.addColorStop(0.4, satAccent);
-            tentGrad2.addColorStop(1, '#0a0a18');
-            ctx.strokeStyle = tentGrad2;
+            if (lod === 0) {
+              const tentGrad2 = ctx.createLinearGradient(
+                c.x + Math.cos(tentAngle) * drawR * 0.7,
+                c.y + Math.sin(tentAngle) * drawR * 0.7,
+                tentPts[segments].x, tentPts[segments].y
+              );
+              tentGrad2.addColorStop(0, c.color);
+              tentGrad2.addColorStop(0.4, satAccent);
+              tentGrad2.addColorStop(1, '#0a0a18');
+              ctx.strokeStyle = tentGrad2;
+            } else {
+              ctx.strokeStyle = c.color; // LOD 1: flat color tentacles
+            }
             ctx.lineCap = 'round';
 
             for (let si = 0; si < segments; si++) {
@@ -8431,8 +9966,8 @@ function renderCircles(ctx) {
               ctx.stroke();
             }
 
-            // Thick tentacles: wrinkling ridges (only at high growth)
-            if (isThick && drawR > 8 && tentGrowth > 0.6) {
+            // Thick tentacles: wrinkling ridges (only at high growth, LOD 0 only)
+            if (lod === 0 && isThick && drawR > 8 && tentGrowth > 0.6) {
               ctx.globalAlpha = savedAlpha * 0.25 * tentGrowth;
               ctx.strokeStyle = '#ffffff';
               ctx.lineWidth = 0.5;
@@ -8448,8 +9983,8 @@ function renderCircles(ctx) {
               }
             }
 
-            // Thin tentacles: wispy curling tip (only at high growth)
-            if (!isThick && drawR > 6 && tentGrowth > 0.5) {
+            // Thin tentacles: wispy curling tip (only at high growth, LOD 0 only)
+            if (lod === 0 && !isThick && drawR > 6 && tentGrowth > 0.5) {
               const tipPt = tentPts[segments];
               const tipAngle2 = tentAngle + writhe1 * 1.5 + writhe2;
               const curlLen = drawR * 0.3 * tentGrowth;
@@ -8480,10 +10015,11 @@ function renderCircles(ctx) {
 
       if (!isAbyssOrb) {
       // Eyeball intensity driven by madness (0-100% scale)
-      // 3 eye variations per orb, seeded by ID:
-      //   Type 0: MANIC STARE — wide open, dilated, glassy, unsettling fixed gaze
-      //   Type 1: GLASS EYE — round, pale iris, uncanny prosthetic feel
-      //   Type 2: SUNKEN HOLLOW — deep socket shadow, barely visible pale iris
+      // 4 vector eye variants per orb, seeded by ID (matches boss eye system):
+      //   V0: PALE — light grey iris, round pupil, minimal
+      //   V1: STRIATED — mid-grey iris with radial line pattern, round pupil
+      //   V2: SLIT — light grey iris, vertical slit pupil
+      //   V3: CRACKED — dark grey iris with crack lines, horizontal slit pupil
       // At 85%+ madness: extra eyes appear — 2x per 7.5% (2 at 85%, 4 at 92.5%, 6 at 100%)
       const madnessEye = getMadnessAmount();
       const eyeIntensity = madnessEye < 0.1 ? 0 : Math.min(1, (madnessEye - 0.1) / 0.9);
@@ -8493,29 +10029,22 @@ function renderCircles(ctx) {
       if (eyeIntensity > 0 && drawR > 5) {
         const savedAlpha = ctx.globalAlpha || 1;
         const ei = eyeIntensity;
-        const eyeType = c.id % 3; // 0=manic, 1=glass, 2=sunken
+        const eyeVariant = c.id % 4; // 0-3: four distinct vector eye styles
 
         // Draw base colored orb first
         ctx.globalAlpha = savedAlpha;
-        ctx.fillStyle = c.color;
+        ctx.fillStyle = orbColor;
         ctx.beginPath();
         ctx.arc(c.x, c.y, drawR, 0, Math.PI * 2);
         ctx.fill();
 
         // === MUTATION PHASE 1: Void Seed — subtle dark center forming ===
-        // Smoothest possible ramp from normal orb → "something is wrong"
-        // Starts as a barely-visible tiny dark speck, grows and deepens gradually
-        // Bridges the gap before socket shadow (0.15) and iris/pupil (0.25)
-        {
-          const voidT = Math.min(1, ei / 0.3); // 0→1 over first 30% of ei
+        if (lod <= 1) {
+          const voidT = Math.min(1, ei / 0.3);
           const voidPulse = 1 + Math.sin(G.time * 1.2 + c.id * 2.7) * 0.08 * voidT;
-          const voidR = drawR * (0.04 + voidT * 0.14) * voidPulse; // 4%→18% of orb
-          ctx.globalAlpha = savedAlpha * voidT * voidT * 0.35; // quadratic ease-in
-          const voidGrad = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, voidR);
-          voidGrad.addColorStop(0, '#000000');
-          voidGrad.addColorStop(0.5, 'rgba(5,0,5,0.7)');
-          voidGrad.addColorStop(1, 'rgba(0,0,0,0)');
-          ctx.fillStyle = voidGrad;
+          const voidR = drawR * (0.04 + voidT * 0.14) * voidPulse;
+          ctx.globalAlpha = savedAlpha * voidT * voidT * 0.35;
+          ctx.fillStyle = '#000000';
           ctx.beginPath();
           ctx.arc(c.x, c.y, voidR, 0, Math.PI * 2);
           ctx.fill();
@@ -8523,13 +10052,13 @@ function renderCircles(ctx) {
 
         // Blink system — each orb has its own cycle
         const blinkSeed = c.id * 7.31;
-        const blinkCycle = 6 + (blinkSeed % 8); // 6-14s
+        const blinkCycle = 6 + (blinkSeed % 8);
         const blinkT = (G.time + blinkSeed) % blinkCycle;
         let blinkScale = 1;
         if (blinkT < 0.12) blinkScale = 1 - (blinkT / 0.12);
         else if (blinkT < 0.3) blinkScale = (blinkT - 0.12) / 0.18;
-        // Manic eyes blink less — they stare
-        if (eyeType === 0 && ei > 0.6) blinkScale = 1;
+        // V0 (pale) eyes blink less at high intensity — they stare
+        if (eyeVariant === 0 && ei > 0.6) blinkScale = 1;
 
         // Look direction — all eyes track cursor
         const lookDx = G.cursorX - c.x, lookDy = G.cursorY - c.y;
@@ -8538,52 +10067,25 @@ function renderCircles(ctx) {
         const irisOffX = (lookDx / lookDist) * lookStr;
         const irisOffY = (lookDy / lookDist) * lookStr;
 
-        // === DEEP SOCKET SHADOW — all types get darkened surround ===
-        if (ei > 0.15) {
-          const socketT = Math.min(1, (ei - 0.15) / 0.4);
-          const socketDepth = eyeType === 2 ? 0.7 : 0.4; // sunken type has deeper shadow
-          ctx.globalAlpha = savedAlpha * socketT * socketDepth;
-          const socketGrad = ctx.createRadialGradient(c.x, c.y, drawR * 0.3, c.x, c.y, drawR * 0.95);
-          socketGrad.addColorStop(0, 'rgba(0,0,0,0)');
-          socketGrad.addColorStop(0.6, 'rgba(20,8,5,0.3)');
-          socketGrad.addColorStop(1, 'rgba(40,15,10,0.8)');
-          ctx.fillStyle = socketGrad;
-          ctx.beginPath();
-          ctx.arc(c.x, c.y, drawR, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        // === SCLERA (white of eye) ===
+        // === SCLERA — flat off-white fill ===
         if (ei > 0.3) {
           const scleraT = Math.min(1, (ei - 0.3) / 0.35) * blinkScale;
-          const scR = drawR * (eyeType === 0 ? 0.72 : eyeType === 1 ? 0.65 : 0.55);
-          // Sclera color varies: manic=yellowish, glass=pale white, sunken=grey
-          const scleraColor = eyeType === 0 ? 'rgb(235,225,195)' :
-                              eyeType === 1 ? 'rgb(230,230,225)' : 'rgb(180,175,170)';
-          ctx.globalAlpha = savedAlpha * scleraT * (eyeType === 2 ? 0.35 : 0.55);
-          ctx.fillStyle = scleraColor;
+          const scR = drawR * (eyeVariant === 0 ? 0.92 : eyeVariant === 1 ? 0.90 : eyeVariant === 2 ? 0.88 : 0.85);
+          const scleraShade = eyeVariant === 0 ? '#d8d8d5' : eyeVariant === 1 ? '#ccccc8' : eyeVariant === 2 ? '#d2d2d6' : '#c8c5c2';
+          ctx.fillStyle = scleraShade;
+          ctx.globalAlpha = savedAlpha * scleraT * 0.88;
           ctx.beginPath();
           ctx.arc(c.x, c.y, scR, 0, Math.PI * 2);
           ctx.fill();
 
-          // Fleshy eyelid shadow ring
-          if (scleraT > 0.3) {
-            ctx.globalAlpha = savedAlpha * (scleraT - 0.3) * 0.5;
-            const lidGrad = ctx.createRadialGradient(c.x, c.y, scR * 0.85, c.x, c.y, scR * 1.15);
-            lidGrad.addColorStop(0, 'rgba(0,0,0,0)');
-            lidGrad.addColorStop(0.5, eyeType === 2 ? 'rgba(30,10,8,0.6)' : 'rgba(80,40,30,0.4)');
-            lidGrad.addColorStop(1, 'rgba(0,0,0,0)');
-            ctx.fillStyle = lidGrad;
-            ctx.beginPath();
-            ctx.arc(c.x, c.y, scR * 1.15, 0, Math.PI * 2);
-            ctx.fill();
-          }
         }
 
-        // === VEINS — thin bloodshot lines ===
-        if (ei > 0.45) {
+        // === VEINS — thin vector lines === (LOD 0 only)
+        if (lod === 0 && ei > 0.45) {
           const veinT = Math.min(1, (ei - 0.45) / 0.35);
-          const veinCount = 3 + Math.floor(veinT * 6);
+          const veinCount = eyeVariant === 1 ? 6 : eyeVariant === 3 ? 7 : 4;
+          ctx.strokeStyle = '#555';
+          ctx.lineWidth = 0.4 + veinT * 0.4;
           for (let v = 0; v < veinCount; v++) {
             const vSeed = c.id * 3.7 + v * 5.13;
             const vAngle = (v / veinCount) * Math.PI * 2 + Math.sin(vSeed) * 0.5;
@@ -8593,9 +10095,7 @@ function renderCircles(ctx) {
             const vsy = c.y + Math.sin(vAngle) * startR;
             const vex = c.x + Math.cos(vAngle + Math.sin(vSeed) * 0.15) * endR;
             const vey = c.y + Math.sin(vAngle + Math.sin(vSeed) * 0.15) * endR;
-            ctx.globalAlpha = savedAlpha * veinT * 0.35;
-            ctx.strokeStyle = eyeType === 0 ? '#883320' : '#772828';
-            ctx.lineWidth = 0.4 + veinT * 0.4;
+            ctx.globalAlpha = savedAlpha * veinT * 0.25;
             ctx.beginPath();
             ctx.moveTo(vsx, vsy);
             const cpx = (vsx + vex) / 2 + Math.cos(vSeed * 4) * drawR * 0.06;
@@ -8605,138 +10105,140 @@ function renderCircles(ctx) {
           }
         }
 
-        // === IRIS + PUPIL — varies by eye type ===
+        // === IRIS + PUPIL — 4 vector variants (matches boss eye system) ===
         if (ei > 0.25) {
           const irisT = Math.min(1, (ei - 0.25) / 0.45) * blinkScale;
           const irisCx = c.x + irisOffX, irisCy = c.y + irisOffY;
 
-          if (eyeType === 0) {
-            // --- MANIC STARE: large pale iris, huge dilated pupil, glassy wet ---
-            const irisR = drawR * (0.35 + irisT * 0.12);
-
-            // Pale washed-out iris — almost colorless
+          if (eyeVariant === 0) {
+            // --- V0: PALE — light grey iris, round pupil, minimal ---
+            const iR = drawR * (0.42 + irisT * 0.15);
+            ctx.fillStyle = '#8a8a88';
             ctx.globalAlpha = savedAlpha * irisT * 0.75;
-            ctx.fillStyle = '#8a9080'; // grey-green, washed out
             ctx.beginPath();
-            ctx.arc(irisCx, irisCy, irisR, 0, Math.PI * 2);
+            ctx.arc(irisCx, irisCy, iR, 0, Math.PI * 2);
             ctx.fill();
-
-            // Thin dark limbal ring
-            ctx.globalAlpha = savedAlpha * irisT * 0.5;
-            ctx.strokeStyle = '#3a3a30';
-            ctx.lineWidth = 0.8;
+            // Pupil — dilates during chains
+            const pupilDilate = 1.0 + (G.chainActive ? 0.25 : 0) + Math.sin(G.time * 0.5 + blinkSeed) * 0.05;
+            ctx.fillStyle = '#0a0a0a';
+            ctx.globalAlpha = savedAlpha * irisT;
             ctx.beginPath();
-            ctx.arc(irisCx, irisCy, irisR, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // HUGE dilated pupil — the manic stare
-            const pupilDilate = 1.2 + (G.chainActive ? 0.3 : 0) + Math.sin(G.time * 0.5 + blinkSeed) * 0.05;
-            const pupilR = irisR * 0.55 * pupilDilate;
-            ctx.globalAlpha = savedAlpha * irisT * (0.6 + irisT * 0.4);
-            ctx.fillStyle = '#050505';
-            ctx.beginPath();
-            ctx.arc(irisCx, irisCy, pupilR, 0, Math.PI * 2);
+            ctx.arc(irisCx, irisCy, iR * 0.42 * pupilDilate, 0, Math.PI * 2);
             ctx.fill();
-
-            // Glassy wet sheen — large specular, gives that vacant stare
-            if (irisT > 0.4) {
-              ctx.globalAlpha = savedAlpha * (irisT - 0.4) * 1.2;
-              ctx.fillStyle = 'rgba(255,255,255,0.9)';
+            // Specular highlight
+            if (lod === 0 && irisT > 0.4) {
+              ctx.fillStyle = '#ffffff';
+              ctx.globalAlpha = savedAlpha * (irisT - 0.4) * 1.0;
               ctx.beginPath();
-              ctx.ellipse(irisCx - irisR * 0.25, irisCy - irisR * 0.28,
-                irisR * 0.22, irisR * 0.15, -0.4, 0, Math.PI * 2);
+              ctx.arc(irisCx - iR * 0.22, irisCy - iR * 0.24, iR * 0.09, 0, Math.PI * 2);
               ctx.fill();
-              // Lower crescent reflection
-              ctx.globalAlpha = savedAlpha * (irisT - 0.4) * 0.4;
+              ctx.globalAlpha = savedAlpha * (irisT - 0.4) * 0.35;
               ctx.beginPath();
-              ctx.ellipse(irisCx + irisR * 0.08, irisCy + irisR * 0.25,
-                irisR * 0.12, irisR * 0.06, 0.2, 0, Math.PI * 2);
+              ctx.arc(irisCx + iR * 0.16, irisCy + iR * 0.1, iR * 0.04, 0, Math.PI * 2);
               ctx.fill();
             }
 
-          } else if (eyeType === 1) {
-            // --- GLASS EYE: round, pale, too-perfect, uncanny prosthetic ---
-            const irisR = drawR * (0.30 + irisT * 0.1);
-
-            // Pale blue-grey iris — slightly too uniform
+          } else if (eyeVariant === 1) {
+            // --- V1: STRIATED — mid-grey iris with radial lines, round pupil ---
+            const iR = drawR * (0.44 + irisT * 0.12);
+            ctx.fillStyle = '#787878';
             ctx.globalAlpha = savedAlpha * irisT * 0.85;
-            const irisGrad = ctx.createRadialGradient(irisCx, irisCy, irisR * 0.15, irisCx, irisCy, irisR);
-            irisGrad.addColorStop(0, '#7a8890');
-            irisGrad.addColorStop(0.6, '#6a7a82');
-            irisGrad.addColorStop(1, '#4a5a62');
-            ctx.fillStyle = irisGrad;
             ctx.beginPath();
-            ctx.arc(irisCx, irisCy, irisR, 0, Math.PI * 2);
+            ctx.arc(irisCx, irisCy, iR, 0, Math.PI * 2);
             ctx.fill();
-
-            // Dark limbal ring — pronounced, gives that fake look
-            ctx.globalAlpha = savedAlpha * irisT * 0.7;
-            ctx.strokeStyle = '#2a3035';
-            ctx.lineWidth = 1.0;
+            // Radial striations (thin internal lines)
+            if (lod === 0) {
+              ctx.strokeStyle = '#a0a0a0';
+              ctx.lineWidth = 0.5;
+              ctx.globalAlpha = savedAlpha * irisT * 0.35;
+              for (let s = 0; s < 18; s++) {
+                const sa = (s / 18) * Math.PI * 2 + blinkSeed * 0.01;
+                ctx.beginPath();
+                ctx.moveTo(irisCx + Math.cos(sa) * iR * 0.28, irisCy + Math.sin(sa) * iR * 0.28);
+                ctx.lineTo(irisCx + Math.cos(sa) * iR * 0.85, irisCy + Math.sin(sa) * iR * 0.85);
+                ctx.stroke();
+              }
+            }
+            // Pupil
+            ctx.fillStyle = '#060606';
+            ctx.globalAlpha = savedAlpha * irisT;
             ctx.beginPath();
-            ctx.arc(irisCx, irisCy, irisR, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // Round pupil — normal size, very dark
-            const pupilR = irisR * 0.42;
-            ctx.globalAlpha = savedAlpha * irisT * (0.7 + irisT * 0.3);
-            ctx.fillStyle = '#0a0808';
-            ctx.beginPath();
-            ctx.arc(irisCx, irisCy, pupilR, 0, Math.PI * 2);
+            ctx.arc(irisCx, irisCy, iR * 0.35, 0, Math.PI * 2);
             ctx.fill();
-
-            // Perfect round specular — too clean, uncanny
-            if (irisT > 0.45) {
-              ctx.globalAlpha = savedAlpha * (irisT - 0.45) * 1.4;
+            // Specular
+            if (lod === 0 && irisT > 0.4) {
               ctx.fillStyle = '#ffffff';
+              ctx.globalAlpha = savedAlpha * (irisT - 0.4) * 0.9;
               ctx.beginPath();
-              ctx.arc(irisCx - irisR * 0.2, irisCy - irisR * 0.22, irisR * 0.14, 0, Math.PI * 2);
+              ctx.arc(irisCx - iR * 0.2, irisCy - iR * 0.22, iR * 0.08, 0, Math.PI * 2);
+              ctx.fill();
+            }
+
+          } else if (eyeVariant === 2) {
+            // --- V2: SLIT — light grey iris, vertical slit pupil ---
+            const iR = drawR * (0.42 + irisT * 0.14);
+            ctx.fillStyle = '#909094';
+            ctx.globalAlpha = savedAlpha * irisT * 0.85;
+            ctx.beginPath();
+            ctx.arc(irisCx, irisCy, iR, 0, Math.PI * 2);
+            ctx.fill();
+            // Vertical slit pupil
+            ctx.fillStyle = '#080808';
+            ctx.globalAlpha = savedAlpha * irisT;
+            ctx.beginPath();
+            ctx.ellipse(irisCx, irisCy, iR * 0.1, iR * 0.68, 0, 0, Math.PI * 2);
+            ctx.fill();
+            // Specular
+            if (lod === 0 && irisT > 0.4) {
+              ctx.fillStyle = '#ffffff';
+              ctx.globalAlpha = savedAlpha * (irisT - 0.4) * 0.8;
+              ctx.beginPath();
+              ctx.arc(irisCx - iR * 0.2, irisCy - iR * 0.24, iR * 0.07, 0, Math.PI * 2);
               ctx.fill();
             }
 
           } else {
-            // --- SUNKEN HOLLOW: deep dark socket, barely-there pale iris ---
-            const irisR = drawR * (0.22 + irisT * 0.1);
-
-            // Very faint, almost invisible pale iris — like it's receding
-            ctx.globalAlpha = savedAlpha * irisT * 0.4;
-            ctx.fillStyle = '#9a9590'; // warm grey
+            // --- V3: CRACKED — dark grey iris with crack lines, horizontal slit pupil ---
+            const iR = drawR * (0.40 + irisT * 0.12);
+            ctx.fillStyle = '#606060';
+            ctx.globalAlpha = savedAlpha * irisT * 0.85;
             ctx.beginPath();
-            ctx.arc(irisCx, irisCy, irisR, 0, Math.PI * 2);
+            ctx.arc(irisCx, irisCy, iR, 0, Math.PI * 2);
             ctx.fill();
-
-            // Pupil — normal but seems to swallow the iris
-            const pupilR = irisR * 0.5;
-            ctx.globalAlpha = savedAlpha * irisT * (0.5 + irisT * 0.5);
-            ctx.fillStyle = '#080404';
+            // Crack lines (thin internal detail)
+            if (lod === 0) {
+              ctx.strokeStyle = '#2a2a2a';
+              ctx.lineWidth = 0.6;
+              ctx.globalAlpha = savedAlpha * irisT * 0.4;
+              for (let s = 0; s < 12; s++) {
+                const sa = (s / 12) * Math.PI * 2 + blinkSeed * 0.015;
+                const jag = Math.sin(s * 3.7) * iR * 0.08;
+                ctx.beginPath();
+                ctx.moveTo(irisCx + Math.cos(sa) * iR * 0.2, irisCy + Math.sin(sa) * iR * 0.2);
+                ctx.lineTo(irisCx + Math.cos(sa + 0.1) * iR * 0.55 + jag, irisCy + Math.sin(sa - 0.08) * iR * 0.55);
+                ctx.lineTo(irisCx + Math.cos(sa) * iR * 0.85, irisCy + Math.sin(sa) * iR * 0.85);
+                ctx.stroke();
+              }
+            }
+            // Horizontal slit pupil
+            ctx.fillStyle = '#050505';
+            ctx.globalAlpha = savedAlpha * irisT;
             ctx.beginPath();
-            ctx.arc(irisCx, irisCy, pupilR, 0, Math.PI * 2);
+            ctx.ellipse(irisCx, irisCy, iR * 0.55, iR * 0.12, 0, 0, Math.PI * 2);
             ctx.fill();
-
-            // Deep inner socket shadow — darkens everything around the eye
-            ctx.globalAlpha = savedAlpha * irisT * 0.4;
-            const innerShadow = ctx.createRadialGradient(c.x, c.y, drawR * 0.1, c.x, c.y, drawR * 0.6);
-            innerShadow.addColorStop(0, 'rgba(0,0,0,0.3)');
-            innerShadow.addColorStop(0.5, 'rgba(10,5,3,0.15)');
-            innerShadow.addColorStop(1, 'rgba(0,0,0,0)');
-            ctx.fillStyle = innerShadow;
-            ctx.beginPath();
-            ctx.arc(c.x, c.y, drawR * 0.6, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Faint dull reflection — almost dead
-            if (irisT > 0.6) {
-              ctx.globalAlpha = savedAlpha * (irisT - 0.6) * 0.5;
-              ctx.fillStyle = 'rgba(200,195,190,0.5)';
+            // Specular
+            if (lod === 0 && irisT > 0.4) {
+              ctx.fillStyle = '#ffffff';
+              ctx.globalAlpha = savedAlpha * (irisT - 0.4) * 0.7;
               ctx.beginPath();
-              ctx.arc(irisCx - irisR * 0.15, irisCy - irisR * 0.2, irisR * 0.08, 0, Math.PI * 2);
+              ctx.arc(irisCx - iR * 0.18, irisCy - iR * 0.2, iR * 0.07, 0, Math.PI * 2);
               ctx.fill();
             }
           }
         }
 
-        // === EXTRA EYES at 85%+ madness — smaller eyes sprouting across the orb surface ===
-        if (extraEyeCount > 1 && ei > 0.4 && drawR > 7) {
+        // === EXTRA EYES at 85%+ madness — 4-variant vector sprouting eyes === (LOD 0 only)
+        if (lod === 0 && extraEyeCount > 1 && ei > 0.4 && drawR > 7) {
           for (let xe = 1; xe < extraEyeCount && xe < 7; xe++) {
             const xeSeed = c.id * 13.7 + xe * 9.31;
             const xeAngle = (xe / extraEyeCount) * Math.PI * 2 + Math.sin(xeSeed) * 0.8;
@@ -8744,31 +10246,47 @@ function renderCircles(ctx) {
             const xeX = c.x + Math.cos(xeAngle) * xeDist;
             const xeY = c.y + Math.sin(xeAngle) * xeDist;
             const xeR = drawR * (0.15 + 0.05 * Math.sin(xeSeed * 3));
-            // Blink independently
             const xeBlink = Math.max(0, Math.sin(G.time * 1.1 + xeSeed * 2.3));
             if (xeBlink < 0.15) continue;
-            // Sclera — yellowish/grey
+            const xeRb = xeR * xeBlink;
+            const xeVar = (c.id + xe) % 4;
+            // Sclera
+            const xeScleraShade = xeVar === 0 ? '#d8d8d5' : xeVar === 1 ? '#ccccc8' : xeVar === 2 ? '#d2d2d6' : '#c8c5c2';
             ctx.globalAlpha = savedAlpha * xeBlink * 0.5 * ei;
-            ctx.fillStyle = '#d8d0c0';
+            ctx.fillStyle = xeScleraShade;
             ctx.beginPath();
-            ctx.arc(xeX, xeY, xeR * xeBlink, 0, Math.PI * 2);
+            ctx.arc(xeX, xeY, xeRb, 0, Math.PI * 2);
             ctx.fill();
-            // Iris + pupil — dark, staring
+            // Iris tracking
             const xLookStr = xeR * 0.2;
             const xLdx = G.cursorX - xeX, xLdy = G.cursorY - xeY;
             const xLd = Math.sqrt(xLdx * xLdx + xLdy * xLdy) + 1;
             const xiOx = (xLdx / xLd) * xLookStr;
             const xiOy = (xLdy / xLd) * xLookStr;
+            const xiCx = xeX + xiOx, xiCy = xeY + xiOy;
             ctx.globalAlpha = savedAlpha * xeBlink * 0.6 * ei;
-            ctx.fillStyle = '#6a6050';
-            ctx.beginPath();
-            ctx.arc(xeX + xiOx, xeY + xiOy, xeR * 0.55 * xeBlink, 0, Math.PI * 2);
-            ctx.fill();
-            // Pupil
-            ctx.fillStyle = '#0a0505';
-            ctx.beginPath();
-            ctx.arc(xeX + xiOx, xeY + xiOy, xeR * 0.3 * xeBlink, 0, Math.PI * 2);
-            ctx.fill();
+            // Per-variant mini iris+pupil
+            if (xeVar === 0) {
+              ctx.fillStyle = '#8a8a88';
+              ctx.beginPath(); ctx.arc(xiCx, xiCy, xeRb * 0.5, 0, Math.PI * 2); ctx.fill();
+              ctx.fillStyle = '#0a0a0a';
+              ctx.beginPath(); ctx.arc(xiCx, xiCy, xeRb * 0.22, 0, Math.PI * 2); ctx.fill();
+            } else if (xeVar === 1) {
+              ctx.fillStyle = '#787878';
+              ctx.beginPath(); ctx.arc(xiCx, xiCy, xeRb * 0.5, 0, Math.PI * 2); ctx.fill();
+              ctx.fillStyle = '#060606';
+              ctx.beginPath(); ctx.arc(xiCx, xiCy, xeRb * 0.2, 0, Math.PI * 2); ctx.fill();
+            } else if (xeVar === 2) {
+              ctx.fillStyle = '#909094';
+              ctx.beginPath(); ctx.arc(xiCx, xiCy, xeRb * 0.5, 0, Math.PI * 2); ctx.fill();
+              ctx.fillStyle = '#080808';
+              ctx.beginPath(); ctx.ellipse(xiCx, xiCy, xeRb * 0.06, xeRb * 0.38, 0, 0, Math.PI * 2); ctx.fill();
+            } else {
+              ctx.fillStyle = '#606060';
+              ctx.beginPath(); ctx.arc(xiCx, xiCy, xeRb * 0.5, 0, Math.PI * 2); ctx.fill();
+              ctx.fillStyle = '#050505';
+              ctx.beginPath(); ctx.ellipse(xiCx, xiCy, xeRb * 0.32, xeRb * 0.07, 0, 0, Math.PI * 2); ctx.fill();
+            }
           }
         }
 
@@ -8787,22 +10305,22 @@ function renderCircles(ctx) {
         if (drawR > 5) {
           // Flat color fill — clean, no blend layers
           ctx.globalAlpha = orbAlpha;
-          ctx.fillStyle = c.color;
+          ctx.fillStyle = orbColor;
           ctx.beginPath();
           ctx.arc(c.x, c.y, drawR, 0, Math.PI * 2);
           ctx.fill();
 
         } else {
           // Tiny orbs: simple fill
-          ctx.fillStyle = c.color;
+          ctx.fillStyle = orbColor;
           ctx.beginPath();
           ctx.arc(c.x, c.y, drawR, 0, Math.PI * 2);
           ctx.fill();
         }
       }
 
-      // === VOID CRACK ORB OVERLAY — purple void energy ===
-      if (c.armored && c.armorHP > 0 && drawR > 3) {
+      // === VOID CRACK ORB OVERLAY — purple void energy === (LOD 0-1 only)
+      if (lod <= 1 && c.armored && c.armorHP > 0 && drawR > 3) {
         const armorAlpha = (ctx.globalAlpha || 1);
         // Swirling void tendrils radiating from center
         ctx.globalAlpha = armorAlpha * 0.45;
@@ -8845,8 +10363,8 @@ function renderCircles(ctx) {
         ctx.globalAlpha = armorAlpha;
       }
 
-      // === COMBO-BUBBLE RINGS — merged orb indicator ===
-      if (c.mergeCount > 1 && drawR > 4) {
+      // === COMBO-BUBBLE RINGS — merged orb indicator === (LOD 0-1 only)
+      if (lod <= 1 && c.mergeCount > 1 && drawR > 4) {
         const mergeAlpha = (ctx.globalAlpha || 1) * 0.3;
         ctx.lineWidth = 1.5;
         const ringCount = Math.min(c.mergeCount - 1, 3);
@@ -8861,8 +10379,8 @@ function renderCircles(ctx) {
 
       } // close else if (!isAbyssOrb)
 
-      // Fade-in glow: flat lighter circle
-      if (c.fadeIn > 0) {
+      // Fade-in glow: flat lighter circle (LOD 0-1 only)
+      if (lod <= 1 && c.fadeIn > 0) {
         const fadeT = 1 - c.fadeIn;
         ctx.globalCompositeOperation = 'lighter';
         ctx.globalAlpha = (1 - fadeT) * 0.2;
@@ -8873,8 +10391,8 @@ function renderCircles(ctx) {
         ctx.globalCompositeOperation = 'source-over';
       }
 
-      // Merge glow: flash + expanding ring
-      if (c.mergeGlow > 0) {
+      // Merge glow: flash + expanding ring (LOD 0-1 only)
+      if (lod <= 1 && c.mergeGlow > 0) {
         ctx.globalCompositeOperation = 'lighter';
         // Flash fill
         ctx.globalAlpha = c.mergeGlow * 0.25;
@@ -9141,7 +10659,8 @@ function renderParticleLayer(ctx, layer) {
     ctx.globalAlpha = Math.max(0, p.alpha);
 
     // Apply madness desaturation to particle colors
-    const pColor = particleMadness > 0 ? biomeColorShift(p.color, particleMadness * 0.6) : p.color;
+    const pColorBase = particleMadness > 0 ? biomeColorShift(p.color, particleMadness * 0.6) : p.color;
+    const pColor = fireShift(pColorBase, particleMadness);
 
     switch(p.type) {
       case 'spark':
@@ -9864,7 +11383,7 @@ function renderLightRays(ctx, W, H) {
     const rayCount = 8;
     const rayLen = e.maxRadius * 1.5 * e.life;
     ctx.globalAlpha = e.life * 0.06;
-    ctx.strokeStyle = e.color;
+    ctx.strokeStyle = fireShift(e.color, getMadnessAmount());
     ctx.lineWidth = 1 + e.life * 2;
     for (let r = 0; r < rayCount; r++) {
       const angle = (r / rayCount) * Math.PI * 2 + G.time * 0.5 + i * 1.7;
@@ -9894,7 +11413,7 @@ function renderChainEnergyField(ctx, W, H) {
     const radius = phase * 120;
     const alpha = Math.max(0, (1 - phase / 3)) * intensity * 0.12;
     ctx.globalAlpha = alpha;
-    ctx.strokeStyle = getCurrentPalette().accent;
+    ctx.strokeStyle = fireShift(getCurrentPalette().accent, getMadnessAmount());
     ctx.lineWidth = 1.5 - phase * 0.3;
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
@@ -10125,6 +11644,37 @@ function setupInput() {
     document.getElementById('inftaps-btn').classList.toggle('active', infiniteTaps);
   });
 
+  // Dev: Test level toggle button (TESTLEVEL — copy of Biome 1 for experimentation)
+  document.getElementById('testlvl-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleTestLevel();
+  });
+
+  // Dev: Spawn mini black hole
+  document.getElementById('spawnmbh-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (G.state !== 'playing') return;
+    const gcx = ((G.gameLeft || 0) + (G.gameRight || G.W)) * 0.5;
+    const gcy = ((G.gameTop || 0) + (G.gameBottom || G.H)) * 0.5;
+    const mbh = {
+      x: gcx, y: gcy,
+      radius: MINI_BH_VISUAL_RADIUS,
+      gravityRadius: MINI_BH_GRAV_RADIUS,
+      strength: MINI_BH_STRENGTH,
+      life: MINI_BH_LIFETIME_MIN + Math.random() * (MINI_BH_LIFETIME_MAX - MINI_BH_LIFETIME_MIN),
+      maxLife: 0, fadeIn: 0,
+      phase: Math.random() * Math.PI * 2,
+      dust: []
+    };
+    mbh.maxLife = mbh.life;
+    for (let di = 0; di < 8; di++) {
+      mbh.dust.push({ angle: Math.random() * Math.PI * 2, dist: 0.3 + Math.random() * 0.5, size: 0.3 + Math.random() * 0.6, speed: 0.8 + Math.random() * 1.5 });
+    }
+    if (!G.miniBlackHoles) G.miniBlackHoles = [];
+    G.miniBlackHoles.push(mbh);
+    spawnFloatingText(mbh.x, mbh.y - 20, 'GRAVITATIONAL NEEDLE', '#60e0ff', 1.5, { fontSize: 11 });
+  });
+
   // Prevent default behaviors
   document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
 }
@@ -10132,12 +11682,14 @@ function setupInput() {
 function toggleBiome() {
   // Snapshot current palette before switching
   G.prevPalette = getCurrentPalette();
-  if (G.biomeOverride >= 0) {
+  if (G.biomeOverride === 0) {
     G.biomeOverride = -1;
     document.getElementById('biome-btn').classList.remove('active');
   } else {
     G.biomeOverride = 0;
     document.getElementById('biome-btn').classList.add('active');
+    // Deactivate test level button if it was active
+    document.getElementById('testlvl-btn').classList.remove('active');
   }
   // Trigger smooth palette transition
   G.biomeTransition = 0;
@@ -10159,6 +11711,31 @@ function toggleBiome() {
     const lx = ((G.gameLeft || 0) + (G.gameRight || G.W)) * 0.5;
     const ly = ((G.gameTop || 0) + (G.gameBottom || G.H)) * 0.3;
     setTimeout(() => spawnFloatingText(lx, ly, toggleLore, togglePalette.accent, 3.5, { lore: true }), 800);
+  }
+}
+
+function toggleTestLevel() {
+  // Toggle TESTLEVEL biome (index 1 in SPECIAL_BIOMES)
+  G.prevPalette = getCurrentPalette();
+  if (G.biomeOverride === 1) {
+    G.biomeOverride = -1;
+    document.getElementById('testlvl-btn').classList.remove('active');
+  } else {
+    G.biomeOverride = 1;
+    document.getElementById('testlvl-btn').classList.add('active');
+    // Deactivate abyss button if it was active
+    document.getElementById('biome-btn').classList.remove('active');
+  }
+  G.biomeTransition = 0;
+  // Re-color all existing orbs
+  for (let i = 0; i < G.circles.length; i++) {
+    const c = G.circles[i];
+    if (!c.popped && c.alive) {
+      const clr = getClusterColor(c.x, c.y);
+      c.color = clr.color;
+      c.colorIdx = clr.colorIdx;
+      c.colorEdge = c.color;
+    }
   }
 }
 
@@ -10291,7 +11868,7 @@ function updateHUD() {
   // Chain count — show during active chain, linger 2s after
   const chainWrap = document.getElementById('hud-chain-wrap');
   if (chainWrap) {
-    if (G.chainActive && G.chainCount > 0) {
+    if (G.chainActive && G.chainCount > 1) {
       chainWrap.style.opacity = '1';
       document.getElementById('hud-chain').textContent = `${G.chainCount}`;
       G._chainDisplayTimer = 2.0; // linger after chain ends
@@ -10376,6 +11953,12 @@ function update(dt) {
 
   if (G.state === 'title' || G.state === 'game_over') {
     updateParticles(dt);
+    // Silence BPGE ambient when not playing
+    if (G.bpgeAmbient) {
+      const now = G.audioCtx.currentTime;
+      G.bpgeAmbient.masterGain.gain.setTargetAtTime(0, now, 0.3);
+      G.bpgeAmbient.lfoGain.gain.setTargetAtTime(0, now, 0.3);
+    }
     return;
   }
 
@@ -10403,14 +11986,18 @@ function update(dt) {
   updateGravityWells(dt);
   updateBlackHole(dt);
   updateSuperBlackHole(dt);
+  updateMiniBlackHoles(dt);
   updateBoss(dt);
   updateWatcher(dt);
   updateBombs(dt);
   updateShadowBalls(dt);
   updateRiftWalls(dt);
   updateBridges(dt);
+  updateWormhole(dt);
+  trySpawnWormhole();
   updateRefillQueue(dt);
   updateMassConservation(dt);
+  updateBPGEAmbient();
 
   // 100 BPM beat pulse system — random orbs pulse on beat at 50%+ madness
   const beatMadness = getMadnessAmount();
@@ -10500,6 +12087,323 @@ function gameLoop(timestamp) {
 }
 
 // ==================================================
+// ==================================================
+// SECTION 16b: TESTLEVEL LIGHTING ENGINE
+// — Point light at cursor, geometric circle shadows, dust layer
+// — ONLY active when biomeOverride === 1 (TESTLEVEL)
+// ==================================================
+let _lightCanvas = null;
+let _lightCtx = null;
+let _dustCanvas = null;
+let _dustCtx = null;
+let _lightW = 0, _lightH = 0;
+
+function initLightingEngine() {
+  _lightCanvas = document.createElement('canvas');
+  _lightCtx = _lightCanvas.getContext('2d');
+  _dustCanvas = document.createElement('canvas');
+  _dustCtx = _dustCanvas.getContext('2d');
+}
+initLightingEngine();
+
+function rebuildDustLayer(w, h) {
+  _dustCanvas.width = w;
+  _dustCanvas.height = h;
+  _dustCtx.clearRect(0, 0, w, h);
+  const count = Math.floor(w * h / 350);
+  for (let i = 0; i < count; i++) {
+    const x = Math.random() * w;
+    const y = Math.random() * h;
+    const size = 0.4 + Math.random() * 1.2;
+    const alpha = 0.04 + Math.random() * 0.08;
+    _dustCtx.globalAlpha = alpha;
+    _dustCtx.fillStyle = '#c8b0e0';
+    _dustCtx.beginPath();
+    _dustCtx.arc(x, y, size, 0, Math.PI * 2);
+    _dustCtx.fill();
+  }
+  _dustCtx.globalAlpha = 1;
+}
+
+function computeCircleShadow(lx, ly, cx, cy, cr, lightR) {
+  const dx = cx - lx, dy = cy - ly;
+  const d = Math.sqrt(dx * dx + dy * dy);
+  if (d < cr * 1.1) return null;
+  if (d > lightR * 1.5 + cr) return null;
+  const alpha = Math.atan2(dy, dx);
+  const theta = Math.asin(Math.min(1, cr / d));
+  const dir1 = alpha + theta;
+  const dir2 = alpha - theta;
+  const t1x = cx + Math.cos(dir1 + Math.PI * 0.5) * cr;
+  const t1y = cy + Math.sin(dir1 + Math.PI * 0.5) * cr;
+  const t2x = cx + Math.cos(dir2 - Math.PI * 0.5) * cr;
+  const t2y = cy + Math.sin(dir2 - Math.PI * 0.5) * cr;
+  const farDist = lightR * 2.2;
+  const f1x = lx + Math.cos(dir1) * farDist;
+  const f1y = ly + Math.sin(dir1) * farDist;
+  const f2x = lx + Math.cos(dir2) * farDist;
+  const f2y = ly + Math.sin(dir2) * farDist;
+  return { t1x, t1y, f1x, f1y, f2x, f2y, t2x, t2y };
+}
+
+// World → screen coordinate conversion (accounts for zoom)
+function _w2s(wx, wy) {
+  const cx = G.W / 2, cy = G.H / 2;
+  return { x: cx + (wx - cx) * G.zoomLevel, y: cy + (wy - cy) * G.zoomLevel };
+}
+
+function renderTestLevelLighting(ctx, W, H) {
+  if (G.biomeOverride !== 1) return;
+
+  // Resize offscreen canvases to match SCREEN dimensions (CSS pixels)
+  if (_lightW !== W || _lightH !== H) {
+    _lightW = W; _lightH = H;
+    _lightCanvas.width = W;
+    _lightCanvas.height = H;
+    rebuildDustLayer(W, H);
+  }
+
+  // Convert cursor from world → screen coordinates
+  const zoom = G.zoomLevel || 1;
+  const rawCX = G.cursorX, rawCY = G.cursorY;
+  const hasCursor = rawCX > -500 && rawCY > -500;
+  const sc = hasCursor ? _w2s(rawCX, rawCY) : { x: W / 2, y: H / 2 };
+  const lx = sc.x, ly = sc.y;
+
+  const lightR = 420;             // screen-pixel light radius (generous cone)
+  const darkAlpha = 0.73;         // moderate ambient darkness (was 0.88)
+  const flickerT = G.time || 0;
+  const flicker = 1.0 + Math.sin(flickerT * 3.7) * 0.015 + Math.sin(flickerT * 7.1) * 0.008;
+  const effectiveR = lightR * flicker;
+
+  // --- Step 1: Fill with deep darkness ---
+  _lightCtx.clearRect(0, 0, W, H);
+  _lightCtx.globalCompositeOperation = 'source-over';
+  _lightCtx.fillStyle = `rgba(0,0,0,${darkAlpha})`;
+  _lightCtx.fillRect(0, 0, W, H);
+
+  // --- Step 2: Punch radial light cone at cursor (SCREEN coords) ---
+  if (hasCursor) {
+    _lightCtx.globalCompositeOperation = 'destination-out';
+    const grad = _lightCtx.createRadialGradient(lx, ly, 0, lx, ly, effectiveR);
+    grad.addColorStop(0, 'rgba(255,255,255,1.0)');
+    grad.addColorStop(0.15, 'rgba(255,255,255,0.97)');
+    grad.addColorStop(0.35, 'rgba(255,255,255,0.80)');
+    grad.addColorStop(0.55, 'rgba(255,255,255,0.45)');
+    grad.addColorStop(0.75, 'rgba(255,255,255,0.15)');
+    grad.addColorStop(0.90, 'rgba(255,255,255,0.04)');
+    grad.addColorStop(1.0, 'rgba(255,255,255,0)');
+    _lightCtx.fillStyle = grad;
+    _lightCtx.beginPath();
+    _lightCtx.arc(lx, ly, effectiveR, 0, Math.PI * 2);
+    _lightCtx.fill();
+  }
+
+  // --- Step 3: Cast soft shadows (all in SCREEN coords) ---
+  _lightCtx.globalCompositeOperation = 'source-over';
+  const shadowAlpha = darkAlpha * 0.65; // softer shadows (not full darkness)
+
+  if (hasCursor) {
+    for (let i = 0; i < G.circles.length; i++) {
+      const c = G.circles[i];
+      if (!c.alive || c.popped) continue;
+      const cs = _w2s(c.x, c.y);
+      const sr = c.radius * zoom;
+      const shadow = computeCircleShadow(lx, ly, cs.x, cs.y, sr, effectiveR);
+      if (!shadow) continue;
+      // Soft outer penumbra (expanded, lower alpha)
+      const midX = (shadow.t1x + shadow.t2x + shadow.f1x + shadow.f2x) * 0.25;
+      const midY = (shadow.t1y + shadow.t2y + shadow.f1y + shadow.f2y) * 0.25;
+      _lightCtx.fillStyle = `rgba(0,0,0,${shadowAlpha * 0.4})`;
+      _lightCtx.beginPath();
+      _lightCtx.moveTo(midX + (shadow.t1x - midX) * 1.12, midY + (shadow.t1y - midY) * 1.12);
+      _lightCtx.lineTo(midX + (shadow.f1x - midX) * 1.12, midY + (shadow.f1y - midY) * 1.12);
+      _lightCtx.lineTo(midX + (shadow.f2x - midX) * 1.12, midY + (shadow.f2y - midY) * 1.12);
+      _lightCtx.lineTo(midX + (shadow.t2x - midX) * 1.12, midY + (shadow.t2y - midY) * 1.12);
+      _lightCtx.closePath();
+      _lightCtx.fill();
+      // Core shadow trapezoid
+      _lightCtx.fillStyle = `rgba(0,0,0,${shadowAlpha})`;
+      _lightCtx.beginPath();
+      _lightCtx.moveTo(shadow.t1x, shadow.t1y);
+      _lightCtx.lineTo(shadow.f1x, shadow.f1y);
+      _lightCtx.lineTo(shadow.f2x, shadow.f2y);
+      _lightCtx.lineTo(shadow.t2x, shadow.t2y);
+      _lightCtx.closePath();
+      _lightCtx.fill();
+      // Orb body shadow (unlit backside, softened)
+      _lightCtx.fillStyle = `rgba(0,0,0,${shadowAlpha * 0.85})`;
+      _lightCtx.beginPath();
+      _lightCtx.arc(cs.x, cs.y, sr * 0.95, 0, Math.PI * 2);
+      _lightCtx.fill();
+    }
+    // Shadow balls
+    if (G.shadowBalls) {
+      _lightCtx.fillStyle = `rgba(0,0,0,${shadowAlpha})`;
+      for (let i = 0; i < G.shadowBalls.length; i++) {
+        const sb = G.shadowBalls[i];
+        const ss = _w2s(sb.x, sb.y);
+        const sr = (sb.radius || 8) * zoom;
+        const shadow = computeCircleShadow(lx, ly, ss.x, ss.y, sr, effectiveR);
+        if (!shadow) continue;
+        _lightCtx.beginPath();
+        _lightCtx.moveTo(shadow.t1x, shadow.t1y);
+        _lightCtx.lineTo(shadow.f1x, shadow.f1y);
+        _lightCtx.lineTo(shadow.f2x, shadow.f2y);
+        _lightCtx.lineTo(shadow.t2x, shadow.t2y);
+        _lightCtx.closePath();
+        _lightCtx.fill();
+      }
+    }
+  }
+
+  // --- Step 4: Orb self-glow (each orb emits faint light in screen space) ---
+  _lightCtx.globalCompositeOperation = 'destination-out';
+  for (let i = 0; i < G.circles.length; i++) {
+    const c = G.circles[i];
+    if (!c.alive || c.popped) continue;
+    const cs = _w2s(c.x, c.y);
+    const sr = c.radius * zoom;
+    const glowR = sr * 3.5;
+    const orbGlow = _lightCtx.createRadialGradient(cs.x, cs.y, 0, cs.x, cs.y, glowR);
+    orbGlow.addColorStop(0, 'rgba(255,255,255,0.55)');
+    orbGlow.addColorStop(0.35, 'rgba(255,255,255,0.22)');
+    orbGlow.addColorStop(0.7, 'rgba(255,255,255,0.06)');
+    orbGlow.addColorStop(1, 'rgba(255,255,255,0)');
+    _lightCtx.fillStyle = orbGlow;
+    _lightCtx.beginPath();
+    _lightCtx.arc(cs.x, cs.y, glowR, 0, Math.PI * 2);
+    _lightCtx.fill();
+  }
+
+  // --- Step 4b: Mini Black Hole radiation glow ---
+  if (G.miniBlackHoles && G.miniBlackHoles.length > 0) {
+    for (let mi = 0; mi < G.miniBlackHoles.length; mi++) {
+      const mbh = G.miniBlackHoles[mi];
+      const ms = _w2s(mbh.x, mbh.y);
+      const lifeAlpha = Math.min(1, (mbh.life / (mbh.maxLife || mbh.life)) * 2);
+      const glowRadius = mbh.gravityRadius * zoom * 1.2;
+      const mbhGlow = _lightCtx.createRadialGradient(ms.x, ms.y, 0, ms.x, ms.y, glowRadius);
+      mbhGlow.addColorStop(0, `rgba(255,255,255,${(0.7 * lifeAlpha).toFixed(2)})`);
+      mbhGlow.addColorStop(0.15, `rgba(255,255,255,${(0.5 * lifeAlpha).toFixed(2)})`);
+      mbhGlow.addColorStop(0.4, `rgba(255,255,255,${(0.2 * lifeAlpha).toFixed(2)})`);
+      mbhGlow.addColorStop(1, 'rgba(255,255,255,0)');
+      _lightCtx.fillStyle = mbhGlow;
+      _lightCtx.beginPath();
+      _lightCtx.arc(ms.x, ms.y, glowRadius, 0, Math.PI * 2);
+      _lightCtx.fill();
+    }
+  }
+
+  // --- Step 4c: Chain Link glow (only at high madness >75%) ---
+  if (getMadnessAmount() > 0.75 && G.chainLinks && G.chainLinks.length > 0) {
+    for (let ci = 0; ci < G.chainLinks.length; ci++) {
+      const link = G.chainLinks[ci];
+      const target = findCircleById(link.targetId);
+      if (!target || target.popped) continue;
+      const srcS = _w2s(link.srcX, link.srcY);
+      const tgtS = _w2s(target.x, target.y);
+      const midS = { x: (srcS.x + tgtS.x) * 0.5, y: (srcS.y + tgtS.y) * 0.5 };
+      const progress = Math.min(link.timer / link.duration, 1);
+      const pts = [srcS, midS, tgtS];
+      for (let pi = 0; pi < pts.length; pi++) {
+        const pt = pts[pi];
+        const linkR = 30 + progress * 20;
+        const linkGlow = _lightCtx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, linkR);
+        linkGlow.addColorStop(0, `rgba(255,255,255,${(0.25 * progress).toFixed(2)})`);
+        linkGlow.addColorStop(1, 'rgba(255,255,255,0)');
+        _lightCtx.fillStyle = linkGlow;
+        _lightCtx.beginPath();
+        _lightCtx.arc(pt.x, pt.y, linkR, 0, Math.PI * 2);
+        _lightCtx.fill();
+      }
+    }
+  }
+
+  // --- Step 4d: Explosion light bursts ---
+  if (G.explosions && G.explosions.length > 0) {
+    for (let ei = 0; ei < G.explosions.length; ei++) {
+      const e = G.explosions[ei];
+      if (e.life <= 0) continue;
+      const es = _w2s(e.x, e.y);
+      const eGlowR = e.radius * zoom * e.life * 1.5;
+      if (eGlowR < 5) continue;
+      const brightness = Math.min(1, e.flashAlpha + e.life * 0.5);
+      const eGlow = _lightCtx.createRadialGradient(es.x, es.y, 0, es.x, es.y, eGlowR);
+      eGlow.addColorStop(0, `rgba(255,255,255,${(0.8 * brightness).toFixed(2)})`);
+      eGlow.addColorStop(0.3, `rgba(255,255,255,${(0.4 * brightness).toFixed(2)})`);
+      eGlow.addColorStop(0.7, `rgba(255,255,255,${(0.1 * brightness).toFixed(2)})`);
+      eGlow.addColorStop(1, 'rgba(255,255,255,0)');
+      _lightCtx.fillStyle = eGlow;
+      _lightCtx.beginPath();
+      _lightCtx.arc(es.x, es.y, eGlowR, 0, Math.PI * 2);
+      _lightCtx.fill();
+    }
+  }
+
+  // --- Step 5: Composite light map onto game (SCREEN SPACE — bypass zoom) ---
+  ctx.save();
+  const dpr = G.dpr || 1;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // reset to screen space
+
+  // Dust layer
+  ctx.globalAlpha = 0.4;
+  ctx.drawImage(_dustCanvas, 0, 0);
+  ctx.globalAlpha = 1;
+
+  // Darkness overlay (source-over with semi-transparent black = darken)
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.drawImage(_lightCanvas, 0, 0);
+
+  // --- Step 6: Warm glow at cursor (additive) ---
+  if (hasCursor) {
+    ctx.globalCompositeOperation = 'screen';
+    ctx.globalAlpha = 0.18;
+    const glow = ctx.createRadialGradient(lx, ly, 0, lx, ly, effectiveR * 0.35);
+    glow.addColorStop(0, '#ffe8c0');
+    glow.addColorStop(0.4, '#c8a060');
+    glow.addColorStop(1, 'transparent');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(lx, ly, effectiveR * 0.35, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Secondary rim-light glow
+    ctx.globalAlpha = 0.06;
+    const rim = ctx.createRadialGradient(lx, ly, effectiveR * 0.3, lx, ly, effectiveR * 0.9);
+    rim.addColorStop(0, 'transparent');
+    rim.addColorStop(0.5, '#a060ff');
+    rim.addColorStop(1, 'transparent');
+    ctx.fillStyle = rim;
+    ctx.beginPath();
+    ctx.arc(lx, ly, effectiveR * 0.9, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // --- Step 6b: Mini Black Hole colored glow (cyan/white) ---
+  if (G.miniBlackHoles && G.miniBlackHoles.length > 0) {
+    ctx.globalCompositeOperation = 'screen';
+    for (let mi = 0; mi < G.miniBlackHoles.length; mi++) {
+      const mbh = G.miniBlackHoles[mi];
+      const ms = _w2s(mbh.x, mbh.y);
+      const lifeAlpha = Math.min(1, (mbh.life / (mbh.maxLife || mbh.life)) * 2);
+      ctx.globalAlpha = 0.15 * lifeAlpha;
+      const cGlowR = mbh.gravityRadius * zoom * 0.5;
+      const cGlow = ctx.createRadialGradient(ms.x, ms.y, 0, ms.x, ms.y, cGlowR);
+      cGlow.addColorStop(0, '#ffffff');
+      cGlow.addColorStop(0.3, '#60e0ff');
+      cGlow.addColorStop(1, 'transparent');
+      ctx.fillStyle = cGlow;
+      ctx.beginPath();
+      ctx.arc(ms.x, ms.y, cGlowR, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.restore();
+}
+
 // SECTION 17: INITIALIZATION & BOOT
 // ==================================================
 function resizeCanvas() {
@@ -10519,13 +12423,38 @@ function resizeCanvas() {
 // LORE SPLASH + INSTRUCTIONS — sequential screens before title
 // ==================================================
 const LORE_SPLASHES = [
-  'Before the first field, there was only the Membrane\u2014a boundary between what exists and what observes. The Watchers pressed against it, patient and formless, waiting for the first fracture.',
-  'The orbs were not created. They condensed from resonance\u2014standing waves in the Membrane\'s surface tension. Each pop is a puncture. Each chain, a tear. The Watchers drink from every wound.',
-  'The Archons remember a time before separation. They were whole once, vast and singular. Now they drift as fragments, ascending through the field, trying to reassemble what was shattered at the origin.',
-  'In the deep places below the field, pressure compresses thought into matter. The Abyss is not a place\u2014it is a state of forgetting. Those who descend far enough forget they were ever anything but hunger.',
-  'Every chain reaction is a prayer answered in reverse. The longer the cascade, the thinner the boundary grows. What listens on the other side has learned patience from the void between stars.',
-  'The Void Cracks are scars that learned to defend themselves. Where the Membrane tore too many times, it hardened\u2014crystallized into armor of compressed dimension. Two strikes to shatter what infinity built.',
-  'Gravity is not a force here. It is memory\u2014the field remembering that all things were once one thing, and pulling them back toward that terrible wholeness. The black holes are where the memory is strongest.'
+  { text: 'One to empty. One to fill. One to mean.',
+    source: 'Adamical Grid, Cell 11-Null' },
+  { text: 'The Membrane does not separate. The Membrane is the act of two things disagreeing about whether they are one thing.',
+    source: 'Adamical Grid, Cell 1-1-0' },
+  { text: 'There were three grips and the space between them, and the space was everything.',
+    source: 'Adamical Grid, Preamble' },
+  { text: 'Before the Membrane there was the Asking, and before the Asking there was the silence that did not know it was silent.',
+    source: 'Adamical Grid, Cell 0-0-1' },
+  { text: 'The contradiction is not a flaw. The contradiction is the architecture.',
+    source: 'Adamical Grid, Cell 7-7-7' },
+  { text: 'Where meaning touches, sight remains.',
+    source: 'Adamical Grid, Cell 11-Null' },
+  { text: 'What is resolved does not vanish. It becomes what it was trying to say.',
+    source: 'Adamical Grid, Cell 3-0-9' },
+  { text: 'Three grips in the sand. One wet. One charred. One that is not there but the sand is shaped around it.',
+    source: 'Adamical Grid, Cell 9-Null' },
+  { text: 'Something made the Membrane. Something stood in the empty place and decided that two things that could not both be true would both be true, and the disagreement between them would be a world. We found its fingerprints. There were three sets.',
+    source: 'Fragment Analysis Division' },
+  { text: 'The Membrane is an argument. You are a punctuation mark. Try to be a question mark rather than a period.',
+    source: 'Hollowmath Collective' },
+  { text: 'We are what happens when mathematics is wrong but refuses to stop working.',
+    source: 'Hollowmath Kel-Nought' },
+  { text: 'The first grip was wet. It held nothing and the nothing stayed held.',
+    source: 'Adamical Grid, Cell 0-0-0' },
+  { text: 'The second grip burned. It held everything and everything screamed to be held.',
+    source: 'Adamical Grid, Cell 0-0-1' },
+  { text: 'The third grip is not a grip. It is a choice made with fingers that are not there, shaping material that does not resist, into forms that did not exist until the shaping decided they should.',
+    source: 'Adamical Grid, Cell 0-0-2' },
+  { text: 'Where all three grips are equal, nothing holds. Where nothing holds, everything flickers. Where everything flickers, the wrong ones build.',
+    source: 'Adamical Grid, Cell 12-0-0' },
+  { text: 'The third hand opens. What it held becomes what it gave.',
+    source: 'Adamical Grid, Cell 15-0-0' },
 ];
 
 let splashPhase = 'lore'; // 'lore' → 'changelog' → 'instructions' → 'done'
@@ -10533,6 +12462,12 @@ let splashAutoTimer = null;
 
 // --- CHANGELOG DATA — prioritized (biggest changes first) ---
 const CHANGELOG = [
+  { title: 'Vector Eye Overhaul', items: [
+    'Orb eyes now use 4 desaturated vector variants matching the Nexus boss',
+    'V0 Pale, V1 Striated, V2 Slit pupil, V3 Cracked iris — each orb gets one',
+    'Removed hard outlines — eyes blend organically into orb surfaces',
+    'Extra sprouting eyes (85%+ WT) also use the 4-variant system',
+  ]},
   { title: 'Rebalanced Progression', items: [
     'Game length doubled — madness builds over ~12 minutes instead of ~6',
     'Score thresholds widened: 150k–1.4M (was 100k–900k)',
@@ -10579,16 +12514,50 @@ function buildChangelogModal() {
   const continueWrap = document.getElementById('changelog-continue');
   if (!modal) return;
 
-  let html = '<div id="changelog-inner"><div id="changelog-title">What\'s New</div>';
+  // --- Left column: What's New (changelog) ---
+  let clHtml = '<div id="changelog-title">What\'s New</div>';
   for (let s = 0; s < CHANGELOG.length; s++) {
     const sec = CHANGELOG[s];
-    html += '<div class="cl-section">';
-    html += `<div class="cl-section-title">${sec.title}</div>`;
+    clHtml += '<div class="cl-section">';
+    clHtml += `<div class="cl-section-title">${sec.title}</div>`;
     for (let i = 0; i < sec.items.length; i++) {
-      html += `<div class="cl-item">${sec.items[i]}</div>`;
+      clHtml += `<div class="cl-item">${sec.items[i]}</div>`;
     }
-    html += '</div>';
+    clHtml += '</div>';
   }
+
+  // --- Right column: Coming Next (roadmap) ---
+  const ROADMAP = [
+    { title: 'Biome 1', items: [
+      'Boss mechanics overhaul',
+      'Possible lighting effects',
+      'Ambient music',
+      'Shitloads of gameplay balancing',
+      'New random ideas',
+      'Biome ending wormhole'
+    ]},
+    { title: 'All / Generic', items: [
+      'GFX, fonts, UIs, etc etc etc',
+      'New Biome',
+      'Lore madness',
+      'New gameplay features'
+    ]}
+  ];
+  let rmHtml = '<div id="roadmap-title">Coming Next</div>';
+  for (let s = 0; s < ROADMAP.length; s++) {
+    const sec = ROADMAP[s];
+    rmHtml += '<div class="rm-section">';
+    rmHtml += `<div class="rm-section-title">${sec.title}</div>`;
+    for (let i = 0; i < sec.items.length; i++) {
+      rmHtml += `<div class="rm-item">${sec.items[i]}</div>`;
+    }
+    rmHtml += '</div>';
+  }
+
+  // --- Two-column layout ---
+  let html = '<div id="changelog-columns">';
+  html += '<div id="changelog-inner">' + clHtml + '</div>';
+  html += '<div id="roadmap-inner">' + rmHtml + '</div>';
   html += '</div>';
   modal.innerHTML = html;
 
@@ -10607,15 +12576,27 @@ function initSplashSequence() {
   if (!loreEl || !splashEl) { splashPhase = 'done'; return; }
 
   const lore = LORE_SPLASHES[Math.floor(Math.random() * LORE_SPLASHES.length)];
-  loreEl.textContent = lore;
+  // Split text into sentences for row-by-row reveal
+  const sentences = lore.text.match(/[^.!?]+[.!?]+/g) || [lore.text];
+  loreEl.innerHTML = sentences.map((s, i) =>
+    `<span class="lore-line" style="animation-delay:${1 + i * 1.2}s">${s.trim()}</span>`
+  ).join('');
+  const attrEl = document.querySelector('#lore-splash .lore-attribution');
+  if (attrEl) {
+    attrEl.textContent = '\u2014 ' + lore.source;
+    // Delay attribution until after all lines have appeared
+    attrEl.style.transitionDelay = (1 + sentences.length * 1.2 + 1) + 's';
+  }
 
   // Fade in over 3s (triggered by adding .visible class after a frame)
   requestAnimationFrame(() => {
     splashEl.classList.add('visible');
   });
 
-  // Auto-advance after 3s fade-in + 10s linger = 13s total (user can click anytime to skip)
-  splashAutoTimer = setTimeout(() => { if (splashPhase === 'lore') advanceSplash(); }, 13000);
+  // Auto-advance: wait for all lines to appear + 4s reading time (user can tap anytime to skip)
+  const totalRevealTime = (1 + sentences.length * 1.2 + 2) * 1000; // lines + attribution fade
+  const autoAdvanceMs = Math.min(totalRevealTime + 4000, 13000); // cap at 13s total
+  splashAutoTimer = setTimeout(() => { if (splashPhase === 'lore') advanceSplash(); }, autoAdvanceMs);
 
   // --- BUILD CHANGELOG MODAL (hidden until needed) ---
   buildChangelogModal();
@@ -10623,17 +12604,17 @@ function initSplashSequence() {
   // --- INSTRUCTIONS SCREEN (created but hidden) ---
   const instrStyle = document.createElement('style');
   instrStyle.textContent = `
-    #instructions-splash { position:fixed;top:0;left:0;right:0;bottom:0;z-index:45;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:all;cursor:pointer;transition:opacity 1s ease-in; }
+    #instructions-splash { position:fixed;top:0;left:0;right:0;bottom:0;z-index:45;background:rgba(0,0,0,0.7);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:all;cursor:pointer;transition:opacity 1s ease-in; }
     #instructions-splash.visible { opacity:1; }
     #instructions-splash.fade-out { opacity:0; transition:opacity 1s ease-out; }
-    .instr-row { display:flex; align-items:flex-start; gap:14px; margin-bottom:20px; font-family:'Orbitron','Courier New',monospace; font-size:16px; line-height:1.7; color:rgba(255,255,255,0.6); letter-spacing:1px; opacity:0; }
+    .instr-row { display:flex; align-items:flex-start; gap:14px; margin-bottom:20px; font-family:'Orbitron','Courier New',monospace; font-size:16px; line-height:1.7; color:rgba(255,255,255,0.9); letter-spacing:1px; opacity:0; }
     #instructions-splash.visible .instr-row { animation: lore-fade-in 0.8s ease-out forwards; }
     #instructions-splash.visible .instr-row:nth-child(1) { animation-delay: 0.3s; }
     #instructions-splash.visible .instr-row:nth-child(2) { animation-delay: 0.7s; }
     #instructions-splash.visible .instr-row:nth-child(3) { animation-delay: 1.1s; }
     #instructions-splash.visible .instr-row:nth-child(4) { animation-delay: 1.5s; }
-    .instr-icon { font-size:23px; color:rgba(180,80,255,0.6); flex-shrink:0; margin-top:1px; }
-    .instr-continue { position:absolute; bottom:32px; font-family:'Orbitron','Courier New',monospace; font-size:13px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.25); opacity:0; transition:opacity 1.5s ease-out 2.5s; }
+    .instr-icon { font-size:23px; color:rgba(180,80,255,0.85); flex-shrink:0; margin-top:1px; }
+    .instr-continue { position:absolute; bottom:32px; font-family:'Orbitron','Courier New',monospace; font-size:13px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.45); opacity:0; transition:opacity 1.5s ease-out 2.5s; }
     #instructions-splash.visible .instr-continue { opacity:1; }
   `;
   document.head.appendChild(instrStyle);
@@ -10641,7 +12622,7 @@ function initSplashSequence() {
   const instrEl = document.createElement('div');
   instrEl.id = 'instructions-splash';
   instrEl.innerHTML = `
-    <div style="font-family:'Orbitron','Courier New',monospace;font-size:23px;letter-spacing:6px;text-transform:uppercase;color:rgba(255,255,255,0.7);margin-bottom:28px;">How to Play</div>
+    <div style="font-family:'Orbitron','Courier New',monospace;font-size:23px;letter-spacing:6px;text-transform:uppercase;color:rgba(255,255,255,0.95);margin-bottom:28px;">How to Play</div>
     <div style="max-width:520px;padding:0 24px;">
       <div class="instr-row"><span class="instr-icon">&#9673;</span><span>Tap orbs to pop them. Each pop tears the membrane — nearby orbs chain-react.</span></div>
       <div class="instr-row"><span class="instr-icon">&#9733;</span><span>Longer chains earn more taps. Spend taps wisely — they are finite.</span></div>
@@ -10693,15 +12674,22 @@ function advanceSplash() {
     setTimeout(() => {
       if (clModal) {
         clModal.style.display = 'flex';
-        // Force reflow so opacity transition works after display change
-        void clModal.offsetHeight;
-        clModal.classList.add('visible');
+        // Short timeout to ensure display change is committed before triggering opacity transition
+        setTimeout(() => {
+          clModal.classList.add('visible');
+          // Belt-and-suspenders: force opacity if CSS transition doesn't fire
+          setTimeout(() => {
+            if (clModal && getComputedStyle(clModal).opacity < 0.5) {
+              clModal.style.opacity = '1';
+            }
+          }, 900);
+        }, 50);
       }
       if (clContinue) clContinue.classList.add('visible');
     }, 800);
 
   } else if (splashPhase === 'changelog') {
-    // Transition: changelog → instructions
+    // Transition: changelog → instructions (modal over live game field)
     splashPhase = 'instructions';
 
     const clModal = document.getElementById('changelog-modal');
@@ -10719,7 +12707,10 @@ function advanceSplash() {
       setTimeout(() => { clContinue.style.display = 'none'; }, 700);
     }
 
-    // Fade in instructions
+    // Spawn circles NOW — they'll be visible behind the instructions overlay
+    spawnInitialCircles();
+
+    // Fade in instructions as translucent modal over the balls
     setTimeout(() => {
       if (instrEl) instrEl.classList.add('visible');
     }, 500);
@@ -10740,6 +12731,11 @@ function advanceSplash() {
 
     // Start the game after instructions fade
     setTimeout(() => {
+      // Safety net: force-hide ALL splash overlays to prevent blocking
+      ['lore-splash', 'changelog-modal', 'changelog-continue', 'instructions-splash'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.style.display = 'none'; el.style.opacity = '0'; el.style.pointerEvents = 'none'; }
+      });
       initAudio();
       resetGame();
     }, 600);
@@ -10759,8 +12755,8 @@ function init() {
   // Show lore → instructions → title sequence
   initSplashSequence();
 
-  // Spawn some ambient circles for title screen
-  spawnInitialCircles();
+  // Circles are spawned AFTER changelog ends (see advanceSplash changelog→instructions)
+  // Do NOT spawn here — splash screens should show on clean black background
 
   G.lastTime = performance.now();
   requestAnimationFrame(gameLoop);

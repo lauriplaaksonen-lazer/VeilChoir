@@ -1,0 +1,18 @@
+# Backups (git IS the version history)
+backups/
+*.backup.html
+*.backup_*.html
+index.backup*
+index.html.backup.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Claude Code working files
+.claude/
+
+# Editor
+*.swp
+*.swo
+*~
