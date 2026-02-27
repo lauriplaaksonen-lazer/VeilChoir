@@ -1,0 +1,163 @@
+POP FIELD — UI, SCREENS & INPUT
+==================================
+
+=== BOOT SEQUENCE ===
+1. init() called
+2. Canvas setup, input setup
+3. initSplashSequence():
+   a. Lore splash: random quote from LORE_SPLASHES (7 quotes)
+      - Fade in over 3s (CSS transition)
+      - Auto-advance after 13s or click/key
+   b. Changelog modal: scrollable "What's New" list
+      - ONLY advances via "Continue" button (not background click)
+      - Fades in 0.8s after lore starts fading
+   c. Instructions splash: 4 "How to Play" rows
+      - Rows animate in with stagger (0.3s, 0.7s, 1.1s, 1.5s)
+      - Click to continue
+   d. Game starts immediately (resetGame called after 0.6s delay)
+4. Title screen (display:none by default — never shown before splash)
+
+=== HTML ELEMENTS ===
+
+#c — Main game canvas (100% viewport)
+
+#hud — Top bar (z-index: 10)
+  - Left: Taps count
+  - Center: Level
+  - Right: Score
+  - Font: Orbitron, uppercase, letter-spacing 3px
+  - Hidden initially (display:none), shown on game start
+
+#xp-bar-wrap / #xp-bar-fill — Bottom XP bar
+  - 8px tall at bottom of screen
+  - Gradient: purple -> pink -> gold
+  - Width transitions with CSS (0.3s ease-out)
+
+#title-screen (z-index: 20)
+  - display:none by default (hidden)
+  - "POP FIELD" header, "Chain Reaction" subtitle
+  - Splash info: Archons, Black Holes, Void Cracks descriptions
+  - Lore teaser text
+  - "Tap to Start" pulsing text
+
+#gameover-screen (z-index: 20)
+  - "GAME OVER" header (red)
+  - Score, Level, Best Chain display
+  - "Tap to Restart" pulsing text
+
+#upgrade-panel (z-index: 30)
+  - Full-screen dark overlay (75% black)
+  - "LEVEL UP" header
+  - Single upgrade card
+    - Name, level transition, description
+    - Click/tap to accept
+
+#lore-splash (z-index: 50)
+  - Full-screen black
+  - Unicode symbol header (◓)
+  - Lore text (max-width 600px)
+  - "— from the Membrane Codex" attribution
+  - "tap or press any key" skip hint
+
+#changelog-modal (z-index: 48)
+  - Scrollable changelog
+  - Dark background (92% black)
+  - Sections with titles and bullet items
+
+#changelog-continue (z-index: 49)
+  - Fixed bottom bar with gradient fade
+  - "Continue" button
+
+=== DEV TOOL BUTTONS ===
+All: position fixed, right side, z-index 15
+
+#biome-btn (top: 56px)
+  - Toggles Abyss biome
+  - Keyboard shortcut: B
+  - Active state: cyan border + glow
+
+#madness-btn (top: 88px)
+  - Toggles devMadnessOverride (0 or 1.0)
+  - Active state: red border + glow
+
+#autolvl-btn (top: 120px)
+  - Toggles autoLevelUp (auto-applies random upgrade)
+  - Active state: green border + glow
+
+#inftaps-btn (top: 152px)
+  - Toggles infiniteTaps (keeps taps at 99)
+  - Active state: gold border + glow
+
+=== INPUT HANDLING ===
+
+Touch Events (canvas):
+  touchstart: record position, start long press timer
+  touchmove: update cursor position, update press position
+  touchend: if short tap -> handleTap(), if long press already fired -> nothing
+  All passive:false for preventDefault
+
+Mouse Events (canvas):
+  mousedown: record position, start long press timer
+  mouseup: if short tap -> handleTap()
+  mousemove: update cursor position (G.cursorX, G.cursorY)
+  mouseleave: reset cursor to -1000, cancel press
+
+Long Press:
+  LONG_PRESS_MS = 350ms
+  setTimeout in startPress()
+  If held 350ms+ -> handleLongPress() -> placeBomb()
+  If released before -> normal handleTap()
+
+Keyboard:
+  B key: toggleBiome()
+
+=== COORDINATE SYSTEM ===
+screenToWorld(sx, sy):
+  Converts screen coordinates to game world (accounting for zoom)
+  x = (sx - centerX) / zoomLevel + centerX
+  y = (sy - centerY) / zoomLevel + centerY
+
+=== TAP HANDLING ===
+handleTap(x, y):
+  1. Init audio if needed
+  2. If splash active -> advanceSplash()
+  3. If title -> resetGame()
+  4. If game_over -> resetGame()
+  5. If not playing or no taps or pending level-up -> return
+  6. Reset tap timer
+  7. Try tap supermassive BH (free, no tap cost)
+  8. Try tap regular BH (free, no tap cost)
+  9. Normal tap -> startChain(x, y)
+
+=== FLOATING TEXT SYSTEM ===
+spawnFloatingText(x, y, text, color, duration):
+  - Max 15 concurrent
+  - Floats upward with fade-out
+  - Used for: "+N TAPS", "MINE SET", "VOID OPENS", "TAP TO COLLAPSE",
+    mass counters, combo text, upgrade names
+
+=== HUD UPDATE ===
+updateHUD():
+  - Updates tap count, level, score displays
+  - XP bar width percentage
+  - Called after every state change
+
+=== SPLASH QUOTES (LORE_SPLASHES) ===
+7 lore passages about:
+  1. The Membrane and Watchers
+  2. Orbs as standing waves, pops as punctures
+  3. Archons and their origin
+  4. The Abyss as a state of forgetting
+  5. Chain reactions as inverted prayers
+  6. Void Cracks as self-defending scars
+  7. Gravity as memory
+
+=== CHANGELOG SECTIONS ===
+7 sections:
+  1. Rebalanced Progression (game length, thresholds, XP)
+  2. Tighter Tap Economy (starting taps, decay, rewards)
+  3. Chain Reaction Tuning (blast, fractures, cascades)
+  4. Shadow Balls (description)
+  5. Supermassive Black Hole (supernova)
+  6. Abyss Biome (whirlpool rendering)
+  7. Cursor & Physics (expanded reach, density, sizing)

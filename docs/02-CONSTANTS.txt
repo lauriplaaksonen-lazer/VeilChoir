@@ -1,0 +1,169 @@
+POP FIELD — ALL GAME CONSTANTS
+================================
+
+=== CORE GAMEPLAY ===
+BASE_TAPS = 8                       // starting taps per game
+BASE_CIRCLE_COUNT = 35              // initial orb count
+BASE_CIRCLE_RADIUS = 18             // default orb radius (px)
+BASE_BLAST_RADIUS = 50              // initial blast radius (px)
+MAX_BLAST_RADIUS = 115              // maximum blast radius (px)
+MAX_TAP_DISTANCE = 80               // max distance from tap to hit orb
+TAP_TIMER_BASE = 10                 // seconds before tap decays (grows +0.5/lvl, max 14)
+
+=== POOL LIMITS ===
+MAX_CIRCLES = 300                   // max orbs on field
+MAX_PARTICLES = 800                 // particle pool size
+MAX_EXPLOSIONS = 40                 // max concurrent explosions
+MAX_FLOATING_TEXTS = 15             // max floating text elements
+MAX_PAINT_SPLATS = 200              // max persistent paint marks
+MAX_AFTERSHOCKS = 20                // max aftershock zones
+
+=== XP & LEVELING ===
+XP_BASE = 15                       // XP needed for level 2
+XP_SCALE = 1.70                    // XP multiplier per level (15->26->43->73->125...)
+PALETTE_LEVELS = 3                  // levels per palette phase (5 phases total)
+
+=== CHAIN MECHANICS ===
+CHAIN_POP_DELAY_MIN = 0.015        // min delay between chain pops (seconds)
+CHAIN_POP_DELAY_MAX = 0.045        // max delay between chain pops
+CHAIN_POP_DELAY_JITTER = 0.015     // random jitter added to delay
+LINK_TENSION_TIME_BASE = 0.18      // base link tension time (seconds)
+LINK_PULL_STRENGTH = 120           // force pulling queued orbs toward source
+
+  Chain tension tiers (getLinkTensionTime):
+    S-tier (50+): 100% of base (full epic pacing)
+    A-tier (30-49): 60% of base
+    B-tier (15-29): 70% of base
+    C-tier (<15): 55% of base (very snappy)
+
+=== DELAYED BLAST THRESHOLDS ===
+DELAYED_BLAST_MINOR = 20           // chain count for tier-1 blast
+DELAYED_BLAST_MAJOR = 35           // chain count for tier-2 blast
+DELAYED_BLAST_MEGA = 55            // chain count for tier-3 blast
+
+=== SUPER CELL (ARCHON) ===
+SC_SPAWN_CHANCE = 0.09             // 9% chance per cooldown check
+SC_RADIUS_MULT = 1.6               // size multiplier vs base orb
+SC_SPIKE_MIN = 5                   // minimum spikes on SC
+SC_SPIKE_MAX = 8                   // maximum spikes
+SC_GRAVITY_LIFE = 0.4              // gravity well duration after SC pop
+SC_GRAVITY_STRENGTH = 200          // gravity well strength
+
+=== BOMB / MINE ===
+BOMB_FUSE_TIME = 3.5               // seconds until detonation
+BOMB_BLAST_MULT = 1.4              // blast radius multiplier
+
+=== INTER-ORB GRAVITY ===
+INTER_ORB_GRAVITY = 15             // base gravity pull from big->small orbs
+
+=== BLACK HOLE ===
+BH_VISUAL_RADIUS = 25              // visual size (px)
+BH_GRAVITY_RADIUS = 420            // pull range (px)
+BH_STRENGTH = 1100                 // gravity strength
+BH_TANGENT_STRENGTH = 0.55         // tangential force ratio (orbital spin)
+BH_COLLAPSE_THRESHOLD = 5          // orbs to swallow for collapse
+BH_SWALLOW_RADIUS_MULT = 0.5       // fraction of visual radius = swallow zone
+  Spawn timer: 25-45 seconds random
+  Lifetime: 8-16 seconds
+  Growth per orb: +3 visual, +15 gravity, +80 strength
+  Horror rate: 0.0015 + mass*0.001 per second
+  Horror cap: 0.35
+
+=== SUPERMASSIVE BLACK HOLE ===
+SBH_SPAWN_INTERVAL_MIN = 30        // min seconds between spawns
+SBH_SPAWN_INTERVAL_MAX = 50        // max seconds between spawns
+SBH_LIFETIME = 8                   // seconds alive
+SBH_COLLAPSE_MASS = 8              // orbs for auto-collapse
+SBH_SWALLOW_FRAC = 0.12            // swallow radius fraction
+  Base strength: 3500
+  Tangent ratio: 0.4
+  Visual radius: 12% of shorter screen dimension
+  Gravity radius: 55-70% of play area diagonal
+  Growth per orb: +5 visual, +20 gravity, +150 strength
+  Horror rate: 0.003 + mass*0.0015 per second
+  Horror cap: 0.50
+  Only spawns at madness > 75%
+  Supernova: triggered when mass >= SBH_COLLAPSE_MASS
+
+=== SHADOW BALLS ===
+SHADOW_BALL_MIN_MADNESS = 0.70     // madness threshold to start spawning
+SHADOW_BALL_MAX_COUNT = 40         // max shadow balls on field
+SHADOW_BALL_SIZE_MIN = 3           // smallest radius (px)
+SHADOW_BALL_SIZE_MAX = 9           // largest radius (px)
+SHADOW_BALL_SPAWN_RATE = 0.15      // seconds between spawn attempts
+  Velocity damping: 0.92 per frame
+  Gravity amplification: 1.5x normal orb forces
+  Cursor pull amplification: 1.3x
+  BH feeding: mass fraction = radius/BASE_CIRCLE_RADIUS (0.17-0.50)
+
+=== PGE (PASSIVE GRAVITATIONAL EFFECT) ===
+PGE_BPM = 90                       // beats per minute
+PGE_BEAT_SEC = 60/90 = 0.6667      // seconds per beat
+PGE_MIN_BEATS_BETWEEN = 6          // min beats between pulses (~4s)
+PGE_MAX_BEATS_BETWEEN = 14         // max beats between (~9.3s)
+
+  B1 Whirlwind:
+    Strength: swirlMadMult = 0.8 + madness * 1.2
+    Force: 35
+    Inward pull: 0.25
+    Chaos jitter at >30% madness: (madness-0.3) * 20
+
+  B2 Abyss Pressure:
+    Strength: abyssMadMult = 0.6 + madness * 0.9
+    Force: 50
+    Underwater current: 6 (horizontal sine drift)
+
+=== MADNESS SCALING FORMULAS ===
+getMadnessAmount():
+  score < 150k: base = 0
+  150k-800k: base = (score-150k)/650k * 0.5
+  800k+: base = 0.5 + min(0.5, (score-800k)/600k)
+  return min(1, base + horrorBoost)
+
+getMadnessPhysicsScale():
+  0-50% madness: 1.0 -> 1.15
+  50-100%: 1.15 -> 1.7
+
+getAbyssSaturation():
+  0-10% madness: 0 (pitch black)
+  10-70% madness: ramp 0->1
+  70-100%: 1 (fully vivid)
+
+=== CURSOR PHYSICS ===
+  Reach: 5x at 0% madness -> 12x at 100%
+  Strength: 1.0x at 0% -> 2.0x at 100%
+  1/d falloff with soft floor (effDist + 40)
+  Max pull per frame: 40 * speedBoost * madPhys * cursorStrMult
+  Brush range: (60 + radius) * cursorReachMult * 0.5
+  Brush max force: 120 * cursorStrMult
+
+=== ORB SIZE SCALING ===
+  0-50% madness: normal sizing (base 18px + random 0-4)
+  50-100%: base grows 1.0x -> 1.5x, random range 4->12
+  66-100%: extreme variation, min size down to 0.45x
+
+=== ORB POPULATION SCALING ===
+  Base: 35 + min(20, floor((level-1)*1.5)) + density*6
+  Madness flood: 1.0x at <10%, up to 2.5x at 100%
+  Zoom factor: min(1, 0.3 + 0.7/zoomLevel)
+
+=== FRACTURING (by level) ===
+  [gen0, gen1, gen2, gen3, gen4] children per generation:
+  L1-4:  [0, 0, 0, 0, 0]
+  L5-6:  [1, 0, 0, 0, 0]
+  L7-9:  [1, 1, 0, 0, 0]
+  L10-11: [2, 1, 0, 0, 0]
+  L12-13: [2, 1, 1, 0, 0]
+  L14-15: [2, 2, 1, 0, 0]
+  L16-17: [2, 2, 1, 1, 0]
+  L18+:  [2, 2, 1, 1, 1]
+
+=== ABYSS TWINKLE PARTICLES ===
+ABYSS_TWINKLE_COUNT = 600
+ABYSS_DUST_COUNT = 1500
+ABYSS_TWINKLE_COLORS = 18 colors (cyan, teal, lime, violet, hot pink, gold, purple, aqua, neon pink, chartreuse, light blue, lavender, amber, mint, rose, light purple, ice, spring green)
+
+=== BEAT PULSE SYSTEM ===
+  100 BPM (0.6s per beat)
+  Active at 50%+ madness
+  Selects 15-40% of living orbs per beat to pulse

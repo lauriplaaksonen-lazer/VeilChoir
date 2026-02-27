@@ -1,0 +1,245 @@
+POP FIELD — CURRENT DEVELOPMENT STATE
+========================================
+Date: 2026-02-26
+File: index.html (9088 lines, single-file game)
+
+=== COMPLETED BATCH: GAMEPLAY POLISH, BALANCE & LORE ===
+
+All 12 items from the polish plan have been implemented:
+
+1. BLACK HOLE VISUAL REWORK
+   - Removed accretion disk stroke ellipse
+   - Added 25 star dust particles spiraling inside event horizon
+   - Particles: random angle, 0.3-0.9 radius, white/blue/gold colors
+   - Respawn at outer edge when reaching center
+
+2. FISSION BALANCE NERF
+   - Capped at 2 fission orbs (was 4)
+   - Fission orbs set as gen-1 minimum (was gen-0)
+   - Marked as shrapnel (0.15 XP)
+   - 800ms blast immunity (shrapnelImmune)
+   - fissionSpawn flag prevents recursive fission
+
+3. BLACK HOLE FREE TAP ON COLLAPSE
+   - +1 tap on collapse, +2 if mass >= 8
+   - Floating text shows tap reward
+
+4. BLACK HOLE GROWS WHEN EATING
+   - bh.radius = BH_VISUAL_RADIUS + mass * 3 (grows 3px per orb)
+   - bh.gravityRadius = BH_GRAVITY_RADIUS + mass * 15
+   - bh.strength = BH_STRENGTH + mass * 80
+   - Applied to both regular BH and SBH
+
+5. SIZE-BASED BLAST RADIUS
+   - sizeScale = circle.radius / BASE_CIRCLE_RADIUS
+   - blastR = (baseR + novaBonus) * (0.7 + 0.3 * sizeScale)
+   - Big merged orbs: 45% bigger blast; tiny shrapnel: 18% smaller
+
+6. SIZE-BASED XP
+   - sizeXpScale = max(0.15, (radius / BASE_CIRCLE_RADIUS) * 0.6)
+   - Normal orb: 0.6 XP (was 1.0); merged 2.5x: 1.5 XP
+   - Shrapnel: clamped to 0.15 XP minimum
+
+7. CURSOR CHASE BOOST
+   - Advanced 1/d falloff with reach multiplier (5x to 12x with madness)
+   - pullBase = 700 * speedBoost * madPhys * strengthMult
+   - Max pull: 40 * boosts (far exceeds original plan's 30)
+   - Cursor speed boost (1.0x to 2.5x for fast mouse movement)
+   - Cursor brush: nearby orbs pushed in cursor direction
+
+8. SLOWER LEVEL PROGRESSION
+   - XP_SCALE = 1.70 (steeper curve)
+   - Diminishing returns at 15 pops (was 20)
+   - Combined with size-based XP: normal orbs give 0.6 XP (was 1.0)
+
+9. FIELD CLEAR MEGA EXPLOSION + BOSS DAMAGE
+   - Full-screen white explosion on circles.length === 0
+   - shakeAmount 15, whiteGlow 1.0, chromaticAb 8
+   - Boss takes 5 HP damage (with cooldown reset between hits)
+   - Reuses playBossDeathSound() for drama
+   - advanceBiome() triggered on field clear
+
+10. DIRECTIONAL RESPAWN BIAS
+    - G.popCenterX/Y: exponential moving average of pop positions
+    - 50% chance to spawn from opposite side of recent pops
+    - Compares horizontal vs vertical offset to pick edge
+
+11. ARCHON RENAME (from "Super Cells")
+    - Title screen HTML: "Archons"
+    - Splash description updated to Archon lore
+    - Code comments updated; internal SC_ variables kept for stability
+
+12. BIOME LORE TEXT
+    - BIOME_LORE constant with text for each phase + Abyss
+    - Displayed via spawnFloatingText on biome transitions
+    - 800ms delay to let visual transition begin first
+
+=== PRIOR SESSION CHANGES ===
+
+1. ABYSS SATURATION SYSTEM
+   - Tied bioluminescent creature coloring to madness
+   - Inverse of B1: B&W at low madness -> vivid colors at high
+   - getAbyssSaturation(), abyssDesaturate(), getAbyssOrbColor()
+   - biomeColorShift() unified function
+   - 8 mid-ground nebula spheres
+   - All Abyss background effects scale with saturation
+
+2. BPM-SYNCED PGE
+   - PGE_BPM = 90 for both B1 and B2
+   - Semi-random skip system (25% at min gap -> 100% at max)
+   - B1 whirlwind reduced: force 35 (was 50), mult 0.8+1.2 (was 1.25+1.75)
+   - B2 pressure reduced: force 50 (was 80), mult 0.6+0.9 (was 1.25+1.75)
+
+3. TITLE SCREEN HIDDEN (display:none by default)
+
+4. ABYSS BALL CONTRAST
+   - Low sat: 5-stop high-contrast greyscale gradient
+   - High sat: 12-color vivid palette with time-based cycling
+
+5. 600 MIDGROUND TWINKLING PARTICLES
+   - 18 crazy colors, fast blinking, quadratic alpha ramp
+
+6. ADVANCED COLOR SYNTHESIS
+   - Normal orbs: 6-layer clipped rendering (base/screen/overlay/color-dodge/multiply/lighter)
+   - Eye base orbs: 2-layer synthesis
+   - Abyss orbs: 6-layer clipped to warped polygon (bioluminescent variant)
+   - renderOrbBloom: hardware-accelerated blur(6px), two-pass bloom
+
+=== CURRENT CONSTANT VALUES ===
+BASE_TAPS = 8
+BASE_CIRCLE_COUNT = 35
+BASE_CIRCLE_RADIUS = 18
+BASE_BLAST_RADIUS = 50
+MAX_BLAST_RADIUS = 115
+XP_BASE = 15
+XP_SCALE = 1.70
+TAP_TIMER_BASE = 10
+BOMB_FUSE_TIME = 3.5
+BOMB_BLAST_MULT = 1.4
+BH_VISUAL_RADIUS = 25
+BH_GRAVITY_RADIUS = 420
+BH_STRENGTH = 1100
+BH_COLLAPSE_THRESHOLD = 5
+SBH_SPAWN_INTERVAL_MIN = 30
+SBH_SPAWN_INTERVAL_MAX = 50
+SBH_LIFETIME = 8
+SBH_COLLAPSE_MASS = 8
+SHADOW_BALL_MIN_MADNESS = 0.70
+SHADOW_BALL_MAX_COUNT = 40
+PGE_BPM = 90
+PGE_MIN_BEATS_BETWEEN = 6
+PGE_MAX_BEATS_BETWEEN = 14
+ABYSS_TWINKLE_COUNT = 600
+ABYSS_DUST_COUNT = 1500
+SC_SPAWN_CHANCE = 0.09
+
+=== PENDING / DEFERRED TASKS ===
+
+1. DYNAMIC PROPORTIONAL BALL SIZING
+   - Analyzed but deferred to focused session
+   - Goal: orbs sized proportionally based on population dynamics
+
+2. END GAME DESIGN (at madness 100%)
+   - User mentioned in prior session but explicitly deferred
+   - What happens when madness reaches maximum?
+
+3. MUSIC SYNCHRONIZATION
+   - PGE beat grid (90 BPM) designed for future music sync
+   - User wants to sync music to gravitational effects later
+
+=== KEY FUNCTION REFERENCE ===
+
+State:
+  getMadnessAmount() -> 0-1
+  getAbyssSaturation() -> 0-1
+  getMadnessPhysicsScale() -> 1.0-1.7
+  getCurrentPalette() -> palette object
+  getTargetCircleCount() -> number
+
+Color:
+  getClusterColor(x, y) -> hex
+  getAbyssOrbColor(x, y) -> hex
+  horrorShift(hex, amount) -> hex
+  abyssDesaturate(hex, sat) -> hex
+  biomeColorShift(hex, madness) -> hex
+  lerpColor(c1, c2, t) -> hex
+
+Orbs:
+  createCircle(x, y) -> orb object
+  spawnInitialCircles()
+  spawnCircleFromEdge()
+  spawnCircleFadeIn()
+  updateCircles(dt)
+  updateColorSynthesis(dt)
+  updateOrbMerging(dt)
+  updateInterOrbGravity(dt)
+  updateMergeAnimations(dt)
+
+Chain:
+  startChain(x, y)
+  popCircle(circleId)
+  updateChainReaction(dt)
+  endChainReaction()
+  phantomPop(x, y)
+
+Entities:
+  updateBlackHole(dt)
+  updateSuperBlackHole(dt)
+  updateShadowBalls(dt)
+  updateBoss(dt)
+  updateWatcher(dt)
+
+PGE:
+  updateWhirlwind(dt) — B1 only
+  updateAbyssalPressure(dt) — B2 only
+
+Rendering:
+  render() — main render function
+  renderBackground()
+  renderAbyssBackground()
+  renderFieldStars()
+  renderNebulaClouds()
+  renderCircles() — all orbs
+  renderOrbBloom()
+  renderShadowBalls()
+  renderBlackHole()
+  renderSuperBlackHole()
+  renderBombs()
+  renderDefaultSC() — B1 Archon
+  renderAbyssSC() — B2 Archon
+
+Audio:
+  playPopSound(chainIndex)
+  playSCPopSound(chainIndex)
+  playBonusTapSound()
+  playPhantomSound()
+  playVoidCrackSound()
+  playAbyssWooshSound()
+  playDelayedBlastBuildup(tier, duration)
+  playDelayedBlastExplosion(tier)
+  playBombPlaceSound()
+
+UI:
+  initSplashSequence()
+  advanceSplash()
+  showUpgradePanel()
+  selectUpgrade(key)
+  showGameOver()
+  updateHUD()
+
+=== FILE STRUCTURE ===
+Single file: index.html
+  <head>: styles, Google Fonts link
+  <body>: HTML elements + <script> tag
+  No external dependencies except Orbitron font
+  No build step — open directly in browser
+  Backup: index.html.backup.YYYYMMDD_HHMMSS
+
+=== BROWSER REQUIREMENTS ===
+  - Canvas 2D context
+  - globalCompositeOperation: screen, overlay, color-dodge, multiply, lighter
+  - ctx.filter (CSS filter on canvas, for blur)
+  - Web Audio API
+  - Touch events (mobile support)
+  - requestAnimationFrame
+  - devicePixelRatio (retina support, capped at 2x)

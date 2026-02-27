@@ -1,0 +1,151 @@
+POP FIELD — CHAIN REACTION & COMBO SYSTEM
+============================================
+
+=== CHAIN START ===
+startChain(x, y):
+  - Costs 1 tap
+  - If chain already active, adds to it (doesn't start fresh)
+  - Creates Attractor gravity well if upgrade active
+  - Finds nearest circle within MAX_TAP_DISTANCE + radius
+  - If hit: queues orb for pop
+  - If miss: phantomPop() — creates temporary explosion at tap point
+    - Phantom blast: 70% of normal blast radius
+    - Still checks for orbs in range
+
+=== CHAIN LINK SYSTEM ===
+When orb is popped, nearby orbs don't pop instantly.
+Instead, a "chain link" is created:
+  {srcX, srcY, targetId, color, timer, duration}
+
+Link tension time (visual buildup before pop):
+  - Duration scales with distance from source
+  - Combo tier affects speed:
+    S-tier (50+): full 0.18s base
+    A-tier (30-49): 60% speed
+    B-tier (15-29): 70% speed
+    C-tier (<15): 55% speed
+
+During link tension:
+  - Visual lightning tendril drawn from source to target
+  - Target orb pulled toward source (LINK_PULL_STRENGTH=120)
+  - When timer >= duration: pop the target orb
+
+=== POP MECHANICS ===
+popCircle(circleId):
+  1. Void Crack check: if armorHP > 1, crack instead of pop
+  2. Void Crack shatter: if armorHP == 1, repulsion burst
+  3. Mark popped, increment chainCount
+  4. Track pop position for spawn bias
+  5. Calculate XP:
+     - Base: [1, 0.5, 0.25, 0.15, 0.08, 0.04] by generation
+     - Shrapnel: 0.15 flat
+     - Size scale: max(0.15, radius/BASE_RADIUS * 0.6)
+     - Diminishing after 12 pops: factor = 12/chainCount
+  6. Calculate blast radius:
+     - baseR = getBlastRadius() + novaBonus
+     - sizeScale: larger orbs have bigger blast (0.7 + 0.3 * scale)
+     - Volatile: 3x blast
+     - SuperCell: 1.5x blast + gravity well
+  7. Create explosion visual
+  8. Play sound (SC gets special boom)
+  9. Spawn particles
+  10. Apply chain feedback (shake, glow, etc.)
+  11. Gravity Well upgrade: pull nearby orbs inward
+  12. Find orbs in blast radius -> create chain links
+  13. Damage boss if present
+  14. Echo Burst: 8%/level chance for 1.3x secondary blast
+  15. Aftershock: leave hot zone on ground
+  16. Shrapnel: spawn fast-flying fragments
+  17. Fission: spawn mini orbs that fly outward
+  18. Cascade Burst: spawns micro-fragments at high chain counts
+  19. Delayed Blast: triggered at chain thresholds (20/35/55)
+
+=== CHAIN END ===
+endChainReaction():
+  - Awards score: chainXpValue * 100
+  - Awards bonus taps based on chain count:
+    Thresholds scale with level:
+      L1-2: big=15, mid=8, small=5 (50% chance)
+      L3-4: big=25, mid=15, small=8 (40% chance)
+      L5-6: big=30, mid=18, small=10 (35% chance)
+      L7-9: big=40, mid=25, small=14 (30% chance)
+      L10+: big=40, mid=25, small=14 (35% chance)
+    Taps earned: big=3, mid=2, small=1
+    Chain Bounty upgrade multiplier: 1 + 0.3*level
+  - Updates best chain
+  - Applies XP -> checks for level up
+  - Triggers Delayed Blast if chain count >= thresholds
+  - Zooms out based on new score
+  - Refills orb population
+
+=== COMBO TIER SYSTEM ===
+Based on chain count during play:
+  C-tier (<15): very snappy pops, minimal drama
+  B-tier (15-29): fast, satisfying
+  A-tier (30-49): good pacing, 40% less than S
+  S-tier (50+): full epic pacing, dramatic pauses
+
+=== DELAYED BLAST ===
+Triggered when chain count crosses thresholds:
+  Minor (20+): tier 1
+  Major (35+): tier 2
+  Mega (55+): tier 3
+
+Buildup:
+  - Duration: tier1=0.8s, tier2=1.2s, tier3=1.6s
+  - Rising sweep sound + sub-bass rumble
+  - White glow overlay builds
+  - Time slows down (timeScale drops)
+
+Explosion:
+  - Blast radius: tier1=1.8x, tier2=2.5x, tier3=3.5x getBlastRadius()
+  - Massive particle burst
+  - Screen shake: tier1=6, tier2=10, tier3=16
+  - Chromatic aberration: tier1=2, tier2=5, tier3=10
+  - All orbs in range queued with chain links
+
+=== CHAIN FEEDBACK ESCALATION ===
+applyChainFeedback(count):
+  count 3+: tiny screen shake (1-2)
+  count 5+: spawn extra sparks
+  count 10+: mild shake (3), tiny slowmo
+  count 20+: moderate shake (5), noticeable slowmo
+  count 35+: heavy shake (8), significant slowmo, chromatic ab
+  count 50+: maximum feedback, screen flash
+
+=== SHRAPNEL SYSTEM ===
+After pop, based on chain count vs threshold:
+  - getShrapnelThreshold(): 6 (L1-2), 4 (L3-4), 3 (L5-6), 2 (L7+)
+  - Spawns 1-3 fast-flying fragments
+  - Speed: 200-400 px/s
+  - shrapnelImmune timer: 0.15s (can't be chain-popped immediately)
+  - Screen-wraps at edges
+
+=== FISSION SYSTEM ===
+upgrades.fission:
+  - Level 1-2: 1 mini orb per pop
+  - Level 3-4: 2 mini orbs per pop
+  - Speed: 150 + level*40
+  - Size: 40-60% of parent
+  - chainBornId set (immune during current chain)
+
+=== CASCADE BURST ===
+Smaller orbs (gen-1+) spawn bonus fragments during long chains:
+  gen 1 at chainCount >= 22: 1 fragment (+1 at >= 42)
+  gen 2 at chainCount >= 33: 1 fragment
+  gen 3 at chainCount >= 42: 1 fragment
+  gen 4 at chainCount >= 52: 1 fragment
+
+=== CHAIN-BORN IMMUNITY ===
+Orbs spawned during a chain (fission, shrapnel, cascade) have:
+  chainBornId = current G.chainGenId
+These orbs are immune to being popped during the SAME chain.
+They become poppable in the NEXT chain reaction.
+This prevents infinite self-sustaining chains.
+
+=== AFTERSHOCK SYSTEM ===
+upgrades.aftershock:
+  - Duration: 0.5s per level
+  - Hot zone left on ground after each pop
+  - Any orb drifting into the zone gets popped
+  - Creates secondary chain links

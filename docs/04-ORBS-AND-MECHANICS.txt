@@ -1,0 +1,192 @@
+POP FIELD — ORB MECHANICS & SYSTEMS
+======================================
+
+=== ORB (CIRCLE) DATA STRUCTURE ===
+{
+  id: number,              // unique incrementing ID
+  x, y: number,           // position
+  radius: number,          // current visual radius
+  baseRadius: number,      // original radius (restored after SC revert)
+  color: string,           // hex color
+  colorEdge: string,       // edge color (same as color)
+  volatile: bool,          // glows volatile — 3x blast on pop
+  armored: bool,           // Void Crack orb
+  armorHP: 0-2,           // 2=fresh, 1=cracked, 0=normal
+  superCell: bool,         // currently in Archon form
+  spikeCount: number,      // SC spike count (5-8)
+  scFade: 0-1,            // SC fade-in/out animation
+  scTimer: number,         // time since SC mutation began
+  scLifespan: number,      // total SC duration (2.1-5.5s)
+  scCooldown: number,      // time until next SC mutation chance
+  popped: bool,            // has been popped
+  queued: bool,            // queued for chain pop
+  pulsePhase: number,      // sine wave phase for ambient pulse
+  vx, vy: number,          // velocity
+  driftAngle: number,      // brownian motion direction
+  driftTimer: number,      // time until next drift change
+  generation: 0-5,         // fracture generation (0=original)
+  shrapnel: bool,          // spawned from shrapnel
+  fissionSpawn: bool,      // spawned from fission
+  shrapnelImmune: number,  // immune to being popped (seconds remaining)
+  chainBornId: number,     // chain generation that spawned this (-1 = not chain-born)
+  spawnAnim: 0-1,          // slide-in animation (1=entering, 0=done)
+  fadeIn: 0-1,             // fade-from-darkness animation (1=invisible, 0=done)
+  alive: bool,             // still on field
+  trail: array,            // position history for motion blur (max 12)
+  synthCooldown: number,   // color synthesis cooldown (seconds)
+  mergeCount: number,      // how many orbs merged into this
+  mergeCooldown: number,   // cooldown between merges
+  mergeTarget: number|null, // ID of orb being merged into
+  mergeAnimProgress: 0-1,  // merge animation progress
+  mergeGlow: number,       // glow flash on absorbing orb
+  mergeStretch: number     // stretch factor during merge
+}
+
+=== ORB SPAWNING ===
+createCircle(x, y):
+  - Color from getClusterColor(x, y) — position-based gradient
+  - Volatile: upgrades.volatileOrbs * 8% chance
+  - Void Crack: 3% chance at level 3+ (not volatile)
+  - Size: BASE_CIRCLE_RADIUS * sizeBase * sizeMin + random * sizeVar
+    - Volatile orbs 1.3x larger
+
+spawnInitialCircles():
+  - Fills field to getTargetCircleCount() count
+  - Minimum 30px spacing between orbs
+  - Uses zoom-aware boundaries
+
+spawnCircleFromEdge():
+  - 40% chance: fade-in (materialize from darkness at random position)
+  - 60%: spawn from screen edge with velocity
+  - Directional bias: 50% chance to spawn opposite of recent pop cluster
+
+spawnCircleFadeIn():
+  - Starts invisible (fadeIn=1.0, radius=0.1)
+  - Grows over ~1.25s with accelerating growth curve
+
+=== ORB MOVEMENT ===
+Gravitational swirl:
+  - All orbs feel pull toward slowly-shifting attractor point
+  - Attractor orbits center: X = center + sin(t*0.13) * width*0.2
+  - Both radial pull (toward attractor) and tangential push (orbiting)
+  - gravStr = min(35, 800/dist), tangentStr = min(25, 500/dist)
+
+Ambient wave:
+  - sin/cos overlay for organic feel
+  - 0.6 * dt * 10 amplitude
+
+Brownian drift:
+  - Random direction changes every 1.5-4s
+  - Speed: 12 (normal), 8 (superCell)
+
+Cursor gravity:
+  - 1/d falloff with soft floor (effDist + 40)
+  - Reach: 5x-12x (scales with madness)
+  - Strength: 1.0x-2.0x (scales with madness)
+  - Speed boost from fast cursor movement (1.0x-2.5x)
+  - Brush: fast cursor pushes nearby orbs in cursor direction
+
+Screen boundaries:
+  - Shrapnel/fission with speed>50: wrap around edges
+  - Normal orbs: soft bounce off edges
+
+=== COLOR SYNTHESIS (Section 7b) ===
+When orbs of different colors overlap:
+  - Grid-based spatial lookup (50px cells) for O(n) performance
+  - Overlap threshold: 85% of combined radii
+  - Color difference > 80 (Manhattan distance in RGB)
+  - Max 5 syntheses per frame
+  - Blend amount: 8% weighted by area ratio (smaller shifts more)
+  - Cooldown: 0.4-0.6s per orb
+  - Spawns 4 sparks + 1 ripple at contact point
+  - Gentle push-apart (15 force)
+
+=== ORB MERGING (Section 7c) ===
+When same-color orbs overlap:
+  - Size ratio required: smaller < 60% of bigger
+  - Speed threshold: bigger must be moving slowly (<15)
+  - Merge cap: 6 + floor(madness * 4) per orb
+  - Max 3 merges per frame
+  - Absorbed orb: shrinks, stretches toward target over 0.45s
+  - Survivor: grows proportionally, gains merge glow
+  - Radius growth: sqrt(a^2 + b^2) — area-preserving
+  - Max radius: BASE_CIRCLE_RADIUS * 2.5 (45px)
+
+=== INTER-ORB GRAVITY (Section 7d) ===
+Bigger orbs pull smaller orbs:
+  - Size ratio required: 1.2x bigger
+  - Range: bigRadius * 4.5 * sizeBonus * madPhys
+  - Mid/big orbs (>=BASE_CIRCLE_RADIUS) get 15% bonus range
+  - Merged orbs pull 1.5x harder
+  - Falloff: linear from edge of range
+
+=== SUPER CELL (ARCHON) MUTATION ===
+Requirements:
+  - Level >= 5
+  - Generation 0 (original orbs only)
+  - Not volatile, not queued
+  - 9% chance per cooldown check
+  - Cooldown: 3.4-11.9s between checks
+
+Lifecycle:
+  1. Fade in: 0.34s (grow to 1.6x base size)
+  2. Active: 2.1-5.5s (full size, spikes visible)
+  3. Fade out: 0.42s (shrink back)
+  4. Revert to normal orb, reset cooldown
+
+When popped:
+  - Creates gravity well (strength 200, range 2.5x blast, duration 0.4s)
+  - 1.5x blast radius
+  - Special deep boom sound
+
+=== VOLATILE ORBS ===
+  - upgrades.volatileOrbs * 8% spawn chance
+  - 1.3x larger than normal
+  - 3x blast radius when popped
+  - Visual: brighter bloom, pulsing glow
+
+=== VOID CRACK ORBS ===
+  - 3% chance at level 3+
+  - Never volatile
+  - 2 HP:
+    Hit 1: Cracks (armorHP 2->1)
+      - Creates gravity well pulling orbs inward (strength 180, range 1.8x blast)
+      - Purple explosion, crack sound
+    Hit 2: Shatters (armorHP 1->0)
+      - Repulsion burst pushes orbs outward (range 1.5x blast, force 250)
+      - Purple explosion
+  - Visual: purple void tendrils, crystalline armor overlay
+
+=== WEIGHTED ORB COUNTING ===
+getOrbValue(c):
+  sizeRatio >= 1.5: 1.5 (big merged)
+  sizeRatio >= 0.9: 1.0 (normal)
+  sizeRatio >= 0.5: 0.5 (mid fragment)
+  sizeRatio >= 0.3: 0.25 (small)
+  sizeRatio >= 0.15: 0.15 (tiny)
+  else: 0.1 (micro)
+
+Used for population counting — small fragments count less toward max.
+
+=== ADVANCED COLOR SYNTHESIS (Rendering) ===
+Normal orbs (drawR > 5) — 6-layer clipped rendering:
+  1. Base: warm center -> orb color -> half-dark edge (radial gradient)
+  2. Screen blend: luminous color mixing (white->warm->color->black)
+  3. Overlay blend: contrast boost and depth
+  4. Color-dodge: edge iridescence with hue-shifted color at rim
+  5. Multiply: directional shadow darkening bottom hemisphere
+  6. Lighter: crisp specular highlight
+  Tiny orbs (<=5): simple fill
+
+Abyss orbs (drawR > 5) — 6-layer clipped to warped polygon:
+  1. Base: bioluminescent warm center -> orb color -> dark edge
+  2. Screen: inner glow scaling with saturation
+  3. Overlay: contrast depth, stronger with saturation
+  4. Color-dodge: bioluminescent edge iridescence (sat > 0.1)
+  5. Multiply: deep-sea shadow from above
+  6. Lighter: pulsing specular highlight (sine wave)
+  Tiny abyss orbs (<=5): simple gradient
+
+Eye base orbs — 2-layer synthesis:
+  1. Base gradient (warm center -> color -> dark)
+  2. Screen layer (luminous mix)

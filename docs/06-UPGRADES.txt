@@ -1,0 +1,126 @@
+POP FIELD — UPGRADE & PROGRESSION SYSTEM
+==========================================
+
+=== UPGRADE SELECTION ===
+- Single upgrade offered per level-up (no choice — fate decides)
+- Random pick from all non-maxed upgrades
+- If autoLevelUp enabled: applied instantly with floating text
+- Otherwise: full-screen panel with single card
+
+=== LEVEL UP REWARDS ===
+- +1 bonus tap per level
+- Random upgrade
+- Palette transition (every 3 levels)
+- Tap timer max increases (+0.5s/level, cap 14s)
+
+=== XP FORMULA ===
+XP needed per level: floor(previous * XP_SCALE)
+  Level 2: 15 XP
+  Level 3: 26 XP
+  Level 4: 43 XP
+  Level 5: 73 XP
+  Level 6: 125 XP
+  Level 7: 212 XP
+  Level 8: 361 XP
+  ...and so on (1.70x multiplier)
+
+XP earned per chain: chainXpValue * 100
+  Per-pop XP: base * sizeScale * dimFactor
+  base: [1.0, 0.5, 0.25, 0.15, 0.08, 0.04] by generation
+  sizeScale: max(0.15, radius/18 * 0.6)
+  dimFactor: 1.0 for first 12 pops, then 12/chainCount
+
+=== ALL 10 UPGRADES ===
+
+1. NOVA RADIUS (maxLvl: 8)
+   Effect: Blast radius +5px per level
+   Formula: baseR + novaBonus (novaBonus = level * 5)
+   Description: "Blast radius +Npx wider — chains reach further"
+
+2. ECHO BURST (maxLvl: 6)
+   Effect: 8% chance per level for secondary explosion
+   Echo blast: 1.3x normal blast radius
+   Description: "N% chance each pop triggers a second blast (1.3x range)"
+
+3. GRAVITY WELL (maxLvl: 6)
+   Effect: Each pop pulls nearby orbs inward
+   Strength: level * 22 * sizeScale * madPhys
+   Range: blastR * 2.8 * madPhys
+   Falloff: quadratic (edgeFade^2)
+   Description: "Pops pull nearby orbs inward (strength N)"
+
+4. VOLATILE ORBS (maxLvl: 5)
+   Effect: 8% per level of orbs spawn volatile
+   Volatile = 3x blast radius, 1.3x size, glow
+   Description: "N% of orbs glow volatile — when popped, 3x blast radius"
+
+5. AFTERSHOCK (maxLvl: 5)
+   Effect: Pops leave hot zones on ground
+   Duration: 0.5s per level
+   Any orb drifting in gets popped
+   Description: "Pops leave hot zones for Ns — orbs drifting in get popped"
+
+6. FISSION (maxLvl: 4)
+   Effect: Each pop spawns mini orbs
+   Level 1-2: 1 mini orb
+   Level 3-4: 2 mini orbs
+   Level 3+: faster launch speed
+   Mini orbs chain on next chain (chainBornId immunity)
+   Description: "Each pop spawns N mini orb(s) that fly outward and chain"
+
+7. CHAIN BOUNTY (maxLvl: 6)
+   Effect: Multiplies bonus tap rewards
+   Multiplier: 1 + 0.3 * level
+   Description: "Bonus tap rewards xN — bigger chains earn more taps"
+
+8. DENSITY (maxLvl: 6)
+   Effect: +6 orbs per level on field
+   Immediately spawns 6 orbs when upgraded
+   Description: "+N orbs on field — more targets, bigger chains"
+
+9. MINE LAYER (maxLvl: 3)
+   Effect: Long press places mines
+   Charges per round: equal to level
+   Fuse: 3.5s
+   Blast: 140% of base
+   Description: "Long press to place N mine(s) (3.5s fuse, 140% blast)"
+
+10. ATTRACTOR (maxLvl: 5)
+    Effect: Taps and mines create gravity wells
+    Tap gravity well:
+      Range: 60 + level*30 px
+      Strength: 50 + level*35
+      Duration: 0.5 + level*0.15 s
+    Mine gravity well:
+      Range: 80 + level*35 px
+      Strength: 20 + level*12
+      Duration: BOMB_FUSE_TIME (3.5s)
+    Description: "Taps & mines pull orbs inward"
+
+=== BONUS TAP SYSTEM ===
+At end of chain, bonus taps awarded based on chain count:
+  Level 1-2: big=15 (+3), mid=8 (+2), small=5 (+1, 50%)
+  Level 3-4: big=25 (+3), mid=15 (+2), small=8 (+1, 40%)
+  Level 5-6: big=30 (+3), mid=18 (+2), small=10 (+1, 35%)
+  Level 7-9: big=40 (+3), mid=25 (+2), small=14 (+1, 30%)
+  Level 10+: big=40 (+3), mid=25 (+2), small=14 (+1, 35%)
+
+With Chain Bounty upgrade: taps *= (1 + 0.3 * level)
+
+=== TAP TIMER ===
+Base: 10 seconds
+Per level: +0.5s
+Cap: 14 seconds
+Only decays when: taps > 0, not pending level-up, not chain active
+Uses raw dt (immune to slowmo)
+Infinite taps dev mode: keeps taps at 99
+
+=== PROGRESSION SCALING ===
+Blast radius: sqrt curve (big early jump, diminishing later)
+  t = min(1, (level-1)/20)
+  growth = t^0.65
+  base = 50 + 65 * growth (50->115 over 20 levels)
+  Final = base * zoomScale * madnessPhysicsScale
+
+Fracturing: introduced gradually over levels 5-18
+  (see detailed table in 02-CONSTANTS.txt)

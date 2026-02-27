@@ -1,0 +1,105 @@
+POP FIELD — GAME DESIGN DOCUMENT
+===================================
+Single-file HTML5 Canvas chain-reaction popping game
+File: index.html (~9088 lines)
+Font: Orbitron (Google Fonts)
+Framework: Vanilla JS, Canvas 2D
+
+CONCEPT
+-------
+A chain-reaction game where you tap orbs to pop them, causing nearby orbs to
+chain-pop. The goal is to create the longest possible chain reactions.
+As score increases, a "madness" system progressively transforms the visuals
+from clean/colorful to cosmic horror (B1) or deep-sea bioluminescence (B2).
+
+TWO BIOMES
+----------
+B1 — MAIN BIOME (default)
+  - 5 palette phases (violet/pink/gold shifting)
+  - Madness = horror desaturation (colorful -> grey/flesh/bile)
+  - Eyeball overlays grow on orbs
+  - Whirlwind PGE (passive gravitational effect)
+  - Watcher entity appears at edge of screen
+
+B2 — ABYSS BIOME (toggle with B key or button)
+  - Deep ocean trench aesthetic
+  - Madness = INVERSE: B&W -> vivid bioluminescent colors
+  - Orbs mutate into tentacled medusa creatures
+  - Pressure wave PGE (crushes orbs toward center)
+  - Background: oceanic dust, marine snow, nebula spheres
+
+GAME FLOW
+---------
+1. Boot -> Lore splash (random quote, 13s auto-advance or click)
+2. Changelog modal (scrollable, "Continue" button)
+3. Instructions splash (4 rows, click to continue)
+4. Game starts immediately after instructions
+5. Title screen (#title-screen) is hidden by default (display:none)
+6. Playing: tap orbs, chain reactions, earn score/XP, level up
+7. Game Over when taps reach 0 (tap timer drains taps over time)
+
+CORE LOOP
+---------
+- Player has limited TAPS (starts at 8)
+- Each tap pops nearest orb or creates phantom pop
+- Popped orbs blast nearby orbs in radius -> chain reaction
+- Chain reactions earn SCORE and XP
+- XP fills bar -> Level Up -> random upgrade offered (single choice)
+- Bigger chains = bonus taps rewarded
+- Taps decay over time (10s base timer) when idle
+- Game over when taps = 0
+
+ZOOM SYSTEM
+-----------
+- Game starts at 2.0x zoom (zoomed in, intimate view)
+- Zooms out as score increases: 2.0x -> 0.5x over 400k score
+- Game boundaries calculated from zoom level each frame
+- All spawning/physics use zoom-aware boundaries
+
+MADNESS SYSTEM (0% - 100%)
+---------------------------
+- Score contribution: ramps 0->0.5 from 150k->800k, 0.5->1.0 from 800k->1.4M
+- Black holes add permanent horrorBoost (capped at 0.35 regular, 0.50 supermassive)
+- Dev override: devMadnessOverride variable (-1=off, 0-1=forced)
+- Affects: colors, orb size, orb count, physics scale, visual effects, entities
+
+GAME TIMER / FRAME LOOP
+------------------------
+- requestAnimationFrame at 60fps
+- Raw dt capped at 50ms
+- G.timeScale multiplier (slowmo during big chains)
+- G.time accumulates scaled time
+- G.rawDt used for tap timer (immune to slowmo)
+
+LINE COUNT BREAKDOWN (approximate)
+-----------------------------------
+Lines 1-79: HTML/CSS (styles, layout)
+Lines 80-141: HTML elements (canvas, HUD, screens, panels)
+Lines 142-189: Section 1 - Constants
+Lines 190-289: Section 2 - Palettes & Lore
+Lines 290-311: Section 3 - Upgrades
+Lines 312-480: Section 4 - Game State & Reset
+Lines 482-713: Section 5 - Audio System
+Lines 714-920: Section 6 - Utilities (math, madness, color, palettes)
+Lines 921-1112: Section 7 - Circle/Orb Management
+Lines 1113-1201: Circle spawning (edge, fade-in, refill)
+Lines 1202-1414: Circle update (movement, gravity, cursor, SC mutation)
+Lines 1415-1557: Section 7b - Color Synthesis
+Lines 1558-1690: Section 7c - Orb Merging
+Lines 1689-1770: Section 7d - Inter-Orb Gravity
+Lines 1771-1820: Section 7e - Merge Animations
+Lines 1821-2100: Section 8 - Particle System
+Lines 2101-2258: Section 9 - Explosions & Bombs
+Lines 2259-2575: Section 9b - Shadow Balls
+Lines 2576-3010: Section 10 - Chain Reaction Engine
+Lines 3010-3560: Black Holes (regular + supermassive)
+Lines 3560-3730: PGE (whirlwind + abyss pressure)
+Lines 3730-4357: Black Hole rendering + misc
+Lines 4357-5219: Section 10d - Boss System
+Lines 5219-5310: Section 11 - Upgrade System
+Lines 5310-7680: Section 12 - Rendering Pipeline
+Lines 7680-8288: Section 13 - Post-Processing
+Lines 8288-8560: Section 14 - Input Handling
+Lines 8560-8679: Section 15 - UI/HUD & Floating Text
+Lines 8679-8817: Section 16 - Game Loop
+Lines 8817-9088: Section 17 - Init, Splash, Changelog, Boot

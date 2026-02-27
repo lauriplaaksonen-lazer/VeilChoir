@@ -1,0 +1,240 @@
+POP FIELD — RENDERING PIPELINE & VISUAL EFFECTS
+===================================================
+
+=== RENDER ORDER (render() function) ===
+
+1. BACKGROUND (full canvas, before zoom transform)
+   - renderBackground(): gradient + horror/abyss adjustments
+
+2. ZOOM TRANSFORM APPLIED
+   ctx.translate(W/2, H/2)
+   ctx.scale(zoomLevel, zoomLevel)
+   ctx.translate(-W/2, -H/2)
+
+3. FIELD STARS (behind everything)
+   - renderFieldStars(): tiny ambient stars, biomeColorShifted
+
+4. BIOME-SPECIFIC BACKGROUND
+   B1: renderNebulaClouds() — gradient nebula shapes
+   B2: renderAbyssBackground() — ALL abyss background layers
+
+5. PAINT SPLATS
+   - renderPaintSplats(): persistent paint marks on field
+
+6. BACKGROUND PARTICLES (layer='bg')
+   - Motes, ripples rendered behind orbs
+
+7. AFTERSHOCK ZONES
+   - Hot zones from Aftershock upgrade
+
+8. ORB BLOOM (behind orbs)
+   - renderOrbBloom(): hardware-accelerated blur glow
+   - ctx.filter = 'blur(6px)'
+   - Two-pass: inner bright (white->color) + wider diffuse halo
+   - Bloom alpha: normal 0.06, volatile 0.16, SC 0.12
+
+9. SHADOW BALLS
+   - renderShadowBalls(): non-interactive dark phantoms
+
+10. GRAVITY WELLS
+    - Visual rings showing active pull zones
+
+11. CHAIN LINKS
+    - Lightning tendrils from source to queued targets
+    - Color shifts with biomeColorShift
+
+12. MERGE ANIMATIONS
+    - Stretching orbs being absorbed
+
+13. ORBS (main rendering)
+    renderCircles():
+    For each orb:
+      a. Trail/motion blur (if speed > 6)
+      b. SuperCell rendering (B1: eye-cluster, B2: tentacle horror)
+      c. Abyss orb rendering (warped polygon + synthesis + tentacles)
+      d. Normal orb rendering:
+         - Eye phases (if madness > 10%, drawR > 5):
+           Phase 1 (10-25%): dark spot in center
+           Phase 2 (25-50%): sclera, rim, veins
+           Phase 3 (50-75%): iris visible, cursor tracking
+           Phase 4 (75-100%): full eye, branching veins, specular
+         - Advanced synthesis (no eyes, drawR > 5):
+           6-layer clipped rendering
+         - Tiny orbs: simple fill
+      e. Void Crack overlay (purple void tendrils)
+      f. Merge glow flash
+      g. Volatile glow (pulsing aura)
+      h. Beat pulse effect (100 BPM)
+
+14. FOREGROUND PARTICLES (layer='fg')
+    - Sparks, embers, hexes, glitch, etc.
+
+15. EXPLOSIONS
+    - Expanding ring with flash
+    - Color from source orb
+
+16. BLACK HOLES
+    B1: Dark core + accretion disk + star dust
+    B2: Whirlpool with concentric rings
+
+17. SUPERMASSIVE BLACK HOLE
+    B1: Massive void with distortion rings + 60 dust particles
+    B2: Deep maelstrom
+
+18. BOSS
+    (Rendered at its own layer)
+
+19. BOMBS / MINES
+    - Outer ring (blast preview, dashed)
+    - Mine body (blinking)
+    - Fuse arc (countdown ring)
+
+20. FLOATING TEXTS
+    - "+N TAPS", "VOID OPENS", etc.
+
+21. ZOOM TRANSFORM RESTORED
+
+22. POST-PROCESSING (full canvas, after zoom)
+    - renderWatcher(): cosmic horror at screen edges
+    - Scanline overlay (subtle CRT effect)
+    - Chromatic aberration (RGB channel offset)
+    - White glow overlay (flash on big combos)
+    - Screen shake (translate offset)
+
+
+=== ADVANCED COLOR SYNTHESIS LAYERS ===
+
+Normal Orbs (6 layers, clipped to circle):
+  Layer 1 — Base Fill (source-over):
+    Radial gradient: warm highlight center -> orb color -> half-dark edge
+    Derived colors: _warmHL = rgb(r+80, g+60, b+20)
+
+  Layer 2 — Screen Blend:
+    Alpha: 0.35
+    Radial: white -> warm highlight -> color -> black
+    Creates luminous inner glow
+
+  Layer 3 — Overlay Blend:
+    Alpha: 0.30
+    Radial: white -> grey -> dark -> black
+    Boosts contrast, creates depth
+
+  Layer 4 — Color-Dodge:
+    Alpha: 0.12
+    Radial: transparent center -> hue-shifted rim -> black
+    Creates iridescent edge rainbow
+    Hue shift: _hueShift = rgb(g+40, b+30, r+50) — channel rotation
+
+  Layer 5 — Multiply:
+    Alpha: 0.25
+    Linear gradient: white top -> dark bottom
+    Directional shadow for volume
+
+  Layer 6 — Lighter:
+    Alpha: 0.40
+    Radial: white highlight dot upper-left
+    Crisp specular highlight
+
+Abyss Orbs (6 layers, clipped to warped polygon):
+  Same structure but tuned for deep-sea bioluminescence:
+  - Bio-glow warm tint: _abyssGlow = rgb(r+60, g+90, b+70)
+  - Bioluminescent hue shift: _abyssHue = rgb(b+50, r+30, g+60)
+  - Screen alpha scales with saturation (0.2 + sat*0.25)
+  - Color-dodge only at sat > 0.1
+  - Specular pulses with sine wave (G.time*2.2)
+  - Shadow gradient darker (deep-sea)
+
+Eye Base (2 layers, clipped to circle):
+  Layer 1: Base gradient
+  Layer 2: Screen blend (lighter version)
+
+renderOrbBloom():
+  - ctx.filter = 'blur(6px)' for hardware-accelerated soft glow
+  - Two passes:
+    Inner: white -> color (tight glow)
+    Outer: wider diffuse color halo
+  - Alpha: normal 0.06, volatile 0.16, SC 0.12
+  - ctx.filter = 'none' after to keep orbs crisp
+
+
+=== BACKGROUND RENDERING ===
+
+B1 (Normal):
+  - Linear gradient top->bottom (bgTop -> bgBot)
+  - Horror: lerps toward grey (#1a1a1a) at high madness
+  - Nebula clouds: gradient shapes, biomeColorShifted
+  - Field stars: tiny dots, desaturated at high madness
+
+B2 (Abyss) — renderAbyssBackground():
+  All effects scale with sat = getAbyssSaturation():
+
+  1. Haze blobs: ~6 large soft circles
+     Alpha: sat-dependent, use satColor
+
+  2. Light shafts: ~4 vertical beams
+     Dimmer in void, use satColor
+
+  3. Rising particles: ~20 small dots drifting upward
+     Barely visible at low sat -> glowing at high
+
+  4. Marine snow: ~30 tiny falling particles
+     Always somewhat visible, tinted with sat
+
+  5. Oceanic dust: 1500 particles (ABYSS_DUST_COUNT)
+     Alpha and color both scale with saturation
+
+  6. Depth fog: top-heavy gradient overlay
+     Stronger in void (alpha 0.25) -> lighter at full sat (0.13)
+
+  7. Twinkling particles: 600 (ABYSS_TWINKLE_COUNT)
+     18 crazy colors, fast twinkling (1.5-5.5 Hz)
+     Sharp blink cutoff (visible only when twinkle > 0.4)
+     Invisible at sat < 0.12, quadratic alpha ramp
+     Larger get glow halos at high sat
+
+  8. Nebula spheres: 8 large blurred radial gradients
+     Invisible in void, cubic ramp bloom
+     Each: x, y, radius (50-120), color from vivid palette
+
+  Background base: #010108 (pitch black) -> #041828 (deep midnight blue)
+
+
+=== PARTICLE TYPES ===
+  spark:  fast-fading directional sparks (gravity-affected)
+  ripple: expanding ring (bg layer)
+  ember:  floating upward, flickering
+  ribbon: flowing trails, sine-wave motion
+  hex:    hexagonal spinning shapes
+  glitch: flickering rectangles
+  splat:  expanding blobs
+  star:   spinning star shapes
+  mote:   tiny ambient specks (gravitational swirl, cursor-attracted)
+
+
+=== POST-PROCESSING ===
+
+Watcher:
+  - Drawn at screen edges
+  - Opacity scales with madness
+  - Eye glow and reach amount
+  - Tentacles reaching inward
+
+Scanlines:
+  - Pre-baked canvas pattern
+  - Overlaid at low alpha
+  - Intensity scales with madness
+
+Chromatic Aberration:
+  - RGB channel offset (separate drawImage calls)
+  - Offset amount = G.chromaticAb pixels
+  - Decays at rate 8/s
+
+White Glow:
+  - Full-screen white overlay
+  - Triggered on big chain finishes
+  - Decays at rate 1.5/s
+
+Screen Shake:
+  - Random translate offset applied to canvas
+  - G.shakeAmount decays at 15/s
+  - Triggered by: pops, BH collapse, SBH, delayed blasts, boss

@@ -1,0 +1,167 @@
+POP FIELD — SPECIAL ENTITIES
+===============================
+
+=== SUPER CELL / ARCHON ===
+Spawn: Level 5+, gen-0 orbs, 9% chance per cooldown check
+Cooldown: 3.4-11.9 seconds between checks
+
+Lifecycle:
+  Fade-in: 0.34s — grows to 1.6x base size
+  Active: 2.1-5.5s — full spikes, blinking eye
+  Fade-out: 0.42s — shrinks back to normal
+  Revert: cooldown 4.25-14.45s
+
+Visual (B1 Default):
+  - Amorphous eye-cluster entity
+  - 5-8 animated spikes rotating around body
+  - Blinking eye center with tracking iris
+  - Bio-luminescent edge glow
+  - Rendered by renderDefaultSC()
+
+Visual (B2 Abyss):
+  - Tentacle horror mass
+  - Writhing tentacles with bioluminescent gradients
+  - Multiple eyes with tracking
+  - Colors scale with Abyss saturation
+  - Rendered by renderAbyssSC()
+
+Pop Effects:
+  - Gravity well: strength 200, range 2.5x blast, 0.4s
+  - 1.5x blast radius
+  - Special deep boom + crunch sound
+  - Extra massive particle burst
+
+
+=== BLACK HOLE (REGULAR) ===
+Spawn: Every 25-45 seconds (random)
+Lifetime: 8-16 seconds
+
+Properties:
+  Visual radius: 25px base (+3 per orb eaten)
+  Gravity radius: 420px base (+15 per orb eaten)
+  Strength: 1100 base (+80 per orb eaten)
+  Tangent strength: 0.55 (creates orbital spin)
+  Swallow zone: 50% of visual radius
+
+Behavior:
+  - Fades in over 1.2s
+  - Pulls orbs with 1/d radial gravity
+  - Tangential force creates orbiting
+  - Swallows orbs that touch event horizon
+  - Mass counter shown (N/5)
+  - At 5+ mass: "TAP TO COLLAPSE" prompt
+  - Auto-collapse after 3s of being ready
+  - Or player taps to collapse manually (free — no tap cost)
+
+Collapse:
+  - Blast: 80% of BASE_BLAST_RADIUS + mass*12
+  - Starts chain reaction (free — no tap cost)
+  - Bonus taps: floor(mass/2) + 1
+  - Horror boost: +0.01 + mass*0.003
+
+Horror corruption:
+  - Rate: 0.0015 + mass*0.001 per second while alive
+  - Cap: 0.35
+
+Visual (B1): Star Control style — dark core, spiraling dust, accretion ring
+Visual (B2): Spinning ocean whirlpool — concentric rings, water distortion
+
+Star dust: 25 particles spiraling inward
+  - Each: angle, dist (0.3-0.9), size (0.5-2), speed (0.3-1.1)
+  - Respawn at outer edge when reaching center
+
+Black hole vortex: When active, creates localized swirl
+  - Range: 80% of gravity radius
+  - Strength: 30 + madness*80 (subtle at low, fierce at high)
+
+
+=== SUPERMASSIVE BLACK HOLE (SBH) ===
+Spawn: madness > 75%, every 30-50 seconds
+Lifetime: 8 seconds
+
+Properties:
+  Visual radius: 12% of shorter screen dimension (+5 per orb)
+  Gravity radius: 55-70% of play area diagonal (+20 per orb)
+  Strength: 3500 base (+150 per orb)
+  Tangent ratio: 0.4
+  Swallow zone: 12% of visual radius
+  Collapse mass: 8 orbs
+
+Behavior:
+  - Fades in over 2.0s (dramatic)
+  - Persistent screen rumble while active
+  - Chromatic aberration while active (2 + mass*0.5)
+  - Much stronger pull than regular BH (1/sqrt(d) falloff for wider range)
+  - Swallows orbs at inner event horizon
+  - At 8+ mass: "TAP TO COLLAPSE!" prompt
+  - Auto-collapse after 4s ready or at death if mass >= 3
+
+SUPERNOVA (SBH with mass >= SBH_COLLAPSE_MASS):
+  - Triggers supernova instead of normal collapse
+  - Blast covers 45%+ of play area (huge!)
+  - Radius: 60% of play area diagonal * madness scale
+  - Extended 2s chain reaction window
+  - Bonus taps: ceil(mass * 0.75) + 2
+  - Massive screen shake (15), chromatic ab (12), white glow
+  - 12 extra gravity wells spawned around blast area
+  - Boss damage: double hits
+
+Normal collapse (mass < threshold):
+  - Standard sized blast (55% base + mass*15)
+  - Bonus taps: ceil(mass * 0.5) + 1
+
+Horror corruption:
+  - Rate: 0.003 + mass*0.0015 per second
+  - Cap: 0.50
+
+Visual (B1): Massive dark void with distortion, 60 spiraling dust particles
+Visual (B2): Deep maelstrom — concentric water rings, massive scale
+
+
+=== SHADOW BALLS ===
+Spawn: madness >= 70%, every 0.15s
+Max count: 40 (scales linearly from 70-100% madness)
+
+Properties:
+  Radius: 3-9px
+  Non-interactive (can't be popped by player)
+  Always somewhat translucent (alpha * 0.7)
+
+Movement:
+  - Same gravitational swirl as normal orbs but 1.5x amplified
+  - More aggressive chaotic jitter (direction shifts every 0.3-1.3s)
+  - Faster ambient wave (1.2x vs 0.6x)
+  - Cursor gravity: 1.3x normal strength
+  - Caught in whirlwinds and pressure waves (1.5x amplified)
+  - Velocity damping: 0.92 (floaty)
+
+Black Hole Feeding:
+  - Shadow balls feed both regular and supermassive BH
+  - Mass fraction = radius / BASE_CIRCLE_RADIUS (0.17-0.50)
+  - 1.5x stronger pull than normal orbs
+  - Dark particle burst on consumption
+
+Visual:
+  - Dark core: pure black radial gradient
+  - Inner solid black circle (0.8x radius)
+  - Subtle dark shimmer ring (0.25 alpha, oscillating)
+  - B2 Abyss: faint bioluminescent corona at sat > 0.3
+    - Color from vivid palette, very subtle (max alpha 0.105)
+
+
+=== BOSS SYSTEM ===
+(Section 10d — exists but details are in code around line 4357)
+  - Boss spawns on timer (bossTimer, default 30s)
+  - Has HP, state machine (appearing/active/dying)
+  - Damaged by chain pops, BH collapses, SBH supernovae
+  - Awards taps and score on kill
+  - bossKillCount tracks total kills per run
+
+
+=== WATCHER ENTITY ===
+  - Appears at screen edges at high madness
+  - watcher state: { opacity, eyeGlow, reachAmount, breathPhase }
+  - Becomes more visible as madness increases
+  - Eye glow and breath animation
+  - "Tentacles" reaching inward from edges
+  - Pure atmosphere — no gameplay interaction

@@ -1,0 +1,141 @@
+POP FIELD — BIOME SYSTEM
+=========================
+
+=== B1: MAIN BIOME (5 PALETTE PHASES) ===
+
+Phase I (Levels 1-3): Deep violet + hot pink + warm gold
+  bgTop: #0d0018, bgBot: #1a0028
+  colors: [#b24dff, #ff3c8e, #ffd84d]
+  accent: #e040fb
+  baseNote: 240 Hz, oscType: sine
+
+Phase II (Levels 4-6): Richer, more saturated
+  bgTop: #120020, bgBot: #200035
+  colors: [#9c27b0, #ff1a6e, #ffe066]
+  accent: #ea80fc
+  baseNote: 262 Hz, oscType: sine
+
+Phase III (Levels 7-9): Deeper, neon edges
+  bgTop: #0a0014, bgBot: #1a0030
+  colors: [#7c4dff, #ff4081, #ffca28]
+  accent: #d500f9
+  baseNote: 294 Hz, oscType: sawtooth
+
+Phase IV (Levels 10-12): High contrast, electric
+  bgTop: #06000f, bgBot: #14002a
+  colors: [#651fff, #f50057, #ffc400]
+  accent: #aa00ff
+  baseNote: 330 Hz, oscType: sawtooth
+
+Phase V (Levels 13+): Ultra vivid, white-hot accents
+  bgTop: #04000a, bgBot: #10001e
+  colors: [#d050ff, #ff2070, #ffe180]
+  accent: #e040fb
+  baseNote: 349 Hz, oscType: sine
+
+B1 MADNESS PROGRESSION:
+  - Colors desaturate via horrorShift() toward grey/flesh/bile
+  - Past 50%: tint toward sickly flesh tones (r:140, g:90, b:70)
+  - Orbs grow eyeball overlays (4 phases, 10-100%)
+  - Background desaturates
+  - Watcher entity appears at screen edges
+  - Field stars dim and shift color
+  - Scanline overlay intensifies
+  - Chromatic aberration
+
+B1 PGE — WHIRLWIND:
+  - Tangential swirl toward field center
+  - BPM-synced at 90 BPM (semi-random skips)
+  - Duration: 2-4 beats
+  - Clockwise or counter-clockwise (random)
+  - Force: 35 * physics_scale * madness_mult
+  - Inward pull component: 25% of swirl force
+  - Chaos jitter at >30% madness
+
+
+=== B2: ABYSS BIOME (SPECIAL) ===
+
+Palette:
+  bgTop: #000a12, bgBot: #001018
+  colors: [#00e5ff, #00bfa5, #76ff03] (cyan, teal, lime)
+  accent: #18ffff
+  baseNote: 180 Hz, oscType: triangle
+
+Extended vivid palette (12 colors):
+  #00e5ff (cyan), #00bfa5 (teal), #76ff03 (lime), #e040fb (violet),
+  #ff4081 (hot pink), #ffd740 (gold), #7c4dff (deep purple),
+  #00fff5 (aqua), #ff6ec7 (neon pink), #b0ff00 (chartreuse),
+  #ea80fc (lavender), #84ffff (ice)
+
+B2 SATURATION SYSTEM (INVERSE OF B1):
+  getAbyssSaturation():
+    0-10% madness: sat=0 (pitch black monochrome)
+    10-70% madness: ramp 0->1 (gradual color bloom)
+    70-100%: sat=1 (fully vivid bioluminescent)
+
+  Low saturation (0-50%):
+    Orbs use 5-stop high-contrast greyscale gradient:
+    #e0e8f0, #607888, #202830, #90a8b8, #384048
+    Gradually blends toward desaturated palette colors
+
+  High saturation (50-100%):
+    Time-based color cycling through extended vivid palette
+    80% blend toward vivid colors at max saturation
+    Background transitions from pitch black to deep midnight blue
+
+  abyssDesaturate(hex, sat):
+    Desaturates toward dim greyscale with slight blue tint
+    dimLum = luminance * 0.4
+    Blue channel gets +8 tint (underwater feel)
+
+  biomeColorShift(hex, madness):
+    Unified function: calls abyssDesaturate in Abyss, horrorShift elsewhere
+
+B2 BACKGROUND LAYERS (all scale with saturation):
+  1. Base gradient: #010108 (pitch black) -> #041828 (deep midnight blue)
+  2. Field stars: desaturated tints, dimmer alpha at low sat
+  3. Cosmic dust: 1500 particles, abyssDesaturated
+  4. Haze blobs: alpha scales with sat, use satColor
+  5. Light shafts: dimmer in void, use satColor
+  6. Rising particles: barely visible -> glowing
+  7. Marine snow: always somewhat visible, tinted with sat
+  8. Oceanic dust: alpha and color scale with sat
+  9. Depth fog: stronger in void (0.25) -> lighter at full sat (0.13)
+  10. Twinkling particles: 600 midground particles, 18 crazy colors
+      - Fast twinkling (1.5-5.5 Hz), sharp blink cutoff
+      - Invisible at sat < 0.12, quadratic alpha ramp
+      - Glow halos on larger particles at high sat
+  11. Nebula spheres: 8 large blurred radial gradients
+      - Invisible in void, cubic ramp bloom
+
+B2 ORB MUTATIONS (scale with madness):
+  0-10%: normal circle, greyscale coloring
+  10-60%: body warp increases (warped polygon, 5-8 sides)
+  30-100%: tentacles sprout (3-6 per orb, writhing)
+  40%+: stress lines appear on body
+  20%+: bioluminescent edge glow
+  30%+: inner void appears in center
+  Thick tentacles: wrinkling ridges, wider
+  Thin tentacles: wispy curling tips
+
+B2 PGE — ABYSSAL PRESSURE WAVES:
+  - Crushes orbs toward screen center
+  - BPM-synced at 90 BPM (same system as B1)
+  - Duration: 2-4 beats
+  - Force: 50 * madness_mult
+  - Plays abyss woosh sound
+  - Underwater current: horizontal sine drift (force 6)
+
+B2 SPECIAL RENDERINGS:
+  - Black holes: spinning ocean whirlpools
+  - Supermassive BH: deep maelstroms
+  - Shadow ball corona: bioluminescent glow at sat > 0.3
+  - SuperCell: tentacle horror with saturation-scaled colors
+
+LORE TEXTS:
+  Phase I:  3 variants (field awakens, matter condenses, membrane stretches)
+  Phase II: 3 variants (warmth bleeds, field remembers, energy pools)
+  Phase III: 3 variants (fractures spread, orbs pulse, archons form)
+  Phase IV: 3 variants (field hungers, chains echo, void breathes)
+  Phase V:  3 variants (boundaries dissolve, pops tear membrane, field and void are one)
+  ABYSS:   3 variants (sink below, pressure crushes, deep remembers)

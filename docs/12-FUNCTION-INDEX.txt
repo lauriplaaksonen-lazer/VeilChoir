@@ -1,0 +1,199 @@
+POP FIELD — COMPLETE FUNCTION INDEX
+======================================
+Every function in index.html with line number and purpose.
+
+=== SECTION 1: CONSTANTS (line 142) ===
+170  getLinkTensionTime()          — Chain tension time by combo tier (S/A/B/C)
+
+=== SECTION 4: GAME STATE (line 312) ===
+397  resetGame()                   — Full game state reset, spawn orbs, show HUD
+
+=== SECTION 5: AUDIO (line 483) ===
+485  initAudio()                   — Create Web Audio context
+493  playPopSound(chainIndex)      — Rising-pitch pop (biome-specific)
+512  playBonusTapSound()           — Bonus tap reward chime
+529  playPhantomSound()            — Missed-tap phantom pop
+545  playSCPopSound(chainIndex)    — SuperCell deep boom + crunch
+574  playVoidCrackSound()          — Eerie crack + sub rumble
+603  playAbyssWooshSound()         — Deep pressure wave whoosh
+635  playDelayedBlastBuildup(t,d)  — Rising sweep buildup by tier
+668  playDelayedBlastExplosion(t)  — Bass drop + noise + ring
+
+=== SECTION 6: UTILITIES (line 716) ===
+718  dist(x1,y1,x2,y2)            — Euclidean distance
+723  lerp(a,b,t)                   — Linear interpolation
+725  lerpColor(c1,c2,t)           — Hex color interpolation
+746  getMadnessAmount()            — 0-1 madness (score + horrorBoost)
+755  getHorrorAmount()             — Alias for getMadnessAmount
+760  horrorShift(hex,amount)       — B1 desaturation toward flesh tones
+790  getAbyssSaturation()          — B2 inverse saturation (0-1)
+801  abyssDesaturate(hex,sat)      — Desaturate toward blue-tinted grey
+816  getAbyssOrbColor(x,y)         — B2 orb color (greyscale->vivid)
+863  biomeColorShift(hex,madness)  — Unified: abyss desat or horror shift
+870  shuffle(arr)                  — Fisher-Yates shuffle
+879  getCurrentPalette()           — Current palette (biome override aware)
+888  getCurrentBiome()             — Compat shim for old code
+901  getClusterColor(x,y)          — Position-based orb color
+922  getTargetCircleCount()        — Target orb population
+940  getMadnessPhysicsScale()      — Physics amplification (1.0-1.7)
+948  getBlastRadius()              — Level+madness scaled blast radius
+959  getFractureCounts()           — Fragment counts by generation per level
+980  getShrapnelThreshold()        — Min chain for shrapnel by level
+988  getBonusTapThresholds()       — Bonus tap thresholds by level
+998  getTapTimerMax()              — Tap timer max by level
+1006 getCascadeBurstCount(gen)     — Cascade fragments by generation+chain
+
+=== SECTION 7: CIRCLES (line 1015) ===
+1017 createCircle(x,y)             — Create orb with all properties
+1082 findCircleById(id)            — Lookup orb by ID
+1089 spawnInitialCircles()         — Fill field for game start
+1113 spawnCircleFromEdge()         — Spawn from edge (60%) or fade-in (40%)
+1156 spawnCircleFadeIn()           — Materialize from darkness
+1173 getOrbValue(c)                — Weighted orb value by size
+1183 getWeightedOrbCount()         — Total weighted population
+1193 refillCircles()               — Queue orbs to fill to target count
+1204 updateRefillQueue(dt)         — Process refill queue
+1213 updateCircles(dt)             — All orb physics/movement/mutation
+
+=== SECTION 7b: COLOR SYNTHESIS (line 1417) ===
+1423 colorDistance(hex1,hex2)       — Manhattan RGB distance
+1429 updateColorSynthesis(dt)      — Overlapping orbs blend colors
+
+=== SECTION 7c: ORB MERGING (line 1560) ===
+1562 updateOrbMerging(dt)          — Same-color overlap -> merge
+
+=== SECTION 7d: INTER-ORB GRAVITY (line 1689) ===
+1691 updateInterOrbGravity(dt)     — Big orbs pull small orbs
+
+=== SECTION 7e: MERGE ANIMATIONS (line 1773) ===
+1775 updateMergeAnimations(dt)     — Absorbed orbs shrink/stretch
+
+=== SECTION 8: PARTICLES (line 1823) ===
+1832 updateAmbientParticles(dt)    — Spawn ambient motes
+1860 acquireParticle()             — Get particle from pool
+1867 spawnParticle(x,y,type,...)   — Create particle
+1889 spawnPopParticles(x,y,color)  — Pop effect (sparks + biome-specific)
+1981 updateParticles(dt)           — All particle physics
+
+=== SECTION 9: EXPLOSIONS (line 2103) ===
+2105 createExplosion(x,y,r,c,echo) — Create expanding ring
+2118 updateExplosions(dt)          — Expand and fade explosions
+
+=== SECTION 9b: BOMBS (line 2130) ===
+2132 placeBomb(x,y)                — Place mine with fuse
+2159 updateBombs(dt)               — Fuse countdown
+2170 detonateBomb(b)               — Mine explosion -> chain
+2210 renderBombs(ctx)              — Mine visual (ring, body, fuse)
+2243 playBombPlaceSound()          — Mine placement sound
+
+=== SECTION 9b: SHADOW BALLS (line 2260) ===
+2270 createShadowBall()            — Create dark phantom orb
+2295 updateShadowBalls(dt)         — Movement, BH feeding, gravity
+2518 renderShadowBalls(ctx)        — Dark gradient + shimmer ring
+
+=== SECTION 10: CHAIN REACTION (line 2578) ===
+2580 startChain(x,y)               — Begin chain from tap
+2628 phantomPop(x,y)               — Missed-tap explosion
+2659 popCircle(circleId)           — Pop orb (XP, blast, effects)
+2966 updateAftershocks(dt)         — Hot zone countdown
+2988 updateGravityWells(dt)        — Well lifetime + orb pulling
+
+=== BLACK HOLES (line 3010) ===
+3024 updateBlackHole(dt)           — Spawn, gravity, swallow, collapse
+3175 tryTapBlackHole(x,y)          — Player taps BH -> collapse
+3187 triggerBlackHoleCollapse(bh)   — Free chain pop + bonus taps
+3266 updateSuperBlackHole(dt)      — SBH spawn, gravity, swallow
+3461 tryTapSuperBlackHole(x,y)     — Player taps SBH -> collapse
+3472 triggerSuperBlackHoleCollapse() — Supernova or normal collapse
+
+=== PGE (line 3561) ===
+3578 updateWhirlwind(dt)           — B1 tangential swirl + BH vortex
+3676 updateAbyssalPressure(dt)     — B2 crushing pressure + current
+
+=== BLACK HOLE RENDERING (line 3733) ===
+3733 renderBlackHole(ctx)          — BH visual (B1 accretion / B2 whirlpool)
+3881 renderSuperBlackHole(ctx)     — SBH visual (B1 void / B2 maelstrom)
+
+=== CHAIN SYSTEM (line 4087) ===
+4087 updateChainLinks(dt)          — Link tension + pop triggering
+4116 updateChainReaction(dt)       — Chain queue processing
+4147 endChain()                    — Award score/XP/taps, trigger blasts
+4224 applyChainFeedback(index)     — Shake/glow/slowmo by chain size
+4251 triggerDelayedBlast(t,d,ts)   — Start delayed blast buildup
+4290 updateDelayedBlast(dt)        — Countdown to explosion
+4325 executeDelayedBlast()         — Fire delayed blast
+
+=== SECTION 10d: BOSS (line 4357) ===
+4361 playBossSpawnSound()          — Boss appear sound
+4390 playBossHitSound()            — Boss damage sound
+4406 playBossDeathSound()          — Boss kill sound
+4452 trySpawnBoss(dt)              — Boss spawn timer
+4546 updateBoss(dt)                — Boss state machine
+4849 damageBoss(x,y,r,orbR)       — Deal damage from explosions
+4909 renderBoss(ctx)               — Boss visual dispatch
+4954 renderNexusBoss(ctx,b)        — Nexus boss type visual
+5039 renderLeviathanBoss(ctx,b)    — Leviathan boss type visual
+
+=== SECTION 11: UPGRADES (line 5219) ===
+5221 checkLevelUp()                — XP check -> show upgrade
+5247 showUpgradePanel()            — Display upgrade card (or auto-apply)
+5281 selectUpgrade(key)            — Apply upgrade, check game over
+
+=== SECTION 12: RENDERING (line 5310) ===
+5312 render()                      — MAIN RENDER FUNCTION (all layers)
+5474 updateWatcher(dt)             — Watcher opacity/glow
+5497 renderWatcher(ctx,W,H)        — Cosmic horror at edges
+5536 renderGalaxyBackground(ctx,W,H) — Galaxy BG with wobble
+5631 updateFieldStars(dt,W,H)      — Star position updates
+5685 renderFieldStars(ctx,W,H)     — Tiny ambient stars
+5708 renderBackground(ctx,W,H)     — Gradient + horror/abyss
+5863 renderGrid(ctx,W,H)           — Grid overlay (unused?)
+5896 renderPaintSplats(ctx)        — Persistent paint marks
+5914 renderAftershocks(ctx)        — Hot zone visuals
+5930 renderGravityWells(ctx)       — Active well ring visuals
+5955 renderChainLinks(ctx)         — Lightning tendrils
+6116 renderDefaultSC(ctx,c,drawR)  — B1 Archon: eye-cluster entity
+6269 renderAbyssSC(ctx,c,drawR)    — B2 Archon: tentacle horror
+6401 renderCircles(ctx)            — ALL ORB RENDERING (massive function)
+7299 renderExplosions(ctx)         — Expanding blast rings
+7478 renderParticleLayer(ctx,layer) — Particles by layer (bg/fg)
+7582 renderFloatingTexts(ctx)      — Floating text rendering
+7619 renderWhiteGlow(ctx,W,H)      — Flash overlay
+7635 renderDelayedBlastBuildup(ctx,W,H) — Buildup visual pulse
+
+=== SECTION 13: POST-PROCESSING (line 7682) ===
+7684 createScanlinePattern()       — Pre-bake CRT scanlines
+7709 renderNebulaClouds(ctx,W,H)   — B1 gradient nebula shapes
+7846 renderAbyssBackground(ctx,W,H) — B2 ALL background layers
+8169 renderOrbBloom(ctx)           — Hardware-accelerated glow
+8217 renderLightRays(ctx,W,H)      — Directional light streaks
+8244 renderChainEnergyField(ctx,W,H) — Active chain energy visual
+8267 renderVignette(ctx,W,H)       — Screen edge darkening
+8275 renderChromaticAb(ctx,W,H)    — RGB channel offset
+
+=== SECTION 14: INPUT (line 8288) ===
+8292 screenToWorld(sx,sy)          — Screen -> world coords (zoom)
+8300 handleTap(x,y)                — Main tap handler
+8335 handleLongPress(x,y)          — Mine placement
+8349 setupInput()                  — All event listeners
+8493 toggleBiome()                 — Cycle biome override
+8525 advanceBiome()                — Step to next biome
+
+=== SECTION 15: UI/HUD (line 8560) ===
+8562 spawnFloatingText(x,y,t,c,d)  — Create floating text
+8573 updateFloatingTexts(dt)       — Float up and fade
+8589 corruptText(text,madness)     — Enochian text corruption
+8616 corruptTextPreserveNumbers(t,m) — Corrupt text keeping numbers
+8633 updateHUD()                   — Refresh HUD display
+8669 showGameOver()                — Show game over screen
+
+=== SECTION 16: GAME LOOP (line 8679) ===
+8681 update(dt)                    — MAIN UPDATE (all systems)
+8805 gameLoop(timestamp)           — requestAnimationFrame loop
+
+=== SECTION 17: INIT (line 8819) ===
+8821 resizeCanvas()                — Handle window resize
+8893 buildChangelogModal()         — Build changelog HTML
+8919 initSplashSequence()          — Setup lore/changelog/instructions
+8993 advanceSplash()               — Transition between splash phases
+9067 init()                        — ENTRY POINT

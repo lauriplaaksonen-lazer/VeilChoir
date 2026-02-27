@@ -1,0 +1,76 @@
+POP FIELD — AUDIO SYSTEM
+==========================
+
+All audio is procedurally generated using Web Audio API.
+No audio files — everything is synthesized in real-time.
+
+=== INITIALIZATION ===
+initAudio(): Creates AudioContext on first user interaction
+  G.audioCtx = new AudioContext()
+  Called from handleTap() and touch events
+
+=== SOUND EFFECTS ===
+
+1. playPopSound(chainIndex)
+   - Rising pitch with chain index: baseNote * 1.055^chainIndex (capped at 4000 Hz)
+   - Uses biome oscType (sine, sawtooth, triangle)
+   - Volume: 0.04 + chainIndex*0.0015 (max 0.12)
+   - Duration: 0.18s
+   - Frequency sweep: freq -> freq*0.7 over 0.1s
+
+2. playBonusTapSound()
+   - Rising sine: 880 Hz -> 1400 Hz
+   - Volume: 0.18
+   - Duration: 0.35s
+
+3. playPhantomSound()
+   - Low descending sine: 80 Hz -> 40 Hz
+   - Volume: 0.08
+   - Duration: 0.2s
+   - Played on missed taps (phantom pop)
+
+4. playSCPopSound(chainIndex)
+   Two layers:
+   a. Deep boom: sine 60->25 Hz, volume 0.2, 0.4s
+   b. Crunch: square 90->30 Hz, volume 0.06, 0.25s
+
+5. playVoidCrackSound()
+   Two layers:
+   a. Eerie crack: sine 400->80 Hz, volume 0.15, 0.55s
+   b. Sub rumble: triangle 50->30 Hz, volume 0.12, 0.45s
+
+6. playAbyssWooshSound()
+   Two layers:
+   a. Sub-bass whoosh: sine 35->20 Hz, fade in to 0.15, 1.6s
+   b. Whooshing mid: triangle 120->50 Hz, volume 0.06, 1.3s
+
+7. playDelayedBlastBuildup(tier, duration)
+   Two layers:
+   a. Rising sweep: sawtooth
+      Start freq: tier3=80, tier2=120, tier1=180
+      End freq: tier3=900, tier2=700, tier1=500
+      Volume: tier3=0.10, tier2=0.07, tier1=0.05
+   b. Sub-bass rumble: sine 40 Hz steady
+      Volume: 0.08 -> 0.15
+
+8. playDelayedBlastExplosion(tier)
+   Three layers:
+   a. Bass drop: sine 150-200 Hz -> 20 Hz, volume 0.12-0.25
+   b. White noise burst: random buffer, volume 0.05-0.12, 0.3s
+   c. High ring (tier 2+): sine 2000->600 Hz, volume 0.06
+
+9. playBombPlaceSound()
+   - Sine: 300->150 Hz
+   - Volume: 0.1
+   - Duration: 0.18s
+
+=== AUDIO BIOME INTEGRATION ===
+Each palette defines:
+  baseNote: starting frequency for pop sounds (180-349 Hz)
+  oscType: waveform shape (sine, sawtooth, triangle)
+
+Pop sounds become higher-pitched as chains grow longer.
+Different biomes have different tonal character:
+  B1 early: warm sine tones (240-262 Hz)
+  B1 late: harsher sawtooth (294-330 Hz) then back to sine (349 Hz)
+  B2 Abyss: deep triangle waves (180 Hz)
