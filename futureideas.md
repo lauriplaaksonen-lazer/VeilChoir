@@ -189,6 +189,31 @@ Three new biomes, each breaking the Membrane in a different way. Full lore, visu
 
 ---
 
+### Biome D: THE DELIRIUM — *Where the counting counts itself* (2026-02-27)
+
+**Core twist:** Fever-dream geometric hallucinations. The Membrane's mathematical self-description becomes recursive — the Adamical Grid reading its own Cell Ø-Ø-Ø. Two interlocking mechanics: **kaleidoscopic symmetry** that mirrors player actions, and **geometric pattern recognition** that rewards deliberate formations.
+
+**Gameplay:**
+- **Kaleidoscopic Mirror:** Field has a rotating symmetry order (2/3/4/6-fold). Pop one orb → mirror counterparts pop free at rotated positions. 6-fold = 6 pops for 1 tap. Axis rotates slowly, order cycles (2→3→4→6→4→3→2). Track the symmetry to time your chains.
+- **Geometric Formations:** Orbs drift into sacred geometry (triangles, hexagons, pentagrams). Complete patterns glow gold. Pop any orb in a complete pattern → entire formation cascades as one (2-6× XP bonus). Ghost vertices show where missing orbs would complete a pattern. Weak "pattern gravity" nudges orbs toward formation positions.
+- **The Fever (Rule Mutations):** Every 12-18s, one fundamental rule temporarily shifts for 4-6s — gravity inverts, blast radius becomes elliptical, chains propagate in reverse, orb sizes swap, 30% of orbs phase to immune, or only same-polygon-type orbs can chain. Telegraphed by background tessellation stutter.
+- **Orbs as geometric primitives:** Perfect triangles, squares, pentagons, hexagons (not circles). At high madness: impossible geometry — Penrose triangles, shapes with wrong edge/vertex counts.
+- **Visual:** Living tessellation background that morphs between triangle/square/hex tilings. Golden symmetry axis lines. Sacred geometry particle snow. Pops SUBDIVIDE instead of explode (triangle → 4 smaller triangles).
+
+**Boss: THE THEOREM** — A living geometric proof assembling itself from captured orbs into a mandala (3 concentric rotating rings: triangle, hexagon, dodecagon). If the Theorem completes its proof (fills all rings, holds 3s): "THE PROOF RESOLVES" — heals to full HP, erases all captured orbs, player loses 2 taps. The player must free captured orbs via chain hits faster than the Theorem replaces them. At <30% HP, a **Contradiction Orb** (the flaw in the proof) appears — hitting it collapses the entire mandala and ejects captured orbs as chain material in a perfect geometric burst. Death: the mandala simplifies step by step (dodecagon→hexagon→triangle→line→point→silence), then "THE PROOF WAS NEVER ABOUT THE ANSWER."
+
+**Lore:** The triple-Null coordinate (Cell Ø-Ø-Ø) — where the Adamical Grid describes itself. The First Counting applied to the First Counting. Enumerator Ø-771 queried it and got the query itself as the answer. The recursion has not terminated. The Hollowmaths love it: "the one place where my proof and my disproof were the same shape." The Choir's chord heard one semitone higher — the next chord, before the Membrane has sung it.
+
+**Audio:** Harmonic series literally maps to symmetry order (2-fold = octave, 3-fold = fifth, 6-fold = major third). Pattern completions play ascending arpeggios (N notes for N-sided polygon). Fever mutations pitch-bend the ambient tone down one semitone. Boss mandala hums dissonant intervals that resolve toward consonance as rings complete — the player's job is to keep the chord broken.
+
+**Builds on:** ABYSS polygon renderer, perspective grid, gravity wells, Dark Prism inversion, spatial hash, Nexus tether patterns. Full concept in `delirium-concept.md`.
+
+| Biome | What Breaks | Player Role | Feel |
+|-------|-------------|-------------|------|
+| **Delirium** | Mathematics itself | Pattern-reader / contradiction-keeper | Hypnotic — watch the geometry dream |
+
+---
+
 ---
 
 ## Pseudo-3D / Real 3D Exploration (2026-02-27)

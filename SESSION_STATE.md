@@ -14,6 +14,7 @@
 - **"Madness" is now "World Transparency" (WT)** in all design docs and conversation
 - Code still uses `getMadnessAmount()`, `G.horrorBoost`, etc. internally
 - The first eye mutation phase is called **"Mutation: Phase 1"**
+- **LT** — Lightning Test biome (`biomeOverride === 1`, formerly "TESTLEVEL"). Debug lighting engine with shadow casting, light sources, saturation effects, and feathered multi-pass shadows.
 
 ### Pending / Discussed But Not Implemented
 - **Shadow Orb Gameplay Mechanic** — Currently shadow orbs are purely cosmetic (spawn at 55%+ WT, up to 400, non-interactive). Three gameplay alternatives were proposed:

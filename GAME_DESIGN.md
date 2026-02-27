@@ -127,6 +127,15 @@ Each phase has unique background gradients, particle colors, and oscillator tone
 - Progressive tentacle mutation on orbs (tied to madness)
 - Toggle with B key or Abyss button
 
+### LT — Lightning Test (Special Biome)
+- Debug lighting engine (`biomeOverride === 1`, formerly "TESTLEVEL")
+- Cursor-centered radial light source with shadow casting from orbs
+- Multi-pass feathered shadows (4-layer penumbra→core system)
+- Orb saturation shifts by light proximity (+15% near, -30% far)
+- Self-glow on orbs, black hole variants, explosions, and chain links
+- Orb body shadow (directional gradient, lit side vs dark side)
+- Toggle with T key or TESTLEVEL button
+
 ---
 
 ## World Transparency (WT) System

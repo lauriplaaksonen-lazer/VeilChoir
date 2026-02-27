@@ -1222,7 +1222,12 @@ function getTargetCircleCount() {
     2.0 + (madness - 0.8) * 2.5;
   // Density upgrade: 6% orb mass per level (scales with field size)
   const densityMult = 1.0 + G.upgrades.density * 0.06;
-  return Math.round(baseCount * zoomFactor * madnessOrbMult * densityMult);
+  // Level 6+ dampening at low-mid WT (screen too busy early on)
+  let levelDampen = 1.0;
+  if (G.level >= 6) {
+    levelDampen = madness < 0.4 ? 0.75 + madness * 0.625 : 1.0; // 0.75× at 0% WT → 1.0× at 40%
+  }
+  return Math.round(baseCount * zoomFactor * madnessOrbMult * densityMult * levelDampen);
 }
 
 // --- PROGRESSION SCALING HELPERS ---
@@ -3548,9 +3553,9 @@ function updateShadowBalls(dt) {
   if (G.prismCooldown > 0) G.prismCooldown = Math.max(0, G.prismCooldown - dt);
 
   let clusterDetected = false;
-  if (G.shadowBalls.length >= 8 && G.prismCooldown <= 0) {
-    const PRISM_RADIUS = 25;
-    const PRISM_THRESHOLD = 7;
+  if (G.shadowBalls.length >= 12 && G.prismCooldown <= 0) {
+    const PRISM_RADIUS = 35;
+    const PRISM_THRESHOLD = 10;
     const step = Math.max(1, Math.floor(G.shadowBalls.length / 30));
     for (let i = 0; i < G.shadowBalls.length; i += step) {
       const probe = G.shadowBalls[i];
@@ -3596,7 +3601,7 @@ function updateShadowBalls(dt) {
       G.gravityInvertTimer = Math.max(0, G.gravityInvertTimer - dt);
       // When grace fully expires, start cooldown
       if (G.gravityInvertTimer <= 0) {
-        G.prismCooldown = 2.0; // 2s cooldown before it can trigger again
+        G.prismCooldown = 5.0; // 5s cooldown before it can trigger again (was 2s)
       }
     }
   }
@@ -5368,7 +5373,7 @@ function renderSuperBlackHole(ctx) {
 const MINI_BH_SPAWN_MIN = 90;   // seconds (SBH is 30-50, so 3x rarer)
 const MINI_BH_SPAWN_MAX = 150;
 const MINI_BH_STRENGTH = 6000;
-const MINI_BH_GRAV_RADIUS = 150;
+const MINI_BH_GRAV_RADIUS = 300;  // 2× wider pull radius (was 150)
 const MINI_BH_VISUAL_RADIUS = 5;
 const MINI_BH_LIFETIME_MIN = 4;
 const MINI_BH_LIFETIME_MAX = 7;
@@ -5376,10 +5381,9 @@ const MINI_BH_LIFETIME_MAX = 7;
 function updateMiniBlackHoles(dt) {
   if (!G.miniBlackHoles) return;
   const madness = getMadnessAmount();
-  if (madness < 0.75) return;
 
-  // Spawn logic — max 1 at a time
-  if (G.miniBlackHoles.length < 1) {
+  // Spawn logic — only at high madness, max 1 at a time
+  if (madness >= 0.75 && G.miniBlackHoles.length < 1) {
     G.miniBlackHoleTimer += dt;
     const interval = MINI_BH_SPAWN_MIN + Math.random() * (MINI_BH_SPAWN_MAX - MINI_BH_SPAWN_MIN);
     if (G.miniBlackHoleTimer >= interval) {
@@ -5445,6 +5449,7 @@ function updateMiniBlackHoles(dt) {
     const fadeMult = mbh.fadeIn * fadeOut;
 
     // Gravity pull on orbs — very strong but tiny swallow zone (objects fly past)
+    // + spaghettification: orbs stretch toward the black hole
     for (let i = 0; i < G.circles.length; i++) {
       const c = G.circles[i];
       if (c.popped || !c.alive) continue;
@@ -5463,6 +5468,24 @@ function updateMiniBlackHoles(dt) {
       const tangent = accel * 0.7;
       c.vx += (-ny) * tangent;
       c.vy += (nx) * tangent;
+
+      // Spaghettification — stretch orbs toward the black hole
+      // Closer = more stretch. Max stretch at d < gravityRadius * 0.3
+      const spaghettiZone = mbh.gravityRadius * 0.6;
+      if (d < spaghettiZone) {
+        const spaghettiT = 1 - (d / spaghettiZone); // 0 at edge, 1 at center
+        const stretchAmount = 1 + spaghettiT * spaghettiT * 1.8; // max 2.8× elongation
+        const squashAmount = 1 / Math.sqrt(stretchAmount);       // volume-preserving squash
+        c.stretchX = stretchAmount;
+        c.stretchY = squashAmount;
+        c.stretchAngle = Math.atan2(dy, dx); // stretch TOWARD the black hole
+      } else {
+        // Gentle return to normal outside spaghetti zone
+        if (c.stretchX > 1.01) {
+          c.stretchX += (1 - c.stretchX) * dt * 4;
+          c.stretchY += (1 - c.stretchY) * dt * 4;
+        }
+      }
 
       // Swallow only if orb somehow hits dead center (very unlikely at high speed)
       if (d < 3) {
@@ -5614,8 +5637,8 @@ function endChain() {
   const rawScore = count <= 30 ? count * count : (900 + (count - 30) * 30);
   G.score += Math.floor(rawScore * levelMult);
 
-  // Progressive zoom: 2.0 at score 0 → 0.5 at score ~400000
-  G.zoomTarget = Math.max(0.5, 2.0 - G.score * (1.5 / 400000));
+  // Progressive zoom: 2.0 at score 0 → 0.5 at score ~250000 (faster curve)
+  G.zoomTarget = Math.max(0.5, 2.0 - G.score * (1.5 / 250000));
 
   // XP (shrapnel balls worth 25%)
   G.xp += Math.floor(G.chainXpValue);
@@ -8158,6 +8181,16 @@ function renderWTBanner(ctx, W, H) {
   ctx.fillStyle = b.color;
   ctx.fillText(b.subtext, W / 2, centerY + fontSize * 0.7 + 8);
 
+  // Lore quote — smaller italic text below subtext
+  if (b.lore) {
+    const loreSize = Math.min(13, W * 0.015);
+    ctx.font = `italic ${loreSize}px 'Georgia', serif`;
+    ctx.letterSpacing = '0px';
+    ctx.globalAlpha = alpha * 0.5;
+    ctx.fillStyle = '#cccccc';
+    ctx.fillText(b.lore, W / 2, centerY + fontSize * 0.7 + 8 + subSize + 16);
+  }
+
   ctx.restore();
 }
 
@@ -9452,7 +9485,18 @@ function renderCircles(ctx) {
     const lod = screenR >= 12 ? 0 : screenR >= 6 ? 1 : screenR >= 3 ? 2 : 3;
 
     // Brighten orb color at WT <80% — keeps field vivid longer
-    const orbColor = orbBrighten(c.color, getMadnessAmount());
+    let orbColor = orbBrighten(c.color, getMadnessAmount());
+
+    // LT: Saturation shift by light proximity — near light: +15%, far: -30%
+    if (G.biomeOverride === 1 && G._ltR) {
+      const _cs = _w2s(c.x, c.y);
+      const ldx = _cs.x - G._ltLx, ldy = _cs.y - G._ltLy;
+      const lDist = Math.sqrt(ldx * ldx + ldy * ldy);
+      const ll = Math.max(0, 1 - lDist / G._ltR); // 1.0 at center, 0.0 at edge
+      // Gradual: near light (ll>0.3) boost up to +0.15, far (ll<0.3) desaturate down to -0.30
+      const satShift = ll > 0.3 ? (ll - 0.3) * 0.214 : -(1 - ll / 0.3) * 0.30;
+      orbColor = adjustSaturationHex(orbColor, satShift);
+    }
 
     // LOD 3: minimal dot — skip save/restore entirely
     if (lod === 3) {
@@ -9579,17 +9623,26 @@ function renderCircles(ctx) {
       }
     }
 
-    // Velocity-based deformation — fluid stretch along movement direction (LOD 0-1 only)
-    const speed = Math.sqrt(c.vx * c.vx + c.vy * c.vy);
-    const deformThreshold = 20; // lower threshold — stretch starts at modest speeds
-    if (lod <= 1 && speed > deformThreshold && (c.mergeTarget === null || c.mergeTarget === undefined)) {
-      const deformAmount = Math.min(0.35, (speed - deformThreshold) / 400); // more visible, max 35%
-      const velAngle = Math.atan2(c.vy, c.vx);
+    // Spaghettification — MBH tidal stretch overrides velocity deformation when active
+    if (c.stretchX && c.stretchX > 1.05) {
       ctx.translate(c.x, c.y);
-      ctx.rotate(velAngle);
-      ctx.scale(1 + deformAmount, 1 / (1 + deformAmount * 0.7)); // stretch + squash (area-preserving)
-      ctx.rotate(-velAngle);
+      ctx.rotate(c.stretchAngle || 0);
+      ctx.scale(c.stretchX, c.stretchY);
+      ctx.rotate(-(c.stretchAngle || 0));
       ctx.translate(-c.x, -c.y);
+    } else {
+      // Velocity-based deformation — fluid stretch along movement direction (LOD 0-1 only)
+      const speed = Math.sqrt(c.vx * c.vx + c.vy * c.vy);
+      const deformThreshold = 20; // lower threshold — stretch starts at modest speeds
+      if (lod <= 1 && speed > deformThreshold && (c.mergeTarget === null || c.mergeTarget === undefined)) {
+        const deformAmount = Math.min(0.35, (speed - deformThreshold) / 400); // more visible, max 35%
+        const velAngle = Math.atan2(c.vy, c.vx);
+        ctx.translate(c.x, c.y);
+        ctx.rotate(velAngle);
+        ctx.scale(1 + deformAmount, 1 / (1 + deformAmount * 0.7)); // stretch + squash (area-preserving)
+        ctx.rotate(-velAngle);
+        ctx.translate(-c.x, -c.y);
+      }
     }
 
     if (c.superCell) {
@@ -10039,6 +10092,8 @@ function renderCircles(ctx) {
         ctx.fill();
 
         // === MUTATION PHASE 1: Void Seed — subtle dark center forming ===
+        // Shape hints at the eye variant this orb will grow into:
+        //   V0/V1: round pupil → circle, V2: vertical slit → vertical ellipse, V3: horizontal slit → horizontal ellipse
         if (lod <= 1) {
           const voidT = Math.min(1, ei / 0.3);
           const voidPulse = 1 + Math.sin(G.time * 1.2 + c.id * 2.7) * 0.08 * voidT;
@@ -10046,7 +10101,16 @@ function renderCircles(ctx) {
           ctx.globalAlpha = savedAlpha * voidT * voidT * 0.35;
           ctx.fillStyle = '#000000';
           ctx.beginPath();
-          ctx.arc(c.x, c.y, voidR, 0, Math.PI * 2);
+          if (eyeVariant === 2) {
+            // V2: Slit — vertical ellipse hint
+            ctx.ellipse(c.x, c.y, voidR * 0.4, voidR, 0, 0, Math.PI * 2);
+          } else if (eyeVariant === 3) {
+            // V3: Cracked — horizontal ellipse hint
+            ctx.ellipse(c.x, c.y, voidR, voidR * 0.5, 0, 0, Math.PI * 2);
+          } else {
+            // V0, V1: Round pupil — keep circle
+            ctx.arc(c.x, c.y, voidR, 0, Math.PI * 2);
+          }
           ctx.fill();
         }
 
@@ -10070,7 +10134,7 @@ function renderCircles(ctx) {
         // === SCLERA — flat off-white fill ===
         if (ei > 0.3) {
           const scleraT = Math.min(1, (ei - 0.3) / 0.35) * blinkScale;
-          const scR = drawR * (eyeVariant === 0 ? 0.92 : eyeVariant === 1 ? 0.90 : eyeVariant === 2 ? 0.88 : 0.85);
+          const scR = drawR * (eyeVariant === 0 ? 1.0 : eyeVariant === 1 ? 0.98 : eyeVariant === 2 ? 0.97 : 0.96);
           const scleraShade = eyeVariant === 0 ? '#d8d8d5' : eyeVariant === 1 ? '#ccccc8' : eyeVariant === 2 ? '#d2d2d6' : '#c8c5c2';
           ctx.fillStyle = scleraShade;
           ctx.globalAlpha = savedAlpha * scleraT * 0.88;
@@ -11937,7 +12001,7 @@ function update(dt) {
 
   // Smooth zoom transition
   if (Math.abs(G.zoomLevel - G.zoomTarget) > 0.001) {
-    G.zoomLevel = lerp(G.zoomLevel, G.zoomTarget, dt * 2);
+    G.zoomLevel = lerp(G.zoomLevel, G.zoomTarget, dt * 3.5);  // faster zoom lerp (was dt*2)
   }
 
   // Update visible game boundaries based on zoom (centered on screen)
@@ -12027,14 +12091,17 @@ function update(dt) {
   // Show dramatic text when crossing 50%, 75%, 90% WT thresholds
   const wtAmount = getMadnessAmount();
   const wtMilestones = [
-    { pct: 50, threshold: 0.50, text: 'THE MEMBRANE THINS', subtext: '50% WORLD TRANSPARENCY', color: '#b060ff' },
-    { pct: 75, threshold: 0.75, text: 'REALITY UNRAVELS',   subtext: '75% WORLD TRANSPARENCY', color: '#ff5080' },
-    { pct: 90, threshold: 0.90, text: 'THE OTHER SIDE BLEEDS THROUGH', subtext: '90% WORLD TRANSPARENCY', color: '#ff2020' }
+    { pct: 50, threshold: 0.50, text: 'THE MEMBRANE THINS', subtext: '50% WORLD TRANSPARENCY', color: '#b060ff',
+      lore: '\u201CThe Membrane does not separate. The Membrane is the act of two things disagreeing about whether they are one thing.\u201D \u2014ADAM-007' },
+    { pct: 75, threshold: 0.75, text: 'REALITY UNRAVELS',   subtext: '75% WORLD TRANSPARENCY', color: '#ff5080',
+      lore: '\u201CThe Membrane is a argument. You are a punctuation mark.\u201D \u2014HOLL-003' },
+    { pct: 90, threshold: 0.90, text: 'THE OTHER SIDE BLEEDS THROUGH', subtext: '90% WORLD TRANSPARENCY', color: '#ff2020',
+      lore: '\u201CAll instruments are functioning within normal parameters. The Membrane is stable. Nothing is wrong.\u201D \u2014ENUM-003' }
   ];
   for (const ms of wtMilestones) {
     if (wtAmount >= ms.threshold && !G.wtMilestones[ms.pct]) {
       G.wtMilestones[ms.pct] = true;
-      G.wtBanner = { text: ms.text, subtext: ms.subtext, timer: 0, duration: 3.5, color: ms.color };
+      G.wtBanner = { text: ms.text, subtext: ms.subtext, timer: 0, duration: 5.0, color: ms.color, lore: ms.lore || null };
       G.shakeAmount = Math.max(G.shakeAmount, ms.pct === 90 ? 8 : 4);
     }
   }
@@ -12125,6 +12192,36 @@ function rebuildDustLayer(w, h) {
   _dustCtx.globalAlpha = 1;
 }
 
+// --- LT Saturation helper: shift hex color saturation by amount (-1..+1) ---
+function adjustSaturationHex(hex, shift) {
+  const r = parseInt(hex.slice(1,3), 16) / 255;
+  const g = parseInt(hex.slice(3,5), 16) / 255;
+  const b = parseInt(hex.slice(5,7), 16) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  if (max === min) return hex; // achromatic — no saturation to shift
+  let h, s;
+  const d = max - min;
+  s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+  else if (max === g) h = ((b - r) / d + 2) / 6;
+  else h = ((r - g) / d + 4) / 6;
+  // Shift saturation
+  s = Math.max(0, Math.min(1, s + shift));
+  // HSL → RGB
+  if (s === 0) {
+    const v = Math.round(l * 255);
+    return '#' + ((1<<24)|(v<<16)|(v<<8)|v).toString(16).slice(1);
+  }
+  const hue2rgb = (p, q, t) => { if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p; };
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+  const nr = Math.round(hue2rgb(p, q, h + 1/3) * 255);
+  const ng = Math.round(hue2rgb(p, q, h) * 255);
+  const nb = Math.round(hue2rgb(p, q, h - 1/3) * 255);
+  return '#' + ((1<<24)|(nr<<16)|(ng<<8)|nb).toString(16).slice(1);
+}
+
 function computeCircleShadow(lx, ly, cx, cy, cr, lightR) {
   const dx = cx - lx, dy = cy - ly;
   const d = Math.sqrt(dx * dx + dy * dy);
@@ -12155,7 +12252,6 @@ function _w2s(wx, wy) {
 function renderTestLevelLighting(ctx, W, H) {
   if (G.biomeOverride !== 1) return;
 
-  // Resize offscreen canvases to match SCREEN dimensions (CSS pixels)
   if (_lightW !== W || _lightH !== H) {
     _lightW = W; _lightH = H;
     _lightCanvas.width = W;
@@ -12163,35 +12259,36 @@ function renderTestLevelLighting(ctx, W, H) {
     rebuildDustLayer(W, H);
   }
 
-  // Convert cursor from world → screen coordinates
   const zoom = G.zoomLevel || 1;
   const rawCX = G.cursorX, rawCY = G.cursorY;
   const hasCursor = rawCX > -500 && rawCY > -500;
   const sc = hasCursor ? _w2s(rawCX, rawCY) : { x: W / 2, y: H / 2 };
   const lx = sc.x, ly = sc.y;
 
-  const lightR = 420;             // screen-pixel light radius (generous cone)
-  const darkAlpha = 0.73;         // moderate ambient darkness (was 0.88)
+  const lightR = 1050;            // wider + softer cursor light (was 840)
+  // Cache light position for cross-function access (orb saturation in renderCircles)
+  G._ltLx = lx; G._ltLy = ly; G._ltR = lightR;
+  const darkAlpha = 0.45;         // much brighter ambient — near-flat at start (was 0.73)
   const flickerT = G.time || 0;
-  const flicker = 1.0 + Math.sin(flickerT * 3.7) * 0.015 + Math.sin(flickerT * 7.1) * 0.008;
+  const flicker = 1.0 + Math.sin(flickerT * 3.7) * 0.012 + Math.sin(flickerT * 7.1) * 0.006;
   const effectiveR = lightR * flicker;
 
-  // --- Step 1: Fill with deep darkness ---
+  // --- Step 1: Fill with ambient darkness ---
   _lightCtx.clearRect(0, 0, W, H);
   _lightCtx.globalCompositeOperation = 'source-over';
   _lightCtx.fillStyle = `rgba(0,0,0,${darkAlpha})`;
   _lightCtx.fillRect(0, 0, W, H);
 
-  // --- Step 2: Punch radial light cone at cursor (SCREEN coords) ---
+  // --- Step 2: Punch wide radial light cone at cursor ---
   if (hasCursor) {
     _lightCtx.globalCompositeOperation = 'destination-out';
     const grad = _lightCtx.createRadialGradient(lx, ly, 0, lx, ly, effectiveR);
-    grad.addColorStop(0, 'rgba(255,255,255,1.0)');
-    grad.addColorStop(0.15, 'rgba(255,255,255,0.97)');
-    grad.addColorStop(0.35, 'rgba(255,255,255,0.80)');
-    grad.addColorStop(0.55, 'rgba(255,255,255,0.45)');
-    grad.addColorStop(0.75, 'rgba(255,255,255,0.15)');
-    grad.addColorStop(0.90, 'rgba(255,255,255,0.04)');
+    grad.addColorStop(0, 'rgba(255,255,255,0.75)');     // softer center (was 1.0)
+    grad.addColorStop(0.08, 'rgba(255,255,255,0.70)');  // gentler ramp
+    grad.addColorStop(0.20, 'rgba(255,255,255,0.55)');
+    grad.addColorStop(0.38, 'rgba(255,255,255,0.35)');
+    grad.addColorStop(0.55, 'rgba(255,255,255,0.15)');
+    grad.addColorStop(0.75, 'rgba(255,255,255,0.04)');
     grad.addColorStop(1.0, 'rgba(255,255,255,0)');
     _lightCtx.fillStyle = grad;
     _lightCtx.beginPath();
@@ -12199,9 +12296,9 @@ function renderTestLevelLighting(ctx, W, H) {
     _lightCtx.fill();
   }
 
-  // --- Step 3: Cast soft shadows (all in SCREEN coords) ---
+  // --- Step 3: Cast soft shadows from ORBS ONLY (shadow balls excluded) ---
   _lightCtx.globalCompositeOperation = 'source-over';
-  const shadowAlpha = darkAlpha * 0.65; // softer shadows (not full darkness)
+  const shadowAlpha = darkAlpha * 0.55;
 
   if (hasCursor) {
     for (let i = 0; i < G.circles.length; i++) {
@@ -12211,64 +12308,61 @@ function renderTestLevelLighting(ctx, W, H) {
       const sr = c.radius * zoom;
       const shadow = computeCircleShadow(lx, ly, cs.x, cs.y, sr, effectiveR);
       if (!shadow) continue;
-      // Soft outer penumbra (expanded, lower alpha)
+      // Multi-pass feathered shadow — 4 layers from soft outer to tight core
       const midX = (shadow.t1x + shadow.t2x + shadow.f1x + shadow.f2x) * 0.25;
       const midY = (shadow.t1y + shadow.t2y + shadow.f1y + shadow.f2y) * 0.25;
-      _lightCtx.fillStyle = `rgba(0,0,0,${shadowAlpha * 0.4})`;
-      _lightCtx.beginPath();
-      _lightCtx.moveTo(midX + (shadow.t1x - midX) * 1.12, midY + (shadow.t1y - midY) * 1.12);
-      _lightCtx.lineTo(midX + (shadow.f1x - midX) * 1.12, midY + (shadow.f1y - midY) * 1.12);
-      _lightCtx.lineTo(midX + (shadow.f2x - midX) * 1.12, midY + (shadow.f2y - midY) * 1.12);
-      _lightCtx.lineTo(midX + (shadow.t2x - midX) * 1.12, midY + (shadow.t2y - midY) * 1.12);
-      _lightCtx.closePath();
-      _lightCtx.fill();
-      // Core shadow trapezoid
-      _lightCtx.fillStyle = `rgba(0,0,0,${shadowAlpha})`;
-      _lightCtx.beginPath();
-      _lightCtx.moveTo(shadow.t1x, shadow.t1y);
-      _lightCtx.lineTo(shadow.f1x, shadow.f1y);
-      _lightCtx.lineTo(shadow.f2x, shadow.f2y);
-      _lightCtx.lineTo(shadow.t2x, shadow.t2y);
-      _lightCtx.closePath();
-      _lightCtx.fill();
-      // Orb body shadow (unlit backside, softened)
-      _lightCtx.fillStyle = `rgba(0,0,0,${shadowAlpha * 0.85})`;
-      _lightCtx.beginPath();
-      _lightCtx.arc(cs.x, cs.y, sr * 0.95, 0, Math.PI * 2);
-      _lightCtx.fill();
-    }
-    // Shadow balls
-    if (G.shadowBalls) {
-      _lightCtx.fillStyle = `rgba(0,0,0,${shadowAlpha})`;
-      for (let i = 0; i < G.shadowBalls.length; i++) {
-        const sb = G.shadowBalls[i];
-        const ss = _w2s(sb.x, sb.y);
-        const sr = (sb.radius || 8) * zoom;
-        const shadow = computeCircleShadow(lx, ly, ss.x, ss.y, sr, effectiveR);
-        if (!shadow) continue;
+      const shadowPasses = [
+        { expand: 1.18, alpha: shadowAlpha * 0.10 },  // outermost penumbra
+        { expand: 1.12, alpha: shadowAlpha * 0.20 },  // soft edge
+        { expand: 1.06, alpha: shadowAlpha * 0.40 },  // mid blur
+        { expand: 1.0,  alpha: shadowAlpha * 0.75 },  // tight core
+      ];
+      for (const pass of shadowPasses) {
+        _lightCtx.fillStyle = `rgba(0,0,0,${pass.alpha.toFixed(3)})`;
         _lightCtx.beginPath();
-        _lightCtx.moveTo(shadow.t1x, shadow.t1y);
-        _lightCtx.lineTo(shadow.f1x, shadow.f1y);
-        _lightCtx.lineTo(shadow.f2x, shadow.f2y);
-        _lightCtx.lineTo(shadow.t2x, shadow.t2y);
+        _lightCtx.moveTo(midX + (shadow.t1x - midX) * pass.expand, midY + (shadow.t1y - midY) * pass.expand);
+        _lightCtx.lineTo(midX + (shadow.f1x - midX) * pass.expand, midY + (shadow.f1y - midY) * pass.expand);
+        _lightCtx.lineTo(midX + (shadow.f2x - midX) * pass.expand, midY + (shadow.f2y - midY) * pass.expand);
+        _lightCtx.lineTo(midX + (shadow.t2x - midX) * pass.expand, midY + (shadow.t2y - midY) * pass.expand);
         _lightCtx.closePath();
         _lightCtx.fill();
       }
+      // Orb body shadow — lit-side edge blur: gradient from dark backside to transparent lit side
+      const orbDx = cs.x - lx, orbDy = cs.y - ly;
+      const orbAngle = Math.atan2(orbDy, orbDx);
+      // Shadow on the far side from light, with soft blurred edge toward light
+      const shadowCx = cs.x + Math.cos(orbAngle) * sr * 0.15;
+      const shadowCy = cs.y + Math.sin(orbAngle) * sr * 0.15;
+      const orbShadGrad = _lightCtx.createRadialGradient(
+        cs.x - Math.cos(orbAngle) * sr * 0.4,
+        cs.y - Math.sin(orbAngle) * sr * 0.4,
+        0, shadowCx, shadowCy, sr * 0.95
+      );
+      orbShadGrad.addColorStop(0, 'rgba(0,0,0,0)');
+      orbShadGrad.addColorStop(0.3, 'rgba(0,0,0,0)');
+      orbShadGrad.addColorStop(0.55, `rgba(0,0,0,${(shadowAlpha * 0.5).toFixed(3)})`);
+      orbShadGrad.addColorStop(0.8, `rgba(0,0,0,${(shadowAlpha * 0.8).toFixed(3)})`);
+      orbShadGrad.addColorStop(1, `rgba(0,0,0,${shadowAlpha.toFixed(3)})`);
+      _lightCtx.fillStyle = orbShadGrad;
+      _lightCtx.beginPath();
+      _lightCtx.arc(cs.x, cs.y, sr * 0.92, 0, Math.PI * 2);
+      _lightCtx.fill();
     }
+    // NOTE: Shadow balls completely excluded — they don't interact with light
   }
 
-  // --- Step 4: Orb self-glow (each orb emits faint light in screen space) ---
+  // --- Step 4: Orb self-glow (each orb emits faint light) ---
   _lightCtx.globalCompositeOperation = 'destination-out';
   for (let i = 0; i < G.circles.length; i++) {
     const c = G.circles[i];
     if (!c.alive || c.popped) continue;
     const cs = _w2s(c.x, c.y);
     const sr = c.radius * zoom;
-    const glowR = sr * 3.5;
+    const glowR = sr * 4.0;
     const orbGlow = _lightCtx.createRadialGradient(cs.x, cs.y, 0, cs.x, cs.y, glowR);
-    orbGlow.addColorStop(0, 'rgba(255,255,255,0.55)');
-    orbGlow.addColorStop(0.35, 'rgba(255,255,255,0.22)');
-    orbGlow.addColorStop(0.7, 'rgba(255,255,255,0.06)');
+    orbGlow.addColorStop(0, 'rgba(255,255,255,0.65)');
+    orbGlow.addColorStop(0.3, 'rgba(255,255,255,0.30)');
+    orbGlow.addColorStop(0.6, 'rgba(255,255,255,0.08)');
     orbGlow.addColorStop(1, 'rgba(255,255,255,0)');
     _lightCtx.fillStyle = orbGlow;
     _lightCtx.beginPath();
@@ -12276,17 +12370,19 @@ function renderTestLevelLighting(ctx, W, H) {
     _lightCtx.fill();
   }
 
-  // --- Step 4b: Mini Black Hole radiation glow ---
+  // --- Step 4b: ALL Black Hole variants — strong radiation glow ---
+  // Mini black holes
   if (G.miniBlackHoles && G.miniBlackHoles.length > 0) {
     for (let mi = 0; mi < G.miniBlackHoles.length; mi++) {
       const mbh = G.miniBlackHoles[mi];
       const ms = _w2s(mbh.x, mbh.y);
       const lifeAlpha = Math.min(1, (mbh.life / (mbh.maxLife || mbh.life)) * 2);
-      const glowRadius = mbh.gravityRadius * zoom * 1.2;
+      const glowRadius = mbh.gravityRadius * zoom * 2.0;
       const mbhGlow = _lightCtx.createRadialGradient(ms.x, ms.y, 0, ms.x, ms.y, glowRadius);
-      mbhGlow.addColorStop(0, `rgba(255,255,255,${(0.7 * lifeAlpha).toFixed(2)})`);
-      mbhGlow.addColorStop(0.15, `rgba(255,255,255,${(0.5 * lifeAlpha).toFixed(2)})`);
-      mbhGlow.addColorStop(0.4, `rgba(255,255,255,${(0.2 * lifeAlpha).toFixed(2)})`);
+      mbhGlow.addColorStop(0, `rgba(255,255,255,${(0.95 * lifeAlpha).toFixed(2)})`);
+      mbhGlow.addColorStop(0.1, `rgba(255,255,255,${(0.85 * lifeAlpha).toFixed(2)})`);
+      mbhGlow.addColorStop(0.3, `rgba(255,255,255,${(0.45 * lifeAlpha).toFixed(2)})`);
+      mbhGlow.addColorStop(0.6, `rgba(255,255,255,${(0.12 * lifeAlpha).toFixed(2)})`);
       mbhGlow.addColorStop(1, 'rgba(255,255,255,0)');
       _lightCtx.fillStyle = mbhGlow;
       _lightCtx.beginPath();
@@ -12294,8 +12390,45 @@ function renderTestLevelLighting(ctx, W, H) {
       _lightCtx.fill();
     }
   }
+  // Regular black holes
+  if (G.blackHoles && G.blackHoles.length > 0) {
+    for (let bi = 0; bi < G.blackHoles.length; bi++) {
+      const bh = G.blackHoles[bi];
+      const bs = _w2s(bh.x, bh.y);
+      const fadeIn = bh.fadeIn || 1;
+      const fadeOut = bh.life < 2.0 ? bh.life / 2.0 : 1;
+      const bhAlpha = fadeIn * fadeOut;
+      const bhGlowR = (bh.gravityRadius || 120) * zoom * 1.8;
+      const bhGlow = _lightCtx.createRadialGradient(bs.x, bs.y, 0, bs.x, bs.y, bhGlowR);
+      bhGlow.addColorStop(0, `rgba(255,255,255,${(0.9 * bhAlpha).toFixed(2)})`);
+      bhGlow.addColorStop(0.15, `rgba(255,255,255,${(0.7 * bhAlpha).toFixed(2)})`);
+      bhGlow.addColorStop(0.4, `rgba(255,255,255,${(0.3 * bhAlpha).toFixed(2)})`);
+      bhGlow.addColorStop(0.7, `rgba(255,255,255,${(0.08 * bhAlpha).toFixed(2)})`);
+      bhGlow.addColorStop(1, 'rgba(255,255,255,0)');
+      _lightCtx.fillStyle = bhGlow;
+      _lightCtx.beginPath();
+      _lightCtx.arc(bs.x, bs.y, bhGlowR, 0, Math.PI * 2);
+      _lightCtx.fill();
+    }
+  }
+  // Super black hole
+  if (G.superBlackHole) {
+    const sbh = G.superBlackHole;
+    const ss = _w2s(sbh.x, sbh.y);
+    const sbhGlowR = (sbh.eventHorizon || 80) * zoom * 3.0;
+    const sbhGlow = _lightCtx.createRadialGradient(ss.x, ss.y, 0, ss.x, ss.y, sbhGlowR);
+    sbhGlow.addColorStop(0, 'rgba(255,255,255,0.95)');
+    sbhGlow.addColorStop(0.1, 'rgba(255,255,255,0.80)');
+    sbhGlow.addColorStop(0.3, 'rgba(255,255,255,0.40)');
+    sbhGlow.addColorStop(0.6, 'rgba(255,255,255,0.10)');
+    sbhGlow.addColorStop(1, 'rgba(255,255,255,0)');
+    _lightCtx.fillStyle = sbhGlow;
+    _lightCtx.beginPath();
+    _lightCtx.arc(ss.x, ss.y, sbhGlowR, 0, Math.PI * 2);
+    _lightCtx.fill();
+  }
 
-  // --- Step 4c: Chain Link glow (only at high madness >75%) ---
+  // --- Step 4c: Chain Link glow (WT >75%) ---
   if (getMadnessAmount() > 0.75 && G.chainLinks && G.chainLinks.length > 0) {
     for (let ci = 0; ci < G.chainLinks.length; ci++) {
       const link = G.chainLinks[ci];
@@ -12303,14 +12436,15 @@ function renderTestLevelLighting(ctx, W, H) {
       if (!target || target.popped) continue;
       const srcS = _w2s(link.srcX, link.srcY);
       const tgtS = _w2s(target.x, target.y);
-      const midS = { x: (srcS.x + tgtS.x) * 0.5, y: (srcS.y + tgtS.y) * 0.5 };
       const progress = Math.min(link.timer / link.duration, 1);
-      const pts = [srcS, midS, tgtS];
-      for (let pi = 0; pi < pts.length; pi++) {
-        const pt = pts[pi];
-        const linkR = 30 + progress * 20;
+      // Glow at 5 points along the link line for continuous light
+      for (let pi = 0; pi <= 4; pi++) {
+        const t = pi / 4;
+        const pt = { x: srcS.x + (tgtS.x - srcS.x) * t, y: srcS.y + (tgtS.y - srcS.y) * t };
+        const linkR = 40 + progress * 30;
         const linkGlow = _lightCtx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, linkR);
-        linkGlow.addColorStop(0, `rgba(255,255,255,${(0.25 * progress).toFixed(2)})`);
+        linkGlow.addColorStop(0, `rgba(255,255,255,${(0.35 * progress).toFixed(2)})`);
+        linkGlow.addColorStop(0.5, `rgba(255,255,255,${(0.12 * progress).toFixed(2)})`);
         linkGlow.addColorStop(1, 'rgba(255,255,255,0)');
         _lightCtx.fillStyle = linkGlow;
         _lightCtx.beginPath();
@@ -12326,13 +12460,13 @@ function renderTestLevelLighting(ctx, W, H) {
       const e = G.explosions[ei];
       if (e.life <= 0) continue;
       const es = _w2s(e.x, e.y);
-      const eGlowR = e.radius * zoom * e.life * 1.5;
+      const eGlowR = e.radius * zoom * e.life * 2.0;
       if (eGlowR < 5) continue;
-      const brightness = Math.min(1, e.flashAlpha + e.life * 0.5);
+      const brightness = Math.min(1, (e.flashAlpha || 0) + e.life * 0.6);
       const eGlow = _lightCtx.createRadialGradient(es.x, es.y, 0, es.x, es.y, eGlowR);
-      eGlow.addColorStop(0, `rgba(255,255,255,${(0.8 * brightness).toFixed(2)})`);
-      eGlow.addColorStop(0.3, `rgba(255,255,255,${(0.4 * brightness).toFixed(2)})`);
-      eGlow.addColorStop(0.7, `rgba(255,255,255,${(0.1 * brightness).toFixed(2)})`);
+      eGlow.addColorStop(0, `rgba(255,255,255,${(0.9 * brightness).toFixed(2)})`);
+      eGlow.addColorStop(0.2, `rgba(255,255,255,${(0.6 * brightness).toFixed(2)})`);
+      eGlow.addColorStop(0.5, `rgba(255,255,255,${(0.2 * brightness).toFixed(2)})`);
       eGlow.addColorStop(1, 'rgba(255,255,255,0)');
       _lightCtx.fillStyle = eGlow;
       _lightCtx.beginPath();
@@ -12341,63 +12475,102 @@ function renderTestLevelLighting(ctx, W, H) {
     }
   }
 
-  // --- Step 5: Composite light map onto game (SCREEN SPACE — bypass zoom) ---
+  // --- Step 5: Composite light map onto game (SCREEN SPACE) ---
   ctx.save();
   const dpr = G.dpr || 1;
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // reset to screen space
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
   // Dust layer
-  ctx.globalAlpha = 0.4;
+  ctx.globalAlpha = 0.35;
   ctx.drawImage(_dustCanvas, 0, 0);
   ctx.globalAlpha = 1;
 
-  // Darkness overlay (source-over with semi-transparent black = darken)
+  // Darkness overlay
   ctx.globalCompositeOperation = 'source-over';
   ctx.drawImage(_lightCanvas, 0, 0);
 
-  // --- Step 6: Warm glow at cursor (additive) ---
+  // --- Step 6: Warm glow at cursor (bigger center radius) ---
   if (hasCursor) {
     ctx.globalCompositeOperation = 'screen';
-    ctx.globalAlpha = 0.18;
-    const glow = ctx.createRadialGradient(lx, ly, 0, lx, ly, effectiveR * 0.35);
+    ctx.globalAlpha = 0.14;
+    const glowR = effectiveR * 0.5; // bigger center glow (was 0.35)
+    const glow = ctx.createRadialGradient(lx, ly, 0, lx, ly, glowR);
     glow.addColorStop(0, '#ffe8c0');
-    glow.addColorStop(0.4, '#c8a060');
+    glow.addColorStop(0.3, '#e0c080');
+    glow.addColorStop(0.7, '#c8a060');
     glow.addColorStop(1, 'transparent');
     ctx.fillStyle = glow;
     ctx.beginPath();
-    ctx.arc(lx, ly, effectiveR * 0.35, 0, Math.PI * 2);
+    ctx.arc(lx, ly, glowR, 0, Math.PI * 2);
     ctx.fill();
 
-    // Secondary rim-light glow
-    ctx.globalAlpha = 0.06;
-    const rim = ctx.createRadialGradient(lx, ly, effectiveR * 0.3, lx, ly, effectiveR * 0.9);
+    // Purple rim
+    ctx.globalAlpha = 0.05;
+    const rim = ctx.createRadialGradient(lx, ly, effectiveR * 0.4, lx, ly, effectiveR * 0.95);
     rim.addColorStop(0, 'transparent');
     rim.addColorStop(0.5, '#a060ff');
     rim.addColorStop(1, 'transparent');
     ctx.fillStyle = rim;
     ctx.beginPath();
-    ctx.arc(lx, ly, effectiveR * 0.9, 0, Math.PI * 2);
+    ctx.arc(lx, ly, effectiveR * 0.95, 0, Math.PI * 2);
     ctx.fill();
   }
 
-  // --- Step 6b: Mini Black Hole colored glow (cyan/white) ---
+  // --- Step 6b: Black Hole colored glow overlays (screen blend) ---
+  ctx.globalCompositeOperation = 'screen';
+  // Mini BH: cyan
   if (G.miniBlackHoles && G.miniBlackHoles.length > 0) {
-    ctx.globalCompositeOperation = 'screen';
     for (let mi = 0; mi < G.miniBlackHoles.length; mi++) {
       const mbh = G.miniBlackHoles[mi];
       const ms = _w2s(mbh.x, mbh.y);
       const lifeAlpha = Math.min(1, (mbh.life / (mbh.maxLife || mbh.life)) * 2);
-      ctx.globalAlpha = 0.15 * lifeAlpha;
-      const cGlowR = mbh.gravityRadius * zoom * 0.5;
+      ctx.globalAlpha = 0.25 * lifeAlpha;
+      const cGlowR = mbh.gravityRadius * zoom * 0.8;
       const cGlow = ctx.createRadialGradient(ms.x, ms.y, 0, ms.x, ms.y, cGlowR);
       cGlow.addColorStop(0, '#ffffff');
-      cGlow.addColorStop(0.3, '#60e0ff');
+      cGlow.addColorStop(0.2, '#a0f0ff');
+      cGlow.addColorStop(0.5, '#60e0ff');
       cGlow.addColorStop(1, 'transparent');
       ctx.fillStyle = cGlow;
       ctx.beginPath();
       ctx.arc(ms.x, ms.y, cGlowR, 0, Math.PI * 2);
       ctx.fill();
     }
+  }
+  // Regular BH: purple/violet
+  if (G.blackHoles && G.blackHoles.length > 0) {
+    for (let bi = 0; bi < G.blackHoles.length; bi++) {
+      const bh = G.blackHoles[bi];
+      const bs = _w2s(bh.x, bh.y);
+      const fadeIn = bh.fadeIn || 1;
+      const fadeOut = bh.life < 2.0 ? bh.life / 2.0 : 1;
+      ctx.globalAlpha = 0.2 * fadeIn * fadeOut;
+      const cR = (bh.gravityRadius || 120) * zoom * 0.6;
+      const cGlow = ctx.createRadialGradient(bs.x, bs.y, 0, bs.x, bs.y, cR);
+      cGlow.addColorStop(0, '#e0c0ff');
+      cGlow.addColorStop(0.3, '#a060ff');
+      cGlow.addColorStop(1, 'transparent');
+      ctx.fillStyle = cGlow;
+      ctx.beginPath();
+      ctx.arc(bs.x, bs.y, cR, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  // Super BH: bright white/blue
+  if (G.superBlackHole) {
+    const sbh = G.superBlackHole;
+    const ss = _w2s(sbh.x, sbh.y);
+    ctx.globalAlpha = 0.3;
+    const sGR = (sbh.eventHorizon || 80) * zoom * 1.5;
+    const sGlow = ctx.createRadialGradient(ss.x, ss.y, 0, ss.x, ss.y, sGR);
+    sGlow.addColorStop(0, '#ffffff');
+    sGlow.addColorStop(0.15, '#c0e0ff');
+    sGlow.addColorStop(0.4, '#6080ff');
+    sGlow.addColorStop(1, 'transparent');
+    ctx.fillStyle = sGlow;
+    ctx.beginPath();
+    ctx.arc(ss.x, ss.y, sGR, 0, Math.PI * 2);
+    ctx.fill();
   }
 
   ctx.globalCompositeOperation = 'source-over';
