@@ -1,0 +1,110 @@
+POP FIELD — SIGILS & ARCHON TETHERS
+=====================================
+
+=== SIGILS (BOMB PLACEMENT) ===
+Upgrade: "Sigil" (bombCharges), max level 3
+Placement: Long press (350ms) at cursor position
+
+Properties:
+  Charges: 1-3 per tap cycle (= upgrade level)
+  Fuse timer: 3.5 seconds (BOMB_FUSE_TIME)
+  Blast radius: getBlastRadius() * 1.4 (140% multiplier)
+  Auto-detonates after fuse OR when pulled into black hole event horizon
+  Starts chain reaction if not already active
+  Visual: "SIGIL SET" / "SIGIL PLACED" floating text on placement
+
+Attractor field interaction:
+  - Sigil detonations pull nearby orbs inward
+  - Range: 60 + upgradeLevel * 30 px
+  - Creates persistent gravity wells during fuse countdown
+  - Pulls at 20% strength of black holes
+
+
+=== ARCHON TETHERS (PHASE 5) ===
+
+Orb-to-Orb Connections:
+  - When orb ascends to Archon, forms 4-7 tethers to nearby orbs
+  - Range: 260px + orbRadius * 2
+  - Candidates: alive, not popped, not queued, not another Archon, not already tethered
+  - Selection: closest orbs by distance
+  - Tethered orbs pulse in sync with Archon (pulsePhase synced)
+  - Tethered orbs are chain-immune (cannot be popped by blast propagation)
+  - Dead/popped orbs pruned from tether list automatically
+
+On Archon Death (Implosion):
+  - Tethered orbs rush inward and auto-pop
+  - Gravity well scales with remaining tether count:
+    Gravity strength: 200 * (1 + count * 0.5)   [200 at 0, up to 900 at 7]
+    Duration: 0.4s * (1 + count * 0.3)           [0.4s at 0, up to 1.24s at 7]
+    Radius: blastR * (2.5 + count * 0.5)         [2.5x at 0, up to 6x at 7]
+    Screen shake: 4 + count                       [4 at 0, up to 11 at 7]
+  - Sound: Deep "ARCHON CRUNCH" + boom
+  - Lore text: "THE ARCHON REMEMBERS" / "FRAGMENTS REUNITE" / "WHOLENESS DEVOURS"
+
+On Archon Revert (Timer Expires):
+  - All tethers release, orbs return to normal
+  - Cooldown resets: 4.25-14.2 seconds before next mutation chance
+
+Visual (Orb Tethers):
+  - Pulsing energy lines from Archon center to each tethered orb
+  - Main beam: biome-tinted, 1-2px width, pulsing alpha
+  - Outer glow: wider stroke at low alpha
+  - Glow ring on tethered orb: pulses in sync with Archon
+
+
+=== ARCHON-SIGIL TETHERS (ENOCHIAN CONNECTIONS) ===
+
+Formation:
+  - On Archon ascension, scans for all placed Sigils within 350px
+  - Forms extra tethers: scSigilTethers[] to each nearby bomb
+  - Each stores: { bombIdx, pulsePhase, glyphSeed }
+  - Stale tethers auto-pruned when bomb detonates or index invalid
+
+Visual — Angular Rune-Like Beams:
+  - 3 angular waypoints along path with perpendicular displacement
+  - Creates sharp geometric bends (not smooth curves)
+  - Bend amount: 12 + sin(glyphSeed * 3.7) * 8 pixels perpendicular offset
+
+  Outer beam:
+    Color: #c0a0ff (lavender-purple)
+    Width: 1.0 + pulse * 0.8 px
+    Alpha: 0.2 + pulse * 0.25
+
+  Inner core line:
+    Color: #e0c0ff (lighter lavender)
+    Width: 0.4 + pulse * 0.4 px
+    Alpha: 0.3 + pulse * 0.3
+
+  Glyph marks at each waypoint:
+    - Cross pattern (horizontal + vertical lines)
+    - Diagonal rotating tick marks (angle = glyphSeed * index + time)
+    - Center dot: #e0c0ff, radius 1.2 + pulse * 0.5
+    - Color: #d0b0ff, 0.6px stroke
+
+  Hexagonal glow ring around Sigil target:
+    - 6-sided regular polygon
+    - Color: #c0a0ff
+    - Radius: 14 + pulse * 4 px
+    - Alpha: 0.15 + pulse * 0.2
+
+
+=== INTER-TETHER WEB ===
+When Archon has 2+ tethered orbs:
+  - Thin connecting lines form between all pairs of tethered orbs
+  - Creates sigil-like geometric web pattern
+  - Color: #c0a0ff
+  - Alpha: 0.06 + combined pulse * 0.03
+  - Width: 0.4 + combined pulse * 0.3 px
+  - Purely visual — no gameplay effect
+
+
+=== NEXUS BOSS TETHERS (SEPARATE SYSTEM) ===
+The Nexus boss (B1) has its own independent tether mechanic:
+  - Forms shield tethers to 3-4 nearby orbs
+  - Range: 250px + bossRadius
+  - Tethered orbs are chain-immune (must be direct-tapped to break)
+  - Shield blocks all boss damage while tethers active
+  - Breaking all tethers drops the shield for 0.5s
+  - New tethers form after brief cooldown (1.5s initial, 0.5s after shield break)
+  - Visual: pulsing energy beams from boss center to tethered orbs
+  - NOT related to Archon tethers — completely separate system

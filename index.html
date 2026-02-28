@@ -56,6 +56,12 @@ canvas { display: block; width: 100%; height: 100%; }
 #expanse-btn { position: fixed; top: 248px; right: 16px; z-index: 15; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 6px 12px; color: rgba(255,255,255,0.6); font-family: 'Orbitron', 'Courier New', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; pointer-events: all; transition: background 0.15s, border-color 0.15s, color 0.15s; }
 #expanse-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,200,50,0.4); color: #ffc832; }
 #expanse-btn.active { border-color: rgba(212,146,10,0.7); color: #d4920a; text-shadow: 0 0 8px rgba(212,146,10,0.5); }
+#perks-btn { position: fixed; top: 280px; right: 16px; z-index: 15; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 6px 12px; color: rgba(255,255,255,0.6); font-family: 'Orbitron', 'Courier New', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; pointer-events: all; transition: background 0.15s, border-color 0.15s, color 0.15s; }
+#perks-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(0,255,160,0.4); color: #00ffa0; }
+#perks-btn.active { border-color: rgba(0,255,160,0.6); color: #00ffa0; text-shadow: 0 0 8px rgba(0,255,160,0.4); }
+#pge-btn { position: fixed; top: 312px; right: 16px; z-index: 15; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 6px 12px; color: rgba(255,255,255,0.6); font-family: 'Orbitron', 'Courier New', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; pointer-events: all; transition: background 0.15s, border-color 0.15s, color 0.15s; }
+#pge-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.9); }
+#pge-btn.active { animation: pge-pulse 0.6s ease-out; }
 #lore-splash { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 50; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 1.5s ease-out; pointer-events: all; cursor: pointer; }
 #lore-splash.visible { opacity: 1; transition: opacity 3s ease-in; }
 #lore-splash.fade-out { opacity: 0; transition: opacity 1.5s ease-out; }
@@ -83,6 +89,14 @@ canvas { display: block; width: 100%; height: 100%; }
 .cl-section-title { font-family:'Orbitron','Courier New',monospace;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:rgba(180,80,255,0.9);margin-bottom:10px; }
 .cl-item { font-family:'Orbitron','Courier New',monospace;font-size:13px;line-height:1.8;color:rgba(255,255,255,0.85);letter-spacing:0.5px;padding-left:16px;position:relative;margin-bottom:4px; }
 .cl-item::before { content:'›';position:absolute;left:0;color:rgba(180,80,255,0.75); }
+.cl-biome-group { margin-top:28px;margin-bottom:8px;padding:14px 0 4px 0;border-top:1px solid rgba(255,255,255,0.06); }
+.cl-biome-label { font-family:'Orbitron','Courier New',monospace;font-size:10px;letter-spacing:5px;text-transform:uppercase;margin-bottom:14px;padding:3px 10px;border-radius:3px;display:inline-block; }
+.cl-biome-label.abyss { color:rgba(80,220,255,0.95);background:rgba(80,220,255,0.08);border:1px solid rgba(80,220,255,0.15); }
+.cl-biome-label.expanse { color:rgba(212,146,10,0.95);background:rgba(212,146,10,0.08);border:1px solid rgba(212,146,10,0.15); }
+.cl-section.biome-abyss .cl-section-title { color:rgba(80,220,255,0.9); }
+.cl-section.biome-abyss .cl-item::before { color:rgba(80,220,255,0.7); }
+.cl-section.biome-expanse .cl-section-title { color:rgba(212,146,10,0.9); }
+.cl-section.biome-expanse .cl-item::before { color:rgba(212,146,10,0.7); }
 .rm-section { margin-bottom:22px; }
 .rm-section-title { font-family:'Orbitron','Courier New',monospace;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:rgba(80,220,255,0.85);margin-bottom:10px; }
 .rm-item { font-family:'Orbitron','Courier New',monospace;font-size:13px;line-height:1.8;color:rgba(255,255,255,0.7);letter-spacing:0.5px;padding-left:16px;position:relative;margin-bottom:4px; }
@@ -114,6 +128,8 @@ canvas { display: block; width: 100%; height: 100%; }
 <button id="testlvl-btn" title="Toggle test level">Test</button>
 <button id="spawnmbh-btn" title="Spawn mini black hole">&#9899; BH</button>
 <button id="expanse-btn" title="Toggle Expanse [X]">Expanse</button>
+<button id="perks-btn" title="Toggle perk choices (1 or 2)">Perks: 1</button>
+<button id="pge-btn" title="Trigger PGE for current biome">PGE</button>
 
 <div id="xp-bar-wrap"><div id="xp-bar-fill"></div></div>
 <div id="hud" style="display:none;">
@@ -163,10 +179,10 @@ canvas { display: block; width: 100%; height: 100%; }
 // ==================================================
 // SECTION 1: CONSTANTS & CONFIGURATION
 // ==================================================
-const BASE_TAPS = 8;                    // tighter start — forces strategic play
-const BASE_CIRCLE_COUNT = 35;          // enough to chain but not overwhelming
+const BASE_TAPS = 12;                   // enough room to learn — still finite
+const BASE_CIRCLE_COUNT = 40;          // denser field — more chain targets early
 const BASE_CIRCLE_RADIUS = 18;
-const BASE_BLAST_RADIUS = 50;          // tighter start — slower cascade growth
+const BASE_BLAST_RADIUS = 65;          // wider early blasts — chains reach past orb spacing
 const MAX_BLAST_RADIUS = 115;          // lower cap — controlled late-game power
 const MAX_TAP_DISTANCE = 80;
 const MAX_CIRCLES = 300;
@@ -175,8 +191,8 @@ const MAX_EXPLOSIONS = 40;
 const MAX_FLOATING_TEXTS = 15;
 const MAX_PAINT_SPLATS = 200;
 const MAX_AFTERSHOCKS = 20;
-const XP_BASE = 15;                     // level 2 after ~3-4 decent chains
-const XP_SCALE = 1.70;                  // balanced curve: 15→26→43→73→125...
+const XP_BASE = 10;                     // level 2 after ~2 decent chains
+const XP_SCALE = 1.55;                  // gentler curve: 10→16→25→39→60...
 const INTER_ORB_GRAVITY = 15;            // gentle pull from bigger → smaller orbs
 const CHAIN_POP_DELAY_MIN = 0.015;
 const CHAIN_POP_DELAY_MAX = 0.045;
@@ -334,7 +350,14 @@ const BIOME_LORE = {
     'In the Expanse, being briefly correct is not enough.',
     'The making-place. The silence before form.',
     'Monitoring Station 7 has drifted again.',
-    'Each beast of the land took its own way in living.'
+    'Each beast of the land took its own way in living.',
+    'The Monoliths were not built. They decided to stand.',
+    'Sand does not forget. Sand waits to be read.',
+    'What the wind uncovers, the wind also buries.',
+    'The oldest stones hum at frequencies that predate sound.',
+    'Gravity is not a force here. It is an opinion.',
+    'The Cairn-Watchers left no tools. Only arrangements.',
+    'Between every grain: the blueprint of a larger silence.'
   ]
 };
 
@@ -548,6 +571,10 @@ function resetGame() {
   abyssPressureWave = 0;
   abyssBeatAccum = 0;
   abyssBeatsSinceLast = 0;
+  expanseSandfallActive = 0;
+  expanseBeatAccum = 0;
+  expanseBeatsSinceLast = 0;
+  expanseSandfallCooldown = 0;
   shadowSpawnTimer = 0;
   // If circles already exist from instructions phase, keep them (no teleport)
   if (preservedCircles && preservedCircles.length > 0) {
@@ -749,6 +776,38 @@ function playAbyssWooshSound() {
   triGain.connect(G.audioCtx.destination);
   tri.start(now);
   tri.stop(now + 1.3);
+}
+
+function playSandfallSound() {
+  if (!G.audioCtx) return;
+  const now = G.audioCtx.currentTime;
+  // Sub-bass rumble — warm earth tremor (higher than abyss: 40→25 Hz)
+  const sub = G.audioCtx.createOscillator();
+  const subGain = G.audioCtx.createGain();
+  sub.type = 'sine';
+  sub.frequency.setValueAtTime(40, now);
+  sub.frequency.exponentialRampToValueAtTime(25, now + 1.0);
+  subGain.gain.setValueAtTime(0.001, now);
+  subGain.gain.linearRampToValueAtTime(0.10, now + 0.25);
+  subGain.gain.linearRampToValueAtTime(0.08, now + 0.6);
+  subGain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+  sub.connect(subGain);
+  subGain.connect(G.audioCtx.destination);
+  sub.start(now);
+  sub.stop(now + 1.3);
+  // Triangle wave — sandy mid hiss (80→50 Hz, softer than abyss)
+  const tri = G.audioCtx.createOscillator();
+  const triGain = G.audioCtx.createGain();
+  tri.type = 'triangle';
+  tri.frequency.setValueAtTime(80, now);
+  tri.frequency.exponentialRampToValueAtTime(50, now + 0.8);
+  triGain.gain.setValueAtTime(0.001, now);
+  triGain.gain.linearRampToValueAtTime(0.04, now + 0.15);
+  triGain.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+  tri.connect(triGain);
+  triGain.connect(G.audioCtx.destination);
+  tri.start(now);
+  tri.stop(now + 1.1);
 }
 
 function playDelayedBlastBuildup(tier, duration) {
@@ -993,6 +1052,7 @@ function lerpColor(c1, c2, t) {
 let devMadnessOverride = -1; // -1 = off, 0-1 = forced value
 let autoLevelUp = false; // Auto-select random upgrade on level up
 let infiniteTaps = false; // Dev toggle: infinite taps (no game over)
+let perkChoiceCount = 1;  // Dev toggle: 1 = fate picks (default), 2 = player picks from 2
 
 function getMadnessAmount() {
   if (devMadnessOverride >= 0) return devMadnessOverride;
@@ -1311,7 +1371,7 @@ function getShrapnelThreshold() {
 // Level-scaled bonus tap thresholds
 function getBonusTapThresholds() {
   const lvl = G.level;
-  if (lvl <= 2) return { big: 15, mid: 8,  small: 5, smallChance: 0.50 };  // tighter — need real chains for taps
+  if (lvl <= 2) return { big: 10, mid: 5,  small: 3, smallChance: 0.65 };  // generous early — chain of 5 = guaranteed tap
   if (lvl <= 4) return { big: 25, mid: 15, small: 8, smallChance: 0.40 };
   if (lvl <= 6) return { big: 30, mid: 18, small: 10, smallChance: 0.35 };
   if (lvl <= 9) return { big: 40, mid: 25, small: 14, smallChance: 0.30 };
@@ -1418,7 +1478,10 @@ function createCircle(x, y) {
     mergeCooldown: 0,  // cooldown between merges
     mergeTarget: null,  // ID of orb being merged into (null = not merging)
     mergeAnimProgress: 0, // 0→1 merge animation progress
-    mergeGlow: 0       // glow flash on orb that absorbed another
+    mergeGlow: 0,       // glow flash on orb that absorbed another
+    stretchX: 1, stretchY: 1, stretchAngle: 0,  // BH spaghettification / velocity deformation
+    tidalT: 0,         // tidal deformation intensity (0=none, >0 = near BH)
+    depth: Math.random() < 0.35 ? 1 : 0  // LT depth layers: 0=low/far, 1=high/near
   };
 }
 
@@ -1443,7 +1506,7 @@ function spawnInitialCircles() {
       y = sT + margin + Math.random() * (sH - margin * 2);
       valid = true;
       for (let j = 0; j < G.circles.length; j++) {
-        if (dist(x, y, G.circles[j].x, G.circles[j].y) < 30) { valid = false; break; }
+        if (dist(x, y, G.circles[j].x, G.circles[j].y) < 22) { valid = false; break; }
       }
       attempts++;
     } while (!valid && attempts < 30);
@@ -1462,11 +1525,19 @@ function spawnCircleFromEdge() {
     return;
   }
 
+  // B3 Sandfall upper-area bias: during sandfall and 10s after, strongly prefer top edge
+  const sandfallBias = isExpanseSandfallSpawnBias();
+
   // Directional bias: 50% chance to spawn from opposite side of recent pops
   let edge;
   const gcx = ((G.gameLeft || 0) + (G.gameRight || G.W)) * 0.5;
   const gcy = ((G.gameTop || 0) + (G.gameBottom || G.H)) * 0.5;
-  if (Math.random() < 0.5 && G.popTrackCount > 5) {
+
+  if (sandfallBias) {
+    // During/after sandfall: 70% from top, 15% left, 15% right (never bottom)
+    const r = Math.random();
+    edge = r < 0.70 ? 2 : r < 0.85 ? 0 : 1;
+  } else if (Math.random() < 0.5 && G.popTrackCount > 5) {
     const pdx = G.popCenterX - gcx;
     const pdy = G.popCenterY - gcy;
     if (Math.abs(pdx) > Math.abs(pdy)) {
@@ -1479,14 +1550,35 @@ function spawnCircleFromEdge() {
   }
   let x, y, vx = 0, vy = 0;
   const margin = 30;
-  const speed = 40 + Math.random() * 30;
+  const speed = 55 + Math.random() * 35;
   const eL = G.gameLeft || 0, eT = G.gameTop || 0;
   const eR = G.gameRight || G.W, eB = G.gameBottom || G.H;
+
+  // For side edges during sandfall bias, constrain Y to upper 40% of play area
+  const yRange = (eB - eT) - margin * 2;
+  const yStart = eT + margin;
+
   switch(edge) {
-    case 0: x = eL - margin; y = eT + margin + Math.random() * ((eB - eT) - margin*2); vx = speed; break;
-    case 1: x = eR + margin; y = eT + margin + Math.random() * ((eB - eT) - margin*2); vx = -speed; break;
-    case 2: y = eT - margin; x = eL + margin + Math.random() * ((eR - eL) - margin*2); vy = speed; break;
-    case 3: y = eB + margin; x = eL + margin + Math.random() * ((eR - eL) - margin*2); vy = -speed; break;
+    case 0: // left edge
+      x = eL - margin;
+      y = yStart + Math.random() * (sandfallBias ? yRange * 0.4 : yRange);
+      vx = speed;
+      break;
+    case 1: // right edge
+      x = eR + margin;
+      y = yStart + Math.random() * (sandfallBias ? yRange * 0.4 : yRange);
+      vx = -speed;
+      break;
+    case 2: // top edge
+      y = eT - margin;
+      x = eL + margin + Math.random() * ((eR - eL) - margin * 2);
+      vy = speed;
+      break;
+    case 3: // bottom edge
+      y = eB + margin;
+      x = eL + margin + Math.random() * ((eR - eL) - margin * 2);
+      vy = -speed;
+      break;
   }
   const c = createCircle(x, y);
   c.vx = vx;
@@ -1502,7 +1594,13 @@ function spawnCircleFadeIn() {
   const fL = G.gameLeft || 0, fT = G.gameTop || 0;
   const fW = G.gameW || G.W, fH = G.gameH || G.H;
   const x = fL + margin + Math.random() * (fW - margin * 2);
-  const y = fT + margin + Math.random() * (fH - margin * 2);
+  // During/after sandfall: bias fade-in spawns toward upper 35% of play area
+  let y;
+  if (isExpanseSandfallSpawnBias()) {
+    y = fT + margin + Math.random() * Math.max(50, (fH - margin * 2) * 0.35);
+  } else {
+    y = fT + margin + Math.random() * (fH - margin * 2);
+  }
   const c = createCircle(x, y);
   c.vx = 0;
   c.vy = 0;
@@ -1611,11 +1709,44 @@ function updateCircles(dt) {
     // Shrapnel immunity countdown
     if (c.shrapnelImmune > 0) c.shrapnelImmune -= dt;
 
-    // Spawn slide-in animation
+    // Expanse sharp shard spin
+    if (c.sharpShard && c.shardSpin) c.shardAngle += c.shardSpin * dt;
+
+    // Expanse clump: satellite orbs follow their host — skip ALL normal physics
+    if (c.clumpHost !== undefined) {
+      const host = G.circles.find(h => h.id === c.clumpHost && h.alive && !h.popped);
+      if (host) {
+        // Gentle wobble in the offset angle — they're stuck but not rigid
+        c.clumpPhase += dt * 0.6;
+        const wobble = Math.sin(c.clumpPhase) * 0.08;
+        const angle = c.clumpOffsetAngle + wobble;
+        const targetX = host.x + Math.cos(angle) * c.clumpOffsetDist;
+        const targetY = host.y + Math.sin(angle) * c.clumpOffsetDist;
+        // Hard snap to host position — truly stuck, no drift
+        c.x = targetX;
+        c.y = targetY;
+        // Inherit host velocity so they move as one unit
+        c.vx = host.vx;
+        c.vy = host.vy;
+        continue; // skip gravity, drift, brownian, waves — satellite is purely attached
+      } else {
+        // Host died — break free with a burst
+        c.clumpHost = undefined;
+        c.clumpOffsetAngle = undefined;
+        c.clumpOffsetDist = undefined;
+        // Don't continue — orb returns to normal physics
+      }
+    }
+
+    // Spawn slide-in animation — ease-out deceleration for smooth entry
     if (c.spawnAnim > 0) {
-      c.x += c.vx * dt;
-      c.y += c.vy * dt;
-      c.spawnAnim -= dt * 1.5;
+      // spawnAnim: 1.0 → 0.0 over ~0.85s
+      // Ease-out: orb enters fast then gracefully decelerates
+      const spawnProgress = 1 - c.spawnAnim; // 0→1 during spawn
+      const easeSpeed = Math.max(0.05, 1 - spawnProgress * spawnProgress); // quadratic ease-out
+      c.x += c.vx * easeSpeed * dt;
+      c.y += c.vy * easeSpeed * dt;
+      c.spawnAnim -= dt * 1.2; // ~0.83s duration (was 1.5 → 0.67s)
       if (c.spawnAnim <= 0) {
         c.spawnAnim = 0;
         c.vx = 0;
@@ -1629,7 +1760,12 @@ function updateCircles(dt) {
       c.x += c.vx * dt;
       c.y += c.vy * dt;
       // Gentle drag — velocity persists long enough for orbits
-      const drag = 1 - 1.2 * dt;
+      let drag = 1 - 1.2 * dt;
+      // B3 Expanse: extra friction for small shards (gen 2+) so they settle faster in combos
+      if (G.biomeOverride === 2 && c.generation >= 2) {
+        const genFriction = 1.5 + c.generation * 0.8; // gen2=3.1, gen3=3.9, gen4=4.7, gen5=5.5
+        drag *= (1 - genFriction * dt);
+      }
       c.vx *= drag;
       c.vy *= drag;
     }
@@ -1720,10 +1856,12 @@ function updateCircles(dt) {
       // Close orbs (effDist ~5-20): gentle tug, not a snap
       // Mid-range (effDist ~50-150): noticeable drift toward cursor
       // Far orbs (effDist ~200+): still subtly drawn in
-      const pullBase = 262 * speedBoost * madPhys * cursorStrMult;
-      const basePull = Math.min(20 * speedBoost * madPhys * cursorStrMult, pullBase / (effDist + 28)) * dt * gravDir;
+      // B3 Expanse: 50% stronger cursor pull to counter Sandfall gravity
+      const biomePullMult = G.biomeOverride === 2 ? 1.5 : 1.0;
+      const pullBase = 262 * speedBoost * madPhys * cursorStrMult * biomePullMult;
+      const basePull = Math.min(20 * speedBoost * madPhys * cursorStrMult * biomePullMult, pullBase / (effDist + 28)) * dt * gravDir;
       // Close-range bonus: extra pull when within 80px of cursor
-      const closeBonus = cDist < 80 ? (1 - cDist / 80) * 8 * dt * gravDir * madPhys : 0;
+      const closeBonus = cDist < 120 ? (1 - cDist / 120) * 16 * dt * gravDir * madPhys * biomePullMult : 0;
       const cursorPull = basePull + closeBonus;
       c.x += (cdx / cDist) * cursorPull;
       c.y += (cdy / cDist) * cursorPull;
@@ -1736,6 +1874,18 @@ function updateCircles(dt) {
         const brushForce = brushStr * 45 * cursorStrMult * dt;
         c.vx += (G.cursorVx / cursorSpeed) * brushForce;
         c.vy += (G.cursorVy / cursorSpeed) * brushForce;
+      }
+
+      // Archon cursor evasion — superCells shy away from the cursor in B1
+      // Adds strategic play: player must herd them before popping
+      if (c.superCell && G.biomeOverride !== 0 && G.biomeOverride !== 2) {
+        const evadeRange = 180 + c.radius * 2;
+        if (cDist < evadeRange) {
+          const evadeFactor = (1 - cDist / evadeRange);
+          const evadeStr = evadeFactor * evadeFactor * 18 * dt;
+          c.vx -= (cdx / cDist) * evadeStr;
+          c.vy -= (cdy / cDist) * evadeStr;
+        }
       }
     }
 
@@ -1879,6 +2029,11 @@ function updateCircles(dt) {
                 c.scSigilTethers.push({ bombIdx: j, pulsePhase: Math.random() * Math.PI * 2, glyphSeed: Math.random() * 100 });
               }
             }
+            // Biome-specific Archon ascension lore text
+            if (G.biomeOverride === 2) {
+              const monolithLore = ['A MONOLITH RISES', 'THE STONE AWAKENS', 'SENTINEL TAKES FORM'][Math.floor(Math.random() * 3)];
+              spawnFloatingText(c.x, c.y - c.radius - 20, monolithLore, '#daa520', 2.0, { fontSize: 12 });
+            }
           }
           c.scCooldown = 3.4 + Math.random() * 8.5;
         }
@@ -1932,10 +2087,12 @@ function updateColorSynthesis(dt) {
   // Check neighboring cells
   let synthCount = 0;
   const maxSynthPerFrame = 5; // cap effects per frame for performance
+  const isB1Merge = G.biomeOverride === -1; // B1: aggressive pre-merge color blending
 
   for (let i = 0; i < len && synthCount < maxSynthPerFrame; i++) {
     const a = circles[i];
-    if (!a.alive || a.popped || a.synthCooldown > 0 || a.spawnAnim > 0.3) continue;
+    if (!a.alive || a.popped || a.spawnAnim > 0.3) continue;
+    if (!isB1Merge && a.synthCooldown > 0) continue;
 
     const gx = Math.floor(a.x / cellSize);
     const gy = Math.floor(a.y / cellSize);
@@ -1952,7 +2109,7 @@ function updateColorSynthesis(dt) {
           const b = circles[j];
           const nextJ = b._gridNext;
 
-          if (j > i && b.alive && !b.popped && b.synthCooldown <= 0 && b.spawnAnim <= 0.3) {
+          if (j > i && b.alive && !b.popped && (isB1Merge || b.synthCooldown <= 0) && b.spawnAnim <= 0.3) {
             // Distance check
             const ddx = a.x - b.x;
             const ddy = a.y - b.y;
@@ -1960,60 +2117,86 @@ function updateColorSynthesis(dt) {
             const touchDist = a.radius + b.radius;
 
             if (dist < touchDist * 0.85) {
-              // Check color difference — only synthesize if colors are sufficiently different
-              const cDiff = colorDistance(a.color, b.color);
-              if (cDiff > 80) {
-                // === SYNTHESIS! ===
-                // Blend both colors toward each other (asymmetric — smaller orb shifts more)
-                const aSize = a.radius * a.radius; // area-based weight
+              if (isB1Merge) {
+                // ── B1 pre-merge color matching ──
+                // Smaller orb shifts 80% toward bigger, bigger shifts 20% toward smaller
+                // Exponential approach: converges to ~80%/20% over ~0.5s of overlap
+                const aSize = a.radius * a.radius;
                 const bSize = b.radius * b.radius;
-                const total = aSize + bSize;
-                const blendA = 0.08 * (bSize / total); // how much A shifts toward B
-                const blendB = 0.08 * (aSize / total); // how much B shifts toward A
+                const bigger  = aSize >= bSize ? a : b;
+                const smaller = aSize >= bSize ? b : a;
 
-                a.color = lerpColor(a.color, b.color, blendA);
-                a.colorEdge = a.color;
-                b.color = lerpColor(b.color, a.color, blendB);
-                b.colorEdge = b.color;
+                const rate = 3.0 * dt;
+                const tSmall = Math.min(rate * 0.80, 0.15); // smaller → 80% toward bigger
+                const tBig   = Math.min(rate * 0.20, 0.04); // bigger → 20% toward smaller
 
-                // Cooldown prevents rapid-fire synthesis
-                a.synthCooldown = 0.4 + Math.random() * 0.2;
-                b.synthCooldown = 0.4 + Math.random() * 0.2;
+                // Snapshot target colors before mutation
+                const bigColor = bigger.color;
+                const smallColor = smaller.color;
 
-                // Slight velocity kick — gentle push apart
-                const pushStr = 15;
-                const nx2 = dist > 0.5 ? ddx / dist : (Math.random() - 0.5);
-                const ny2 = dist > 0.5 ? ddy / dist : (Math.random() - 0.5);
-                a.vx += nx2 * pushStr;
-                a.vy += ny2 * pushStr;
-                b.vx -= nx2 * pushStr;
-                b.vy -= ny2 * pushStr;
-
-                // Visual effect: synthesis spark
-                const mx = (a.x + b.x) * 0.5;
-                const my = (a.y + b.y) * 0.5;
-                const blendedColor = lerpColor(a.color, b.color, 0.5);
-
-                // Emit tiny sparks at contact point
-                for (let s = 0; s < 4; s++) {
-                  const angle = Math.random() * Math.PI * 2;
-                  const speed = 30 + Math.random() * 50;
-                  spawnParticle(mx, my, 'spark', blendedColor, {
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed,
-                    maxLife: 0.25 + Math.random() * 0.2,
-                    size: 1.5 + Math.random() * 2
-                  });
-                }
-
-                // Soft glow ring at contact
-                spawnParticle(mx, my, 'ripple', blendedColor, {
-                  maxLife: 0.4,
-                  size: 0,
-                  layer: 'bg'
-                });
+                smaller.color = lerpColor(smaller.color, bigColor, tSmall);
+                smaller.colorEdge = smaller.color;
+                bigger.color = lerpColor(bigger.color, smallColor, tBig);
+                bigger.colorEdge = bigger.color;
 
                 synthCount++;
+              } else {
+                // ── Normal synthesis (non-B1) ──
+                // Check color difference — only synthesize if colors are sufficiently different
+                const cDiff = colorDistance(a.color, b.color);
+                if (cDiff > 80) {
+                  // === SYNTHESIS! ===
+                  // Blend both colors toward each other (asymmetric — smaller orb shifts more)
+                  const aSize = a.radius * a.radius; // area-based weight
+                  const bSize = b.radius * b.radius;
+                  const total = aSize + bSize;
+                  const blendA = 0.08 * (bSize / total); // how much A shifts toward B
+                  const blendB = 0.08 * (aSize / total); // how much B shifts toward A
+
+                  a.color = lerpColor(a.color, b.color, blendA);
+                  a.colorEdge = a.color;
+                  b.color = lerpColor(b.color, a.color, blendB);
+                  b.colorEdge = b.color;
+
+                  // Cooldown prevents rapid-fire synthesis
+                  a.synthCooldown = 0.4 + Math.random() * 0.2;
+                  b.synthCooldown = 0.4 + Math.random() * 0.2;
+
+                  // Slight velocity kick — gentle push apart
+                  const pushStr = 15;
+                  const nx2 = dist > 0.5 ? ddx / dist : (Math.random() - 0.5);
+                  const ny2 = dist > 0.5 ? ddy / dist : (Math.random() - 0.5);
+                  a.vx += nx2 * pushStr;
+                  a.vy += ny2 * pushStr;
+                  b.vx -= nx2 * pushStr;
+                  b.vy -= ny2 * pushStr;
+
+                  // Visual effect: synthesis spark
+                  const mx = (a.x + b.x) * 0.5;
+                  const my = (a.y + b.y) * 0.5;
+                  const blendedColor = lerpColor(a.color, b.color, 0.5);
+
+                  // Emit tiny sparks at contact point
+                  for (let s = 0; s < 4; s++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = 30 + Math.random() * 50;
+                    spawnParticle(mx, my, 'spark', blendedColor, {
+                      vx: Math.cos(angle) * speed,
+                      vy: Math.sin(angle) * speed,
+                      maxLife: 0.25 + Math.random() * 0.2,
+                      size: 1.5 + Math.random() * 2
+                    });
+                  }
+
+                  // Soft glow ring at contact
+                  spawnParticle(mx, my, 'ripple', blendedColor, {
+                    maxLife: 0.4,
+                    size: 0,
+                    layer: 'bg'
+                  });
+
+                  synthCount++;
+                }
               }
             }
           }
@@ -2034,7 +2217,8 @@ function updateColorSynthesis(dt) {
 // SECTION 7b2: MARBLE BOUNCE — elastic collisions during marble mode
 // ==================================================
 function updateMarbleBounce(dt) {
-  if (G.marbleMode <= 0) return;
+  const isExpansePassive = G.biomeOverride === 2 && G.marbleMode <= 0;
+  if (G.marbleMode <= 0 && !isExpansePassive) return; // B3: always-on collision (shards never overlap)
   const circles = G.circles;
   const len = circles.length;
   if (len < 2) return;
@@ -2056,7 +2240,8 @@ function updateMarbleBounce(dt) {
     grid[idx] = i;
   }
 
-  const restitution = 0.85; // bounciness coefficient
+  // B3 passive: gentler collision so shards nudge apart, not ricochet
+  const restitution = isExpansePassive ? 0.5 : 0.85;
 
   for (let i = 0; i < len; i++) {
     const a = circles[i];
@@ -2073,6 +2258,8 @@ function updateMarbleBounce(dt) {
           const b = circles[j];
           const nextJ = b._bounceNext;
           if (j > i && b.alive && !b.popped) {
+            // Skip bounce between clumped host/satellite pairs
+            if ((a.clumpHost === b.id) || (b.clumpHost === a.id)) { j = nextJ; continue; }
             const ddx = b.x - a.x;
             const ddy = b.y - a.y;
             const dist = Math.sqrt(ddx * ddx + ddy * ddy);
@@ -2095,7 +2282,8 @@ function updateMarbleBounce(dt) {
                 const mB = b.radius * b.radius;
                 const totalM = mA + mB;
 
-                const impulse = relVel * restitution * 2 / totalM;
+                const impulseMult = isExpansePassive ? 1.5 : 3; // softer nudge in passive B3
+                const impulse = relVel * restitution * impulseMult / totalM;
 
                 a.vx -= impulse * mB * nx2;
                 a.vy -= impulse * mB * ny2;
@@ -2147,6 +2335,7 @@ function updateOrbMerging(dt) {
   for (let i = 0; i < len; i++) {
     const c = circles[i];
     if (!c.alive || c.popped || c.spawnAnim > 0.5 || c.mergeCooldown > 0) continue;
+    if (c.clumpHost !== undefined) continue; // satellites can't merge further
     const gx = Math.floor(c.x / cellSize);
     const gy = Math.floor(c.y / cellSize);
     if (gx < 0 || gx >= gridW || gy < 0 || gy >= gridH) continue;
@@ -2161,6 +2350,7 @@ function updateOrbMerging(dt) {
   for (let i = 0; i < len && merges < maxMerges; i++) {
     const a = circles[i];
     if (!a.alive || a.popped || a.mergeCooldown > 0 || a.spawnAnim > 0.3) continue;
+    if (a.clumpHost !== undefined) continue; // satellites skip merge scan
     // Merge count cap scales with madness: 6 base, up to 10 at full madness
     const mergeCap = 6 + Math.floor(getMadnessAmount() * 4);
     if (a.mergeCount >= mergeCap || a.superCell || a.armored) continue;
@@ -2184,8 +2374,12 @@ function updateOrbMerging(dt) {
             const d = Math.sqrt(ddx * ddx + ddy * ddy);
             const touchDist = a.radius + b.radius;
 
-            // Merge on overlap (85%) — physics-based: speed + mass determine merge chance
-            if (d < touchDist * 0.85) {
+            // Merge on overlap — physics-based: speed + mass determine merge chance
+            // Expanse: orbs "stick" on contact (105% of touch dist = just near each other)
+            // Normal:  orbs merge on deep overlap (85% of touch dist)
+            const isExpanseClump = G.biomeOverride === 2;
+            const overlapThreshold = isExpanseClump ? 1.05 : 0.85;
+            if (d < touchDist * overlapThreshold) {
               // Calculate relative impact speed
               const relVx = a.vx - b.vx;
               const relVy = a.vy - b.vy;
@@ -2195,42 +2389,98 @@ function updateOrbMerging(dt) {
               const massB = b.radius * b.radius;
               const massRatio = Math.max(massA, massB) / Math.min(massA, massB);
               // Merge probability: higher base + speed boost + mass ratio boost
+              // Expanse: much higher base chance (sticking is easy)
               const speedFactor = Math.min(1, impactSpeed / 120);
               const massFactor = Math.min(1, (massRatio - 1) / 3);
-              const mergeChance = 0.12 + speedFactor * 0.45 + massFactor * 0.25;
+              const mergeChance = isExpanseClump
+                ? 0.40 + speedFactor * 0.35 + massFactor * 0.20
+                : 0.12 + speedFactor * 0.45 + massFactor * 0.25;
               if (Math.random() < mergeChance) {
-                // Area-based radius growth — cap scales with madness (3.5× base → 5× at full madness)
-                const mergeRadiusCap = BASE_CIRCLE_RADIUS * (3.5 + getMadnessAmount() * 1.5);
-                const newArea = Math.PI * a.radius * a.radius + Math.PI * b.radius * b.radius;
-                a.radius = Math.min(mergeRadiusCap, Math.sqrt(newArea / Math.PI));
-                a.baseRadius = a.radius;
+                // === EXPANSE: CLUMP (stick together) instead of absorbing mass ===
+                if (G.biomeOverride === 2) {
+                  // Determine host (larger) and satellite (smaller)
+                  const host = massA >= massB ? a : b;
+                  const sat = massA >= massB ? b : a;
+                  // Initialize clump array on host
+                  if (!host.clumpChildren) host.clumpChildren = [];
+                  // Cap clump size to prevent huge blobs
+                  if (host.clumpChildren.length < 5 && !sat.clumpHost) {
+                    // Calculate offset angle from host to satellite
+                    const ox = sat.x - host.x;
+                    const oy = sat.y - host.y;
+                    const offsetAngle = Math.atan2(oy, ox);
+                    const offsetDist = host.radius + sat.radius * 0.55; // slight overlap for "stuck" look
 
-                // Gradual color blend — store target color for smooth transition
-                a._mergeColorFrom = a.color;
-                a._mergeColorTo = lerpColor(a.color, b.color, 0.5);
-                a._mergeColorT = 0;
-                a.colorEdge = a.color;
-                a.mergeCount = (a.mergeCount || 1) + (b.mergeCount || 1);
+                    sat.clumpHost = host.id;
+                    sat.clumpOffsetAngle = offsetAngle;
+                    sat.clumpOffsetDist = offsetDist;
+                    sat.clumpPhase = Math.random() * Math.PI * 2; // wobble phase
+                    host.clumpChildren.push(sat.id);
 
-                // Average velocities
-                a.vx = (a.vx + b.vx) * 0.5;
-                a.vy = (a.vy + b.vy) * 0.5;
-                a.mergeCooldown = 0.5;
-                a.mergeGlow = 1.0; // survivor glows briefly
+                    // Average velocities — cluster moves as one
+                    const totalMass = massA + massB;
+                    host.vx = (a.vx * massA + b.vx * massB) / totalMass;
+                    host.vy = (a.vy * massA + b.vy * massB) / totalMass;
+                    sat.vx = host.vx;
+                    sat.vy = host.vy;
 
-                // Start merge animation — store original color for gradual blend
-                b._mergeOrigColor = b.color;
-                b.mergeTarget = a.id;
-                b.mergeAnimProgress = 0;
-                b.queued = true; // prevent chain pops during merge anim
+                    a.mergeCooldown = 0.6;
+                    b.mergeCooldown = 0.6;
+                    host.mergeCount = (host.mergeCount || 1) + (sat.mergeCount || 1);
 
-                // Visual ripple at merge point
-                const mx = (a.x + b.x) * 0.5, my = (a.y + b.y) * 0.5;
-                spawnParticle(mx, my, 'ripple', a.color, {
-                  maxLife: 0.4, size: 0, layer: 'bg'
-                });
+                    // Impact crunch visual
+                    const mx2 = (a.x + b.x) * 0.5, my2 = (a.y + b.y) * 0.5;
+                    spawnParticle(mx2, my2, 'spark', host.color, {
+                      maxLife: 0.3, size: 3, layer: 'fg'
+                    });
+                    merges++;
+                  } else {
+                    // Can't clump more — push apart
+                    a.mergeCooldown = 0.4;
+                    b.mergeCooldown = 0.4;
+                    if (d > 0.1) {
+                      const pushStr = 25;
+                      a.vx += (ddx / d) * pushStr;
+                      a.vy += (ddy / d) * pushStr;
+                      b.vx -= (ddx / d) * pushStr;
+                      b.vy -= (ddy / d) * pushStr;
+                    }
+                  }
+                } else {
+                  // === NORMAL BIOMES: Absorb mass (original behavior) ===
+                  // Area-based radius growth — cap scales with madness (3.5× base → 5× at full madness)
+                  const mergeRadiusCap = BASE_CIRCLE_RADIUS * (3.5 + getMadnessAmount() * 1.5);
+                  const newArea = Math.PI * a.radius * a.radius + Math.PI * b.radius * b.radius;
+                  a.radius = Math.min(mergeRadiusCap, Math.sqrt(newArea / Math.PI));
+                  a.baseRadius = a.radius;
 
-                merges++;
+                  // Gradual color blend — store target color for smooth transition
+                  a._mergeColorFrom = a.color;
+                  a._mergeColorTo = lerpColor(a.color, b.color, 0.5);
+                  a._mergeColorT = 0;
+                  a.colorEdge = a.color;
+                  a.mergeCount = (a.mergeCount || 1) + (b.mergeCount || 1);
+
+                  // Average velocities
+                  a.vx = (a.vx + b.vx) * 0.5;
+                  a.vy = (a.vy + b.vy) * 0.5;
+                  a.mergeCooldown = 0.5;
+                  a.mergeGlow = 1.0; // survivor glows briefly
+
+                  // Start merge animation — store original color for gradual blend
+                  b._mergeOrigColor = b.color;
+                  b.mergeTarget = a.id;
+                  b.mergeAnimProgress = 0;
+                  b.queued = true; // prevent chain pops during merge anim
+
+                  // Visual ripple at merge point
+                  const mx = (a.x + b.x) * 0.5, my = (a.y + b.y) * 0.5;
+                  spawnParticle(mx, my, 'ripple', a.color, {
+                    maxLife: 0.4, size: 0, layer: 'bg'
+                  });
+
+                  merges++;
+                }
               } else {
                 // Push apart instead of merging
                 a.mergeCooldown = 0.5;
@@ -2302,25 +2552,30 @@ function updateInterOrbGravity(dt) {
           const b = circles[j];
           const nextJ = b._gravNext;
           if (j !== i && b.alive && !b.popped) {
-            // Determine which is bigger
+            // Determine which is bigger — B3 uses lower threshold so more pairs attract
+            const isExpanseGrav = G.biomeOverride === 2;
+            const sizeThreshold = isExpanseGrav ? 1.05 : 1.2;
             let big, small;
-            if (a.radius > b.radius * 1.2) { big = a; small = b; }
-            else if (b.radius > a.radius * 1.2) { big = b; small = a; }
+            if (a.radius > b.radius * sizeThreshold) { big = a; small = b; }
+            else if (b.radius > a.radius * sizeThreshold) { big = b; small = a; }
             else { j = nextJ; continue; } // too similar in size, skip
 
             const ddx = big.x - small.x;
             const ddy = big.y - small.y;
             const d = Math.sqrt(ddx * ddx + ddy * ddy);
-            // Mid/big balls get 15% bigger gravity radius
+            // Mid/big balls get 15% bigger gravity radius; B3 extends range 1.5×
             const sizeBonus = big.radius >= BASE_CIRCLE_RADIUS ? 1.15 : 1.0;
             const madPhys = getMadnessPhysicsScale();
-            const range = big.radius * 4.5 * sizeBonus * madPhys;
+            const rangeMult = isExpanseGrav ? 1.5 : 1.0;
+            const range = big.radius * 4.5 * sizeBonus * madPhys * rangeMult;
 
             if (d < range && d > 5) {
               // Gravity strength — scaled by big orb's relative size + madness
               let str = INTER_ORB_GRAVITY * (big.radius / BASE_CIRCLE_RADIUS) * madPhys * dt / Math.max(d, 10);
               // Merged orbs pull harder
               if (big.mergeCount > 1) str *= 1.5;
+              // B3: big shards have much stronger gravitational pull on small shards
+              if (isExpanseGrav) str *= 3.0;
               // Falloff near edge of range
               const falloff = 1 - (d / range);
               str *= falloff;
@@ -2845,7 +3100,7 @@ function playBombPlaceSound() {
 const RIFT_WALL_MIN_MADNESS = 0.30;
 const RIFT_WALL_SPAWN_INTERVAL = 24;  // seconds between spawns (was 30)
 const RIFT_WALL_MAX = 4;              // max walls on field (was 3)
-const RIFT_WALL_HP = 5;               // hits to destroy (was 4)
+const RIFT_WALL_HP = 15;              // hits to destroy (was 5)
 const RIFT_WALL_POP_RADIUS = 110;     // pop orbs within this distance on shatter (was 80)
 const RIFT_WALL_GRAVITY = 35;         // pull strength — orbs drift toward the rift
 const RIFT_WALL_GRAVITY_RANGE = 120;  // pixels — gravity pull range from wall
@@ -2885,16 +3140,22 @@ function spawnRiftWall() {
   const x2 = cx - Math.cos(angle) * span;
   const y2 = cy - Math.sin(angle) * span;
 
+  const isExpanseWall = G.biomeOverride === 2;
+  const wallHp = isExpanseWall ? 40 : RIFT_WALL_HP; // B3: 40 HP (gradual drain) vs default 15
   G.riftWalls.push({
     x1, y1, x2, y2,
-    hp: RIFT_WALL_HP,
-    maxHp: RIFT_WALL_HP,
+    hp: wallHp,
+    maxHp: wallHp,
+    displayHp: wallHp, // smooth lerp target for health bar rendering
     alpha: 0,       // fade in
     phase: Math.random() * Math.PI * 2,
     hitFlash: 0
   });
-  const wallLore = ['MEMBRANE FRACTURE', 'THE SCAR HARDENS', 'DIMENSION CRYSTALLIZES'][Math.floor(Math.random() * 3)];
-  spawnFloatingText(cx, cy, wallLore, '#b040ff', 1.2, { fontSize: 13 });
+  const wallLore = isExpanseWall
+    ? ['THE SAND HARDENS', 'ANCIENT STONE RISES', 'A BARRICADE FORMS'][Math.floor(Math.random() * 3)]
+    : ['MEMBRANE FRACTURE', 'THE SCAR HARDENS', 'DIMENSION CRYSTALLIZES'][Math.floor(Math.random() * 3)];
+  const wallLoreCol = isExpanseWall ? '#d4920a' : '#b040ff';
+  spawnFloatingText(cx, cy, wallLore, wallLoreCol, 1.2, { fontSize: 13 });
 }
 
 function shatterRiftWall(wall, index) {
@@ -2911,20 +3172,27 @@ function shatterRiftWall(wall, index) {
   }
 
   // Particle burst along wall length
+  const isExpanseShatter = G.biomeOverride === 2;
+  const shatterParticleColors = isExpanseShatter
+    ? ['#d4920a','#b87333','#e8d5b0','#8b6914','#daa520']
+    : ['#b040ff'];
   const dx = wall.x2 - wall.x1, dy = wall.y2 - wall.y1;
   for (let p = 0; p < 15; p++) {
     const t = Math.random();
     const px = wall.x1 + dx * t, py = wall.y1 + dy * t;
     const angle = Math.random() * Math.PI * 2;
-    spawnParticle(px, py, 'spark', '#b040ff', {
+    spawnParticle(px, py, 'spark', shatterParticleColors[p % shatterParticleColors.length], {
       vx: Math.cos(angle) * (100 + Math.random() * 200),
       vy: Math.sin(angle) * (100 + Math.random() * 200),
       maxLife: 0.5 + Math.random() * 0.3, size: 3 + Math.random() * 3
     });
   }
 
-  const shatterLore = ['THE MEMBRANE TEARS', 'INFINITY SHATTERS', 'THE SCAR OPENS'][Math.floor(Math.random() * 3)];
-  spawnFloatingText(mx, my - 20, shatterLore, '#d060ff', 1.5, { fontSize: 15 });
+  const shatterLore = isExpanseShatter
+    ? ['THE STONE CRUMBLES', 'SAND RETURNS TO DUST', 'THE BARRICADE FALLS'][Math.floor(Math.random() * 3)]
+    : ['THE MEMBRANE TEARS', 'INFINITY SHATTERS', 'THE SCAR OPENS'][Math.floor(Math.random() * 3)];
+  const shatterCol = isExpanseShatter ? '#daa520' : '#d060ff';
+  spawnFloatingText(mx, my - 20, shatterLore, shatterCol, 1.5, { fontSize: 15 });
   G.shakeAmount = Math.max(G.shakeAmount, 3);
   G.riftWalls.splice(index, 1);
 }
@@ -2948,6 +3216,9 @@ function updateRiftWalls(dt) {
     w.alpha = Math.min(1, w.alpha + dt * 1.5); // fade in
     w.phase += dt * 2;
     if (w.hitFlash > 0) w.hitFlash -= dt * 4;
+    // Smooth displayHp lerp for health bar animation
+    if (w.displayHp === undefined) w.displayHp = w.hp;
+    w.displayHp += (w.hp - w.displayHp) * Math.min(1, dt * 6);
 
     // Gravitational pull — orbs near the rift drift toward it
     if (w.alpha > 0.5) {
@@ -3001,6 +3272,7 @@ function damageRiftWall(explosionX, explosionY, blastR) {
 }
 
 function renderRiftWalls(ctx) {
+  const isExpanseRift = G.biomeOverride === 2;
   for (let i = 0; i < G.riftWalls.length; i++) {
     const w = G.riftWalls[i];
     if (w.alpha <= 0) continue;
@@ -3013,74 +3285,176 @@ function renderRiftWalls(ctx) {
     const wallLen = Math.sqrt(dx * dx + dy * dy) || 1;
     const nx = -(dy / wallLen), ny = dx / wallLen;
 
-    // Build a jagged crack path (reused for all layers)
+    // Build wall path — gentle wave for Expanse, jagged crack for default
     const segs = Math.max(6, Math.floor(wallLen / 25));
     const crackPath = [];
     for (let s = 0; s <= segs; s++) {
       const t = s / segs;
       const bx = w.x1 + dx * t;
       const by = w.y1 + dy * t;
-      // Seeded zig-zag perpendicular to line
       const seed = i * 3.7 + s * 7.13;
-      const jag = (s === 0 || s === segs) ? 0 :
-        (Math.sin(seed) * 4 + Math.sin(seed * 2.3) * 2.5 + Math.sin(w.phase * 0.6 + t * 5) * 1.5);
+      let jag;
+      if (isExpanseRift) {
+        // Gently wavy sandstone — lower amplitude (~3-4px)
+        jag = (s === 0 || s === segs) ? 0 :
+          (Math.sin(seed) * 2 + Math.sin(seed * 2.3) * 1.2 + Math.sin(w.phase * 0.4 + t * 4) * 0.8);
+      } else {
+        jag = (s === 0 || s === segs) ? 0 :
+          (Math.sin(seed) * 4 + Math.sin(seed * 2.3) * 2.5 + Math.sin(w.phase * 0.6 + t * 5) * 1.5);
+      }
       crackPath.push({ x: bx + nx * jag, y: by + ny * jag });
     }
 
-    // --- Layer 1: Soft outer glow ---
-    ctx.save();
-    ctx.globalAlpha = baseAlpha * 0.12;
-    ctx.strokeStyle = hit > 0.2 ? '#ff4040' : '#8040c0';
-    ctx.lineWidth = 20 + pulse * 6;
-    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    ctx.beginPath();
-    ctx.moveTo(crackPath[0].x, crackPath[0].y);
-    for (let s = 1; s < crackPath.length; s++) ctx.lineTo(crackPath[s].x, crackPath[s].y);
-    ctx.stroke();
-    ctx.restore();
+    if (isExpanseRift) {
+      // === EXPANSE: Sandstone Barricade ===
 
-    // --- Layer 2: Dark crack interior ---
-    ctx.save();
-    ctx.globalAlpha = baseAlpha * 0.85;
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 4 + pulse * 1.5;
-    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    ctx.beginPath();
-    ctx.moveTo(crackPath[0].x, crackPath[0].y);
-    for (let s = 1; s < crackPath.length; s++) ctx.lineTo(crackPath[s].x, crackPath[s].y);
-    ctx.stroke();
-    ctx.restore();
+      // Layer 1: Wide outer sandstone body
+      ctx.save();
+      ctx.globalAlpha = baseAlpha * 0.15;
+      ctx.strokeStyle = hit > 0.2 ? '#ffe0a0' : '#b87333';
+      ctx.lineWidth = 22 + pulse * 4;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(crackPath[0].x, crackPath[0].y);
+      for (let s = 1; s < crackPath.length; s++) ctx.lineTo(crackPath[s].x, crackPath[s].y);
+      ctx.stroke();
+      ctx.restore();
 
-    // --- Layer 3: Bright energy edge (thinner, on top of dark crack) ---
-    ctx.save();
-    ctx.globalAlpha = baseAlpha * (0.4 + hpFrac * 0.4 + hit * 0.5);
-    ctx.strokeStyle = hit > 0.2 ? '#ff6060' : `hsl(${270 + pulse * 20}, 70%, ${55 + pulse * 10}%)`;
-    ctx.lineWidth = 1.5 + pulse * 0.8;
-    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    ctx.beginPath();
-    ctx.moveTo(crackPath[0].x, crackPath[0].y);
-    for (let s = 1; s < crackPath.length; s++) ctx.lineTo(crackPath[s].x, crackPath[s].y);
-    ctx.stroke();
-    ctx.restore();
+      // Layer 2: Darker inner stone core
+      ctx.save();
+      ctx.globalAlpha = baseAlpha * 0.75;
+      ctx.strokeStyle = hit > 0.2 ? '#daa520' : '#8b6914';
+      ctx.lineWidth = 7 + pulse * 1;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(crackPath[0].x, crackPath[0].y);
+      for (let s = 1; s < crackPath.length; s++) ctx.lineTo(crackPath[s].x, crackPath[s].y);
+      ctx.stroke();
+      ctx.restore();
 
-    // --- HP pips along the crack midpoint ---
-    const mx = (w.x1 + w.x2) / 2, my = (w.y1 + w.y2) / 2;
-    ctx.globalAlpha = w.alpha * 0.8;
-    const pipSpacing = 8;
-    for (let h = 0; h < w.maxHp; h++) {
-      const offset = (h - (w.maxHp - 1) / 2) * pipSpacing;
-      const px = mx + (dx / wallLen) * offset + nx * 12;
-      const py = my + (dy / wallLen) * offset + ny * 12;
-      if (h < w.hp) {
-        ctx.fillStyle = hit > 0.2 ? '#ff8080' : '#c070ff';
+      // Layer 3: Surface detail — stone joint hash marks
+      ctx.save();
+      ctx.globalAlpha = baseAlpha * 0.2;
+      ctx.strokeStyle = '#5a3a10';
+      ctx.lineWidth = 0.8;
+      for (let s = 1; s < crackPath.length - 1; s += 2) {
+        const px = crackPath[s].x, py = crackPath[s].y;
+        const hashLen = 4 + pulse * 1.5;
         ctx.beginPath();
-        ctx.arc(px, py, 2.5, 0, Math.PI * 2);
-        ctx.fill();
-      } else {
-        ctx.fillStyle = '#201030';
+        ctx.moveTo(px - nx * hashLen, py - ny * hashLen);
+        ctx.lineTo(px + nx * hashLen, py + ny * hashLen);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // Layer 4: Warm edge glow
+      ctx.save();
+      ctx.globalAlpha = baseAlpha * (0.12 + hit * 0.3);
+      ctx.strokeStyle = hit > 0.2 ? '#ffe8a0' : '#d4920a';
+      ctx.lineWidth = 1.8 + pulse * 0.6;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(crackPath[0].x, crackPath[0].y);
+      for (let s = 1; s < crackPath.length; s++) ctx.lineTo(crackPath[s].x, crackPath[s].y);
+      ctx.stroke();
+      ctx.restore();
+
+      // --- Health Bar (continuous bar instead of pips) ---
+      const mx = (w.x1 + w.x2) / 2, my = (w.y1 + w.y2) / 2;
+      const barW = 60, barH = 6;
+      const barX = mx + nx * 14 - barW / 2;
+      const barY = my + ny * 14 - barH / 2;
+      const dispHp = w.displayHp !== undefined ? w.displayHp : w.hp;
+      const dispFrac = Math.max(0, dispHp / w.maxHp);
+
+      // Bar background
+      ctx.save();
+      ctx.globalAlpha = w.alpha * 0.6;
+      ctx.fillStyle = 'rgba(20,10,5,0.6)';
+      ctx.beginPath();
+      ctx.roundRect(barX - 1, barY - 1, barW + 2, barH + 2, 3);
+      ctx.fill();
+
+      // Bar fill — gradient from amber (healthy) to dark red (low)
+      if (dispFrac > 0.01) {
+        const fillW = dispFrac * barW;
+        const barGrad = ctx.createLinearGradient(barX, barY, barX + barW, barY);
+        barGrad.addColorStop(0, '#d4920a');
+        barGrad.addColorStop(1, dispFrac < 0.3 ? '#8b2500' : '#daa520');
+        ctx.globalAlpha = w.alpha * 0.85;
+        ctx.fillStyle = barGrad;
         ctx.beginPath();
-        ctx.arc(px, py, 2, 0, Math.PI * 2);
+        ctx.roundRect(barX, barY, fillW, barH, 2);
         ctx.fill();
+      }
+
+      // Bar border
+      ctx.globalAlpha = w.alpha * 0.3;
+      ctx.strokeStyle = 'rgba(255,200,100,0.3)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.roundRect(barX - 1, barY - 1, barW + 2, barH + 2, 3);
+      ctx.stroke();
+      ctx.restore();
+
+    } else {
+      // === DEFAULT: Dimensional crack ===
+
+      // --- Layer 1: Soft outer glow ---
+      ctx.save();
+      ctx.globalAlpha = baseAlpha * 0.12;
+      ctx.strokeStyle = hit > 0.2 ? '#ff4040' : '#8040c0';
+      ctx.lineWidth = 20 + pulse * 6;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(crackPath[0].x, crackPath[0].y);
+      for (let s = 1; s < crackPath.length; s++) ctx.lineTo(crackPath[s].x, crackPath[s].y);
+      ctx.stroke();
+      ctx.restore();
+
+      // --- Layer 2: Dark crack interior ---
+      ctx.save();
+      ctx.globalAlpha = baseAlpha * 0.85;
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 4 + pulse * 1.5;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(crackPath[0].x, crackPath[0].y);
+      for (let s = 1; s < crackPath.length; s++) ctx.lineTo(crackPath[s].x, crackPath[s].y);
+      ctx.stroke();
+      ctx.restore();
+
+      // --- Layer 3: Bright energy edge ---
+      ctx.save();
+      ctx.globalAlpha = baseAlpha * (0.4 + hpFrac * 0.4 + hit * 0.5);
+      ctx.strokeStyle = hit > 0.2 ? '#ff6060' : `hsl(${270 + pulse * 20}, 70%, ${55 + pulse * 10}%)`;
+      ctx.lineWidth = 1.5 + pulse * 0.8;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(crackPath[0].x, crackPath[0].y);
+      for (let s = 1; s < crackPath.length; s++) ctx.lineTo(crackPath[s].x, crackPath[s].y);
+      ctx.stroke();
+      ctx.restore();
+
+      // --- HP pips along the crack midpoint ---
+      const mx = (w.x1 + w.x2) / 2, my = (w.y1 + w.y2) / 2;
+      ctx.globalAlpha = w.alpha * 0.8;
+      const pipSpacing = 8;
+      for (let h = 0; h < w.maxHp; h++) {
+        const offset = (h - (w.maxHp - 1) / 2) * pipSpacing;
+        const px = mx + (dx / wallLen) * offset + nx * 12;
+        const py = my + (dy / wallLen) * offset + ny * 12;
+        if (h < w.hp) {
+          ctx.fillStyle = hit > 0.2 ? '#ff8080' : '#c070ff';
+          ctx.beginPath();
+          ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.fillStyle = '#201030';
+          ctx.beginPath();
+          ctx.arc(px, py, 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
     }
   }
@@ -3439,6 +3813,26 @@ function updateShadowBalls(dt) {
       sb.vy += (pdy / pd) * pushStr;
     }
 
+    // EXPANSE anti-gravity — shadow balls float upward to counter Sandfall
+    // When sandfall pulls shards down, shadows drift up (and linger upward during cooldown)
+    if (G.biomeOverride === 2 && (expanseSandfallActive > 0 || expanseSandfallCooldown > 0)) {
+      let antiGravStr;
+      if (expanseSandfallActive > 0) {
+        // During active sandfall: strong upward force (opposite of shard gravity)
+        const maxDur = (3 + madness * 3) * PGE_BEAT_SEC;
+        const elapsed = maxDur - Math.max(0, expanseSandfallActive);
+        const waveStr = Math.sin(elapsed / maxDur * Math.PI);
+        antiGravStr = waveStr * 90 * dt; // strong upward push
+      } else {
+        // During cooldown: gentle upward drift that fades over 10s
+        const coolFade = expanseSandfallCooldown / 10.0;
+        antiGravStr = coolFade * 25 * dt; // gentle residual lift
+      }
+      sb.vy -= antiGravStr; // upward = negative Y
+      // Slight horizontal wander while floating up (ethereal feel)
+      sb.vx += (Math.random() - 0.5) * antiGravStr * 0.4;
+    }
+
     // Strong repulsion — shadow balls push hard to stay spread out
     const repelRange = 80 + sb.radius * 6;
     let repelChecks = 0;
@@ -3587,7 +3981,7 @@ function updateShadowBalls(dt) {
 
   let clusterDetected = false;
   if (G.shadowBalls.length >= 12 && G.prismCooldown <= 0) {
-    const PRISM_RADIUS = 35;
+    const PRISM_RADIUS = 50;
     const PRISM_THRESHOLD = 10;
     const step = Math.max(1, Math.floor(G.shadowBalls.length / 30));
     for (let i = 0; i < G.shadowBalls.length; i += step) {
@@ -3626,7 +4020,7 @@ function updateShadowBalls(dt) {
   // Manage prism state: active while cluster exists, 3s grace after disengage, 2s cooldown after off
   if (clusterDetected) {
     G.prismClusterActive = true;
-    G.gravityInvertTimer = 3.0; // 3s grace period while cluster held
+    G.gravityInvertTimer = 5.0; // 5s grace period while cluster held
   } else {
     if (G.prismClusterActive) G.prismClusterActive = false;
     // Grace period: count down after cluster breaks
@@ -3648,10 +4042,10 @@ function updateShadowBalls(dt) {
   // Detect state direction change — start cooldown
   const currentSign = G.gravityInvertFactor >= 0 ? 1 : -1;
   if (currentSign !== Math.sign(invertTarget) && G.gravityInvertSwitchCooldown <= 0) {
-    G.gravityInvertSwitchCooldown = 1.8;
+    G.gravityInvertSwitchCooldown = 3.0;
   }
   // Lerp toward target (~0.4-0.5s transition)
-  G.gravityInvertFactor += (invertTarget - G.gravityInvertFactor) * dt * 2.5;
+  G.gravityInvertFactor += (invertTarget - G.gravityInvertFactor) * dt * 1.2;
   G.gravityInvertFactor = Math.max(-1, Math.min(1, G.gravityInvertFactor));
 }
 
@@ -3889,8 +4283,11 @@ function popCircle(circleId) {
         });
       }
       circle.scTethers = [];
-      const impLore = ['THE ARCHON REMEMBERS', 'FRAGMENTS REUNITE', 'WHOLENESS DEVOURS'][Math.floor(Math.random() * 3)];
-      spawnFloatingText(circle.x, circle.y - circle.radius - 25, impLore, '#ffcc00', 1.8, { fontSize: 14 });
+      const impLore = G.biomeOverride === 2
+        ? ['THE MONOLITH CRUMBLES', 'STONE RETURNS TO SAND', 'THE SENTINEL FALLS'][Math.floor(Math.random() * 3)]
+        : ['THE ARCHON REMEMBERS', 'FRAGMENTS REUNITE', 'WHOLENESS DEVOURS'][Math.floor(Math.random() * 3)];
+      const impColor = G.biomeOverride === 2 ? '#daa520' : '#ffcc00';
+      spawnFloatingText(circle.x, circle.y - circle.radius - 25, impLore, impColor, 1.8, { fontSize: 14 });
       G.shakeAmount = Math.max(G.shakeAmount, 4 + tetherCount);
     }
   }
@@ -4102,6 +4499,17 @@ function popCircle(circleId) {
         fc.fissionSpawn = true;   // prevents recursive fission
         fc.shrapnelImmune = 0.8;  // 800ms immunity — must fly far before catchable
         fc.chainBornId = G.chainGenId; // survives this chain, poppable in next
+        // Expanse: fission orbs are also sharp shards
+        if (G.biomeOverride === 2) {
+          fc.sharpShard = true;
+          fc.shardAngle = angle;
+          fc.shardSpin = (Math.random() - 0.5) * 12;
+          fc.shardSides = 3 + (fc.id % 3);
+          // Fission gen is max(3, parent+1) so always gen-3+: use pebble chip or micro-sliver
+          fc.shardVariant = fc.generation >= 4 ? 1 : 2;
+          fc.radius *= 0.7;
+          fc.baseRadius = fc.radius;
+        }
         G.circles.push(fc);
       }
     }
@@ -4123,24 +4531,57 @@ function popCircle(circleId) {
   // FRACTURING SYSTEM: Orbs shatter into smaller pieces on pop
   // Fragments fly AWAY from cursor position (cursor-relative direction)
   // Gen 0 (100%) → gen-1 (60%) → gen-2 (35%) → gen-3 (20%) → gen-4 (12%) → gen-5 (7%)
+  // EXPANSE: sharp shrapnel — more fragments, wider spray, faster, angular rendering
   const nextGen = circle.generation + 1;
   const fracCounts = getFractureCounts();
-  const fracCount = fracCounts[circle.generation] || 0;
+  let fracCount = fracCounts[circle.generation] || 0;
+  const isExpanseFrac = G.biomeOverride === 2;
+  // Expanse: generation-aware fragment count — big shards break into fewer big chunks,
+  // small shards produce more debris spray (gradual chipping, not instant atomization)
+  if (isExpanseFrac && fracCount > 0) {
+    if (circle.generation <= 0) {
+      fracCount = Math.min(fracCount, 3);       // gen-0: max 3 large chunks
+    } else if (circle.generation === 1) {
+      fracCount = Math.min(fracCount + 1, 4);   // gen-1: up to 4 mid chunks
+    } else {
+      fracCount = Math.max(fracCount, Math.min(fracCount + 2, 5)); // gen-2+: original debris spray
+    }
+  }
   if (nextGen <= 5 && fracCount > 0 && G.circles.length < MAX_CIRCLES - 2) {
     const FRAC_SCALES = [1.0, 0.6, 0.35, 0.20, 0.12, 0.07];
+    // B3 Expanse: parent-relative scales (fraction of PARENT radius, not BASE)
+    // Creates gradual chipping: 45→27→15→8→4→3px instead of 45→8→5→3px
+    const B3_PARENT_SCALES = [1.0, 0.60, 0.55, 0.50, 0.45, 0.40];
     const scale = FRAC_SCALES[nextGen];
     const count = fracCount;
-    const speed = 50 + (nextGen * 15);
+    // Expanse: big chunks fly slow (heavy), small debris flies fast
+    // Normal: 50 + gen*15, Expanse: 80 + gen*40
+    const speed = isExpanseFrac ? (80 + nextGen * 40) : (50 + (nextGen * 15));
+    // Expanse: full radial spray (2π), normal: cone (0.8π)
+    const spreadAngle = isExpanseFrac ? Math.PI * 2 : Math.PI * 0.8;
     for (let m = 0; m < count; m++) {
       if (G.circles.length >= MAX_CIRCLES) break;
-      // Spread fragments in a cone centered on "away from cursor" direction
-      const spread = (count > 1) ? ((m / (count - 1)) - 0.5) * Math.PI * 0.8 : 0;
-      const angle = awayAngle + spread + (Math.random() - 0.5) * 0.6;
-      const spawnDist = 6 + Math.random() * 10;
+      let angle;
+      if (isExpanseFrac) {
+        // Full radial spread — shards explode in all directions
+        angle = (m / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+      } else {
+        // Cone centered on "away from cursor" direction
+        const spread = (count > 1) ? ((m / (count - 1)) - 0.5) * spreadAngle : 0;
+        angle = awayAngle + spread + (Math.random() - 0.5) * 0.6;
+      }
+      const spawnDist = isExpanseFrac ? (4 + Math.random() * 6) : (6 + Math.random() * 10);
       const mx = circle.x + Math.cos(angle) * spawnDist;
       const my = circle.y + Math.sin(angle) * spawnDist;
       const mc = createCircle(mx, my);
-      mc.radius = BASE_CIRCLE_RADIUS * scale + Math.random() * 2;
+      // Expanse: parent-relative sizing (each gen = fraction of PARENT's actual radius)
+      // Normal biomes: absolute sizing from BASE_CIRCLE_RADIUS
+      if (isExpanseFrac) {
+        const parentScale = B3_PARENT_SCALES[Math.min(nextGen, B3_PARENT_SCALES.length - 1)];
+        mc.radius = Math.max(3, circle.radius * parentScale + (Math.random() - 0.5) * 2);
+      } else {
+        mc.radius = BASE_CIRCLE_RADIUS * scale + Math.random() * 2;
+      }
       mc.baseRadius = mc.radius;
       mc.generation = nextGen;
       mc.superCell = false;
@@ -4148,10 +4589,21 @@ function popCircle(circleId) {
       mc.scCooldown = 999;
       mc.armored = false; mc.armorHP = 0;  // fragments never armored
       mc.spawnAnim = 0;
-      mc.shrapnelImmune = 0.2; // brief immunity so they fly out visibly
+      mc.shrapnelImmune = isExpanseFrac ? 0.15 : 0.2; // sharper shards catch sooner
       mc.chainBornId = G.chainGenId; // survives this chain, poppable in next
-      mc.vx = Math.cos(angle) * speed;
-      mc.vy = Math.sin(angle) * speed;
+      mc.vx = Math.cos(angle) * (speed + (isExpanseFrac ? Math.random() * 40 : 0));
+      mc.vy = Math.sin(angle) * (speed + (isExpanseFrac ? Math.random() * 40 : 0));
+      // Expanse: mark as sharp shard for angular rendering + spin
+      if (isExpanseFrac) {
+        mc.sharpShard = true;
+        mc.shardAngle = angle; // initial flight direction = orientation
+        mc.shardSpin = (Math.random() - 0.5) * 8; // radians/sec spin
+        mc.shardSides = 3 + (mc.id % 3); // 3-5 sides (triangular to pentagonal)
+        // Shard variant by generation: 0=default jagged, 1=micro-sliver (needle), 2=pebble chip (rounded)
+        if (nextGen >= 4) mc.shardVariant = 1;       // gen-4/5: needle-like micro-slivers
+        else if (nextGen === 3) mc.shardVariant = 2;  // gen-3: rounded pebble chips
+        else mc.shardVariant = 0;                      // gen-1/2: default sharp shard
+      }
       G.circles.push(mc);
     }
   }
@@ -4167,7 +4619,12 @@ function popCircle(circleId) {
       const angle = awayAngle + (Math.random() - 0.5) * Math.PI * 0.6;
       const speed = 60 + Math.random() * 40;
       const mc = createCircle(circle.x, circle.y);
-      mc.radius = BASE_CIRCLE_RADIUS * microScale + Math.random() * 1.5;
+      // Expanse cascade: parent-relative micro-debris
+      if (isExpanseFrac) {
+        mc.radius = Math.max(2.5, circle.radius * 0.25 + Math.random() * 1.5);
+      } else {
+        mc.radius = BASE_CIRCLE_RADIUS * microScale + Math.random() * 1.5;
+      }
       mc.baseRadius = mc.radius;
       mc.generation = microGen;
       mc.superCell = false;
@@ -4177,10 +4634,42 @@ function popCircle(circleId) {
       mc.spawnAnim = 0;
       mc.shrapnelImmune = 0.25;
       mc.chainBornId = G.chainGenId; // survives this chain, poppable in next
-      mc.vx = Math.cos(angle) * speed;
-      mc.vy = Math.sin(angle) * speed;
+      // Expanse: cascade fragments also get sharp shard rendering
+      if (isExpanseFrac) {
+        mc.sharpShard = true;
+        mc.shardAngle = angle;
+        mc.shardSpin = (Math.random() - 0.5) * 10; // faster spin for micro shards
+        mc.shardSides = 3 + (mc.id % 3);
+        mc.shardVariant = 1; // cascade = always micro-slivers (tiny debris)
+        mc.radius *= 0.85; // slightly thinner (reduced from 0.7 — parent-relative already handles size)
+        mc.baseRadius = mc.radius;
+        // Full radial spray for cascade too
+        mc.vx = Math.cos((cb / cascadeCount) * Math.PI * 2 + Math.random() * 0.5) * (speed * 1.5);
+        mc.vy = Math.sin((cb / cascadeCount) * Math.PI * 2 + Math.random() * 0.5) * (speed * 1.5);
+      } else {
+        mc.vx = Math.cos(angle) * speed;
+        mc.vy = Math.sin(angle) * speed;
+      }
       G.circles.push(mc);
     }
+  }
+
+  // Expanse clump: release children when host is popped — they scatter outward
+  if (circle.clumpChildren && circle.clumpChildren.length > 0) {
+    for (let cci = 0; cci < circle.clumpChildren.length; cci++) {
+      const child = G.circles.find(ch => ch.id === circle.clumpChildren[cci] && ch.alive);
+      if (child) {
+        child.clumpHost = undefined;
+        // Scatter outward from host
+        const scatterAngle = child.clumpOffsetAngle || Math.random() * Math.PI * 2;
+        const scatterSpeed = 40 + Math.random() * 30;
+        child.vx += Math.cos(scatterAngle) * scatterSpeed;
+        child.vy += Math.sin(scatterAngle) * scatterSpeed;
+        child.clumpOffsetAngle = undefined;
+        child.clumpOffsetDist = undefined;
+      }
+    }
+    circle.clumpChildren = [];
   }
 
   // Mark for removal after chain
@@ -4219,7 +4708,7 @@ function updateGravityWells(dt) {
     const pullMult = Math.min(1, progress * 2); // ramps up over first half of life
     for (let j = 0; j < G.circles.length; j++) {
       const c = G.circles[j];
-      if (c.popped || !c.alive) continue;
+      if (c.popped || !c.alive || c.queued) continue;
       const d = dist(gw.x, gw.y, c.x, c.y);
       if (d < gw.radius * gwMadPhys && d > 3) {
         const dx = gw.x - c.x, dy = gw.y - c.y;
@@ -4364,6 +4853,10 @@ function updateBlackHole(dt) {
       c.vx += (-ny) * tangentAccel;
       c.vy += (nx) * tangentAccel;
 
+      // Spaghettification — DISABLED (ugly, revisit later)
+      // const bhSpagZone = bh.gravityRadius * 0.4;
+      // if (d < bhSpagZone) { ... }
+
       if (d < bh.radius * BH_SWALLOW_RADIUS_MULT) {
         c.alive = false;
         c.popped = true;
@@ -4372,10 +4865,39 @@ function updateBlackHole(dt) {
         bh.gravityRadius = BH_GRAVITY_RADIUS + bh.mass * 15;
         bh.strength = BH_STRENGTH + bh.mass * 80;
         spawnPopParticles(c.x, c.y, c.color);
+        // Expanse: sand whirlpool spits out tiny shard fragments when swallowing
+        if (G.biomeOverride === 2 && G.circles.length < MAX_CIRCLES - 4) {
+          const ejectCount = 2 + Math.floor(Math.random() * 3); // 2-4 micro-slivers
+          for (let ej = 0; ej < ejectCount; ej++) {
+            const ejAngle = (ej / ejectCount) * Math.PI * 2 + Math.random() * 0.8;
+            const ejSpeed = 200 + Math.random() * 200;
+            const ejDist = bh.radius * 0.8 + Math.random() * 10;
+            const ejX = bh.x + Math.cos(ejAngle) * ejDist;
+            const ejY = bh.y + Math.sin(ejAngle) * ejDist;
+            const ejc = createCircle(ejX, ejY);
+            ejc.radius = BASE_CIRCLE_RADIUS * 0.07 * 0.7; // gen-5 scale, thinned
+            ejc.baseRadius = ejc.radius;
+            ejc.generation = 5;
+            ejc.superCell = false; ejc.spikeCount = 0; ejc.scCooldown = 999;
+            ejc.armored = false; ejc.armorHP = 0;
+            ejc.vx = Math.cos(ejAngle) * ejSpeed;
+            ejc.vy = Math.sin(ejAngle) * ejSpeed;
+            ejc.sharpShard = true;
+            ejc.shardAngle = ejAngle;
+            ejc.shardSpin = (Math.random() - 0.5) * 15;
+            ejc.shardSides = 3;
+            ejc.shardVariant = 1; // micro-sliver
+            ejc.spawnAnim = 0;
+            ejc.shrapnelImmune = 0.5; // brief immunity so they fly out visibly
+            G.circles.push(ejc);
+          }
+        }
         if (bh.mass >= BH_COLLAPSE_THRESHOLD) {
-          spawnFloatingText(bh.x, bh.y - 30, 'TAP TO COLLAPSE', '#e0a0ff', 1.2, { fontSize: 13 });
+          const bhTextCol = G.biomeOverride === 2 ? '#daa520' : '#e0a0ff';
+          spawnFloatingText(bh.x, bh.y - 30, 'TAP TO COLLAPSE', bhTextCol, 1.2, { fontSize: 13 });
         } else {
-          spawnFloatingText(bh.x, bh.y - 20, `${Math.floor(bh.mass)}/${BH_COLLAPSE_THRESHOLD}`, '#c080ff', 0.9, { fontSize: 11 });
+          const bhCountCol = G.biomeOverride === 2 ? '#d4920a' : '#c080ff';
+          spawnFloatingText(bh.x, bh.y - 20, `${Math.floor(bh.mass)}/${BH_COLLAPSE_THRESHOLD}`, bhCountCol, 0.9, { fontSize: 11 });
         }
       }
     }
@@ -4649,6 +5171,10 @@ function updateSuperBlackHole(dt) {
     c.vx += (-ny) * tangentStr;
     c.vy += (nx) * tangentStr;
 
+    // Spaghettification — DISABLED (ugly, revisit later)
+    // const sbhSpagZone = sbh.gravityRadius * 0.3;
+    // if (d < sbhSpagZone) { ... }
+
     // Swallow: orb reaches inner event horizon
     if (d < sbh.radius * SBH_SWALLOW_FRAC) {
       c.alive = false;
@@ -4802,6 +5328,9 @@ let pgeBeatAccum = 0;                       // accumulates time toward next beat
 let pgeBeatsSkipped = 0;                    // how many consecutive beats we've skipped
 const PGE_MIN_BEATS_BETWEEN = 6;           // minimum beats between PGE pulses (~4s at 90bpm)
 const PGE_MAX_BEATS_BETWEEN = 14;          // maximum beats between (~9.3s)
+// B3 Expanse uses much longer intervals — Sandfall is rare but dramatic
+const EXPANSE_PGE_MIN_BEATS = 30;          // ~20 seconds minimum between Sandfalls
+const EXPANSE_PGE_MAX_BEATS = 55;          // ~37 seconds maximum
 let pgeBeatsSinceLast = 0;                  // beats since last PGE fired
 
 function updateWhirlwind(dt) {
@@ -4901,6 +5430,12 @@ let abyssPressureWave = 0; // 0 = no wave, >0 = wave in progress
 let abyssBeatAccum = 0;
 let abyssBeatsSinceLast = 0;
 
+// B3 EXPANSE PGE — SANDFALL: periodic downward gravity pull toward ground
+let expanseSandfallActive = 0;   // >0 = sandfall in progress (seconds remaining)
+let expanseBeatAccum = 0;        // BPM-synced accumulator
+let expanseBeatsSinceLast = 0;   // beats since last PGE fired
+let expanseSandfallCooldown = 0; // >0 = post-sandfall spawn bias active (10s countdown)
+
 function updateAbyssalPressure(dt) {
   const isAbyss = G.biomeOverride >= 0 && SPECIAL_BIOMES[G.biomeOverride] && SPECIAL_BIOMES[G.biomeOverride].name === 'ABYSS';
   if (!isAbyss) return;
@@ -4956,6 +5491,87 @@ function updateAbyssalPressure(dt) {
     c.vx += Math.cos(currentAngle) * currentStr;
     c.vy += Math.sin(currentAngle) * currentStr * 0.3;
   }
+}
+
+// B3 EXPANSE PGE — SANDFALL: rare but dramatic downward gravity, orbs pile at bottom
+// Uses Expanse-specific timing (much rarer than B1/B2 PGEs) with severe force
+function updateExpanseSandfall(dt) {
+  if (G.biomeOverride !== 2) return; // Only in Expanse
+
+  const madness = getMadnessAmount();
+
+  // Count down post-sandfall cooldown (upper-area spawn bias stays active)
+  if (expanseSandfallCooldown > 0) {
+    expanseSandfallCooldown -= dt;
+    if (expanseSandfallCooldown < 0) expanseSandfallCooldown = 0;
+  }
+
+  // BPM-synced trigger — Expanse-specific long intervals (rare but dramatic)
+  expanseBeatAccum += dt;
+  if (expanseBeatAccum >= PGE_BEAT_SEC) {
+    expanseBeatAccum -= PGE_BEAT_SEC;
+    expanseBeatsSinceLast++;
+
+    if (expanseSandfallActive <= 0 && expanseBeatsSinceLast >= EXPANSE_PGE_MIN_BEATS) {
+      const beatsPast = expanseBeatsSinceLast - EXPANSE_PGE_MIN_BEATS;
+      const maxRange = EXPANSE_PGE_MAX_BEATS - EXPANSE_PGE_MIN_BEATS;
+      const fireChance = beatsPast >= maxRange ? 1.0 : 0.15 + 0.85 * (beatsPast / maxRange);
+      if (Math.random() < fireChance) {
+        const beatDur = 3 + madness * 3; // 3-6 beats (~2-4s) — longer than before
+        expanseSandfallActive = beatDur * PGE_BEAT_SEC;
+        expanseBeatsSinceLast = 0;
+        playSandfallSound();
+      }
+    }
+  }
+
+  if (expanseSandfallActive > 0) {
+    const maxDur = (3 + madness * 3) * PGE_BEAT_SEC;
+    expanseSandfallActive -= dt;
+
+    // When sandfall ends, start 10s cooldown for upper-area spawn bias
+    if (expanseSandfallActive <= 0) {
+      expanseSandfallActive = 0;
+      expanseSandfallCooldown = 10.0; // 10 seconds of biased spawning after sandfall
+    }
+
+    // Sine pulse envelope — ramps up, peaks, ramps down
+    const elapsed = maxDur - Math.max(0, expanseSandfallActive);
+    const waveStr = Math.sin(elapsed / maxDur * Math.PI);
+
+    const groundY = G.gameBottom || G.H; // bottom of visible play area
+
+    for (let i = 0; i < G.circles.length; i++) {
+      const c = G.circles[i];
+      if (c.popped || !c.alive) continue;
+
+      // --- Severe downward gravity force (130 base — nearly 3x original) ---
+      const sandMadMult = 0.7 + madness * 1.0; // 0.7x at 0%, 1.7x at 100%
+      const gravStr = waveStr * 130 * getMadnessPhysicsScale() * sandMadMult * dt;
+      c.vy += gravStr; // pure downward pull
+
+      // --- Ground collision (soft bounce) ---
+      const floorY = groundY - c.radius;
+      if (c.y > floorY) {
+        c.y = floorY;
+        if (c.vy > 0) {
+          c.vy *= -0.2;  // harder landing (lose 80% energy)
+          c.vx *= 0.80;  // stronger ground friction
+        }
+      }
+
+      // Horizontal sand scatter at high madness (sand shifts along ground)
+      if (madness > 0.3) {
+        const scatter = (madness - 0.3) * 12 * dt * waveStr;
+        c.vx += (Math.random() - 0.5) * scatter;
+      }
+    }
+  }
+}
+
+// Helper: is the Sandfall upper-area spawn bias currently active?
+function isExpanseSandfallSpawnBias() {
+  return G.biomeOverride === 2 && (expanseSandfallActive > 0 || expanseSandfallCooldown > 0);
 }
 
 function renderBlackHole(ctx) {
@@ -5057,6 +5673,95 @@ function renderBlackHole(ctx) {
       const pulseAlpha = 0.15 + 0.15 * Math.sin(pulseT);
       ctx.globalAlpha = alpha * pulseAlpha;
       ctx.strokeStyle = p.colors[0];
+      ctx.lineWidth = 2;
+      const pulseR = r * (1.5 + 0.3 * Math.sin(pulseT * 0.7));
+      ctx.beginPath();
+      ctx.arc(bh.x, bh.y, pulseR, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  } else if (G.biomeOverride === 2) {
+    // === EXPANSE: Sand Maelstrom — desert whirlpool ===
+    const spin = G.time * 2.0;
+    const sandColors = ['#d4920a','#b87333','#e8d5b0','#8b6914','#daa520'];
+
+    // Outer swirl field — spinning sand arc rings
+    for (let ring = 5; ring >= 1; ring--) {
+      const ringR = r * (0.5 + ring * 0.5);
+      const ringAlpha = alpha * 0.08 * (1 - ring * 0.12);
+      ctx.globalAlpha = Math.max(0, ringAlpha);
+      ctx.strokeStyle = sandColors[ring % sandColors.length];
+      ctx.lineWidth = 1.8 - ring * 0.15;
+      ctx.beginPath();
+      const segments = 3 + ring;
+      for (let s = 0; s < segments; s++) {
+        const startAngle = spin * (0.8 + ring * 0.25) + (s / segments) * Math.PI * 2;
+        const arcLen = Math.PI * (0.3 + 0.12 * ring);
+        ctx.arc(bh.x, bh.y, ringR, startAngle, startAngle + arcLen);
+        ctx.moveTo(bh.x + Math.cos(startAngle + arcLen + 0.3) * ringR, bh.y + Math.sin(startAngle + arcLen + 0.3) * ringR);
+      }
+      ctx.stroke();
+    }
+
+    // Dark vortex center — deep sand pit
+    ctx.globalAlpha = alpha * 0.85;
+    const vortexGrad = ctx.createRadialGradient(bh.x, bh.y, 0, bh.x, bh.y, r);
+    vortexGrad.addColorStop(0, '#1a0a00');
+    vortexGrad.addColorStop(0.4, '#2a1505');
+    vortexGrad.addColorStop(0.75, '#8b691440');
+    vortexGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = vortexGrad;
+    ctx.beginPath();
+    ctx.arc(bh.x, bh.y, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Sand dust particles spiraling around
+    if (bh.dust) {
+      for (let s = 0; s < bh.dust.length; s++) {
+        const d = bh.dust[s];
+        const spiralAngle = d.angle + spin * (1.0 + d.dist * 0.6);
+        const px = bh.x + Math.cos(spiralAngle) * d.dist * r * 1.2;
+        const py = bh.y + Math.sin(spiralAngle) * d.dist * r * 1.2;
+        ctx.globalAlpha = alpha * d.dist * 0.7;
+        ctx.fillStyle = sandColors[s % sandColors.length];
+        ctx.beginPath();
+        ctx.arc(px, py, d.size * 0.9, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Warm amber edge glow
+    ctx.globalAlpha = alpha * 0.25;
+    ctx.strokeStyle = '#d4920a';
+    ctx.lineWidth = 1.5 + Math.sin(spin * 0.4) * 0.5;
+    ctx.beginPath();
+    ctx.arc(bh.x, bh.y, r * 0.85, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Mass progress arc — amber
+    if (bh.mass > 0 && bh.mass < BH_COLLAPSE_THRESHOLD) {
+      const progress = bh.mass / BH_COLLAPSE_THRESHOLD;
+      const arcStart = -Math.PI / 2;
+      const arcEnd = arcStart + progress * Math.PI * 2;
+      ctx.globalAlpha = alpha * 0.7;
+      ctx.strokeStyle = '#daa520';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(bh.x, bh.y, r * 0.95, arcStart, arcEnd);
+      ctx.stroke();
+      ctx.globalAlpha = alpha * 0.1;
+      ctx.strokeStyle = '#8b6914';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(bh.x, bh.y, r * 0.95, arcEnd, arcStart + Math.PI * 2);
+      ctx.stroke();
+    }
+
+    // Collapse-ready pulse — golden
+    if (bh.collapseReady) {
+      const pulseT = bh.pulseTime * 3;
+      const pulseAlpha = 0.15 + 0.15 * Math.sin(pulseT);
+      ctx.globalAlpha = alpha * pulseAlpha;
+      ctx.strokeStyle = '#ffcc44';
       ctx.lineWidth = 2;
       const pulseR = r * (1.5 + 0.3 * Math.sin(pulseT * 0.7));
       ctx.beginPath();
@@ -5268,6 +5973,97 @@ function renderSuperBlackHole(ctx) {
       ctx.stroke();
       ctx.globalAlpha = alpha * pulseAlpha * 0.3;
       ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(sbh.x, sbh.y, pulseR * 1.4, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  } else if (G.biomeOverride === 2) {
+    // === EXPANSE: Supermassive Sand Maelstrom ===
+    const spin = G.time * 1.6;
+    const sandColors = ['#d4920a','#b87333','#e8d5b0','#8b6914','#daa520'];
+
+    // Wide spinning sand arc rings — 7 rings, dramatic scale
+    for (let ring = 7; ring >= 1; ring--) {
+      const ringR = r * (0.4 + ring * 0.7) + Math.sin(sbh.distortionPhase + ring * 1.5) * r * 0.1;
+      const ringAlpha = alpha * 0.06 * (1 - ring * 0.08);
+      ctx.globalAlpha = Math.max(0, ringAlpha);
+      ctx.strokeStyle = sandColors[ring % sandColors.length];
+      ctx.lineWidth = 2.0 - ring * 0.12;
+      ctx.beginPath();
+      const segments = 4 + ring;
+      for (let s = 0; s < segments; s++) {
+        const startAngle = spin * (0.7 + ring * 0.2) + (s / segments) * Math.PI * 2;
+        const arcLen = Math.PI * (0.25 + 0.1 * ring);
+        ctx.arc(sbh.x, sbh.y, ringR, startAngle, startAngle + arcLen);
+        ctx.moveTo(sbh.x + Math.cos(startAngle + arcLen + 0.4) * ringR, sbh.y + Math.sin(startAngle + arcLen + 0.4) * ringR);
+      }
+      ctx.stroke();
+    }
+
+    // Deep sand vortex center
+    ctx.globalAlpha = alpha * 0.92;
+    const vortexGrad = ctx.createRadialGradient(sbh.x, sbh.y, 0, sbh.x, sbh.y, r);
+    vortexGrad.addColorStop(0, '#0a0400');
+    vortexGrad.addColorStop(0.3, '#1a0a00');
+    vortexGrad.addColorStop(0.6, '#3a1f08');
+    vortexGrad.addColorStop(0.85, '#8b691450');
+    vortexGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = vortexGrad;
+    ctx.beginPath();
+    ctx.arc(sbh.x, sbh.y, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Sand accretion ring — warm amber glow
+    ctx.globalAlpha = alpha * 0.18;
+    ctx.globalCompositeOperation = 'lighter';
+    const accrGrad = ctx.createRadialGradient(sbh.x, sbh.y, r * 0.6, sbh.x, sbh.y, r * 1.4);
+    accrGrad.addColorStop(0, 'transparent');
+    accrGrad.addColorStop(0.4, '#d4920a60');
+    accrGrad.addColorStop(0.7, '#b8733340');
+    accrGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = accrGrad;
+    ctx.beginPath();
+    ctx.arc(sbh.x, sbh.y, r * 1.4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
+
+    // Sand dust particles spiraling in
+    if (sbh.dust) {
+      for (let s = 0; s < sbh.dust.length; s++) {
+        const d = sbh.dust[s];
+        const spiralAngle = d.angle + spin * (0.8 + d.dist * 0.5);
+        const px = sbh.x + Math.cos(spiralAngle) * d.dist * r * 1.8;
+        const py = sbh.y + Math.sin(spiralAngle) * d.dist * r * 1.8;
+        ctx.globalAlpha = alpha * d.dist * 0.6;
+        ctx.fillStyle = sandColors[s % sandColors.length];
+        ctx.beginPath();
+        ctx.arc(px, py, d.size * 1.1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Warm amber edge glow
+    ctx.globalAlpha = alpha * 0.35;
+    ctx.strokeStyle = '#daa520';
+    ctx.lineWidth = 2 + Math.sin(spin * 0.3) * 0.6;
+    ctx.beginPath();
+    ctx.arc(sbh.x, sbh.y, r * 0.85, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Collapse-ready pulse — golden sandstorm
+    if (sbh.collapseReady) {
+      const pulseT = sbh.pulseTime * 2.5;
+      const pulseAlpha = 0.2 + 0.2 * Math.sin(pulseT);
+      ctx.globalAlpha = alpha * pulseAlpha;
+      ctx.strokeStyle = '#ffcc44';
+      ctx.lineWidth = 3;
+      const pulseR = r * (1.8 + 0.5 * Math.sin(pulseT * 0.6));
+      ctx.beginPath();
+      ctx.arc(sbh.x, sbh.y, pulseR, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.globalAlpha = alpha * pulseAlpha * 0.3;
+      ctx.strokeStyle = '#ffe8a0';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.arc(sbh.x, sbh.y, pulseR * 1.4, 0, Math.PI * 2);
@@ -5504,23 +6300,10 @@ function updateMiniBlackHoles(dt) {
       c.vx += (-ny) * tangent;
       c.vy += (nx) * tangent;
 
-      // Spaghettification — stretch orbs toward the black hole
-      // Closer = more stretch. Max stretch at d < gravityRadius * 0.3
-      const spaghettiZone = mbh.gravityRadius * 0.6;
-      if (d < spaghettiZone) {
-        const spaghettiT = 1 - (d / spaghettiZone); // 0 at edge, 1 at center
-        const stretchAmount = 1 + spaghettiT * spaghettiT * 1.8; // max 2.8× elongation
-        const squashAmount = 1 / Math.sqrt(stretchAmount);       // volume-preserving squash
-        c.stretchX = stretchAmount;
-        c.stretchY = squashAmount;
-        c.stretchAngle = Math.atan2(dy, dx); // stretch TOWARD the black hole
-      } else {
-        // Gentle return to normal outside spaghetti zone
-        if (c.stretchX > 1.01) {
-          c.stretchX += (1 - c.stretchX) * dt * 4;
-          c.stretchY += (1 - c.stretchY) * dt * 4;
-        }
-      }
+      // Spaghettification — DISABLED (ugly, revisit later)
+      // const spaghettiZone = mbh.gravityRadius * 0.6;
+      // if (d < spaghettiZone) { ... }
+      // Relaxation handled by centralized pass before BH updates
 
       // Swallow only if orb somehow hits dead center (very unlikely at high speed)
       if (d < 3) {
@@ -5826,8 +6609,8 @@ function updateDelayedBlast(dt) {
     if (d > 2) {
       const dx = db.centerX - c.x;
       const dy = db.centerY - c.y;
-      c.x += (dx / d) * pullForce * G.rawDt;
-      c.y += (dy / d) * pullForce * G.rawDt;
+      c.x += (dx / d) * pullForce * G.dt;
+      c.y += (dy / d) * pullForce * G.dt;
     }
   }
 
@@ -7876,17 +8659,200 @@ function checkLevelUp() {
   }
 }
 
+// Power-up icon renderer — canvas vector icons for each upgrade
+function renderUpgradeIcon(ctx, key, x, y, size) {
+  const s = size * 0.4;  // effective drawing radius
+  const lw = size * 0.06;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.lineWidth = lw;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  switch (key) {
+    case 'novaRadius': {
+      // 8-pointed starburst with center dot
+      for (let i = 0; i < 8; i++) {
+        const a = (i / 8) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(a) * s * 0.25, Math.sin(a) * s * 0.25);
+        ctx.lineTo(Math.cos(a) * s, Math.sin(a) * s);
+        ctx.stroke();
+      }
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.12, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    }
+    case 'echoBurst': {
+      // 3 concentric ripple rings
+      for (let i = 1; i <= 3; i++) {
+        ctx.beginPath();
+        ctx.arc(0, 0, s * i * 0.3, 0, Math.PI * 2);
+        ctx.globalAlpha = 1.0 - i * 0.25;
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      break;
+    }
+    case 'gravityWell': {
+      // Spiral inward to center dot
+      ctx.beginPath();
+      for (let t = 0; t < Math.PI * 4; t += 0.1) {
+        const r = s * (1 - t / (Math.PI * 4.5));
+        const px = Math.cos(t) * r;
+        const py = Math.sin(t) * r;
+        t === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.08, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    }
+    case 'volatileOrbs': {
+      // Circle with lightning bolt
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.85, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-s * 0.15, -s * 0.5);
+      ctx.lineTo(-s * 0.05, -s * 0.08);
+      ctx.lineTo(s * 0.15, -s * 0.12);
+      ctx.lineTo(-s * 0.05, s * 0.08);
+      ctx.lineTo(s * 0.05, s * 0.5);
+      ctx.lineTo(-s * 0.1, s * 0.12);
+      ctx.stroke();
+      break;
+    }
+    case 'aftershock': {
+      // Seismic zig-zag with arcs
+      ctx.beginPath();
+      ctx.moveTo(-s, 0);
+      ctx.lineTo(-s * 0.6, -s * 0.35);
+      ctx.lineTo(-s * 0.3, s * 0.25);
+      ctx.lineTo(0, -s * 0.4);
+      ctx.lineTo(s * 0.3, s * 0.3);
+      ctx.lineTo(s * 0.6, -s * 0.2);
+      ctx.lineTo(s, 0);
+      ctx.stroke();
+      // Small arcs below
+      ctx.beginPath();
+      ctx.arc(0, s * 0.3, s * 0.5, Math.PI * 0.15, Math.PI * 0.85);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(0, s * 0.4, s * 0.75, Math.PI * 0.2, Math.PI * 0.8);
+      ctx.stroke();
+      break;
+    }
+    case 'fission': {
+      // Circle splitting into 2 fragments with motion lines
+      ctx.beginPath();
+      ctx.arc(-s * 0.3, 0, s * 0.35, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(s * 0.35, -s * 0.2, s * 0.22, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(s * 0.3, s * 0.25, s * 0.18, 0, Math.PI * 2);
+      ctx.stroke();
+      // Motion lines
+      for (let i = 0; i < 3; i++) {
+        const ly = -s * 0.3 + i * s * 0.3;
+        ctx.beginPath();
+        ctx.moveTo(s * 0.6, ly);
+        ctx.lineTo(s * 0.9, ly);
+        ctx.stroke();
+      }
+      break;
+    }
+    case 'chainFuel': {
+      // Two interlocking chain ovals with spark
+      ctx.beginPath();
+      ctx.ellipse(-s * 0.22, 0, s * 0.35, s * 0.55, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.ellipse(s * 0.22, 0, s * 0.35, s * 0.55, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      // Spark
+      ctx.beginPath();
+      ctx.arc(0, -s * 0.6, s * 0.08, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    }
+    case 'density': {
+      // 3 concentric filled/stroked rings (heavy mass)
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.9, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.6, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.3, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    }
+    case 'bombCharges': {
+      // Equilateral triangle inside circle with center dot
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.85, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      for (let i = 0; i < 3; i++) {
+        const a = (i / 3) * Math.PI * 2 - Math.PI / 2;
+        const px = Math.cos(a) * s * 0.65;
+        const py = Math.sin(a) * s * 0.65;
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(0, 0, s * 0.1, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    }
+    case 'attractorField': {
+      // 4 arrows pointing inward
+      const dirs = [[0, -1], [1, 0], [0, 1], [-1, 0]];
+      for (const [dx, dy] of dirs) {
+        const ox = dx * s * 0.8, oy = dy * s * 0.8;
+        const ix = dx * s * 0.25, iy = dy * s * 0.25;
+        ctx.beginPath();
+        ctx.moveTo(ox, oy);
+        ctx.lineTo(ix, iy);
+        ctx.stroke();
+        // Arrowhead
+        const perpX = -dy, perpY = dx;
+        const headLen = s * 0.2;
+        ctx.beginPath();
+        ctx.moveTo(ix, iy);
+        ctx.lineTo(ix + (dx * 0.5 + perpX * 0.5) * headLen, iy + (dy * 0.5 + perpY * 0.5) * headLen);
+        ctx.moveTo(ix, iy);
+        ctx.lineTo(ix + (dx * 0.5 - perpX * 0.5) * headLen, iy + (dy * 0.5 - perpY * 0.5) * headLen);
+        ctx.stroke();
+      }
+      break;
+    }
+  }
+  ctx.restore();
+}
+
 function showUpgradePanel() {
   const available = Object.keys(UPGRADE_DEFS).filter(k => G.upgrades[k] < UPGRADE_DEFS[k].maxLvl);
   if (available.length === 0) return;
 
-  // Pick ONE random upgrade — no choice, fate decides
-  const pickedKey = available[Math.floor(Math.random() * available.length)];
-  const def = UPGRADE_DEFS[pickedKey];
-  const nextLvl = G.upgrades[pickedKey] + 1;
+  // Pick upgrade(s) — perkChoiceCount controls how many options the player sees
+  const numPicks = Math.min(perkChoiceCount, available.length);
+  const shuffled = available.slice().sort(() => Math.random() - 0.5);
+  const picks = shuffled.slice(0, numPicks);
 
-  // Auto level-up: apply immediately with floating text
+  // Auto level-up: apply first pick immediately with floating text
   if (autoLevelUp) {
+    const pickedKey = picks[0];
+    const def = UPGRADE_DEFS[pickedKey];
     G.pendingLevelUp = true;
     selectUpgrade(pickedKey);
     const cx = ((G.gameLeft || 0) + (G.gameRight || G.W)) * 0.5;
@@ -7899,13 +8865,23 @@ function showUpgradePanel() {
   const container = document.getElementById('upgrade-choices');
   container.innerHTML = '';
 
-  // Single upgrade card — tap to accept
-  const card = document.createElement('div');
-  card.className = 'upgrade-card';
-  card.innerHTML = `<div class="name">${def.name}</div><div class="level">Level ${G.upgrades[pickedKey]} → ${nextLvl}</div><div class="desc">${def.desc(nextLvl)}</div>`;
-  card.addEventListener('click', (e) => { e.stopPropagation(); selectUpgrade(pickedKey); });
-  card.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); selectUpgrade(pickedKey); });
-  container.appendChild(card);
+  // Build card(s) — 1 card if fate mode, 2 cards if player-choice mode
+  for (let pi = 0; pi < picks.length; pi++) {
+    const pickedKey = picks[pi];
+    const def = UPGRADE_DEFS[pickedKey];
+    const nextLvl = G.upgrades[pickedKey] + 1;
+    const card = document.createElement('div');
+    card.className = 'upgrade-card';
+    const iconCanvas = document.createElement('canvas');
+    const iconSize = 48;
+    iconCanvas.width = iconSize; iconCanvas.height = iconSize;
+    const iconCtx = iconCanvas.getContext('2d');
+    renderUpgradeIcon(iconCtx, pickedKey, iconSize / 2, iconSize / 2, iconSize);
+    card.innerHTML = `<div style="display:flex;align-items:center;gap:14px;"><img src="${iconCanvas.toDataURL()}" width="${iconSize}" height="${iconSize}" style="flex-shrink:0;opacity:0.9;" /><div><div class="name">${def.name}</div><div class="level">Level ${G.upgrades[pickedKey]} → ${nextLvl}</div><div class="desc">${def.desc(nextLvl)}</div></div></div>`;
+    card.addEventListener('click', (e) => { e.stopPropagation(); selectUpgrade(pickedKey); });
+    card.addEventListener('touchend', (e) => { e.stopPropagation(); e.preventDefault(); selectUpgrade(pickedKey); });
+    container.appendChild(card);
+  }
 
   document.getElementById('upgrade-panel').style.display = 'flex';
 }
@@ -7950,11 +8926,15 @@ function render() {
   // Layer 1: Background gradient (rendered at full canvas, before zoom)
   renderBackground(ctx, W, H);
 
+  // ═══ DEPTH: BG — deep background, behind everything ═══
   // Layer 1c: The Watcher — cosmic entity behind the field (madness-tied, full-canvas, before zoom)
   renderWatcher(ctx, W, H);
 
   // Layer 1d: Galaxy background — deep space nebula on top of Watcher (default biome only)
   renderGalaxyBackground(ctx, W, H);
+
+  // Layer 1e: EXPANSE background image — desert landscape (before zoom, WT-tied)
+  renderExpanseBgImage(ctx, W, H);
 
   // Zoom: scale around screen center (applies to all game content)
   if (G.zoomLevel !== 1) {
@@ -7971,6 +8951,7 @@ function render() {
     ctx.translate(sx, sy);
   }
 
+  // ═══ DEPTH: BG-mid — between background and shadow orb tier ═══
   // Layer 1b: Nebula clouds (ambient color blobs)
   renderNebulaClouds(ctx, W, H);
 
@@ -7983,6 +8964,10 @@ function render() {
   // Layer 1c2: Void Stars — the other side bleeds through at mid-high WT
   renderVoidStars(ctx, W, H);
 
+  // Layer 1c3: BG-mid starfield — 200 subtle blinking 1px stars
+  renderBgMidStars(ctx, W, H);
+
+  // ═══ DEPTH: Mid — shadow orbs and hazards ═══
   // Layer 2: Persistent paint splats (BLOOM)
   renderPaintSplats(ctx);
 
@@ -8024,6 +9009,7 @@ function render() {
   // Layer 5d: Shadow balls — dark phantom orbs behind normal circles
   renderShadowBalls(ctx);
 
+  // ═══ DEPTH: Top — main game layer (orbs, explosions, lighting, UI) ═══
   // Layer 6: Circles
   renderCircles(ctx);
 
@@ -8041,6 +9027,9 @@ function render() {
 
   // Layer 8: Foreground particles
   renderParticleLayer(ctx, 'fg');
+
+  // Layer 8c: ABYSS underwater caustic light overlay (foreground shimmer)
+  renderAbyssCaustics(ctx, W, H);
 
   // Layer 8b: TESTLEVEL lighting engine — darkness, point light at cursor, orb shadows
   renderTestLevelLighting(ctx, W, H);
@@ -8277,6 +9266,13 @@ galaxyBgImg.src = 'images/BG_Galax.jpg';
 let galaxyBgImgLoaded = false;
 galaxyBgImg.onload = () => { galaxyBgImgLoaded = true; };
 
+// EXPANSE (B3) background image — desert landscape, WT-tied opacity
+const expanseBgImg = new Image();
+expanseBgImg.src = 'Images/BG_B3.jpeg';
+let expanseBgLoaded = false;
+expanseBgImg.onload = () => { expanseBgLoaded = true; };
+let expanseBgOpacity = 0; // smoothly interpolated
+
 const watcherAbyssImg = new Image();
 watcherAbyssImg.src = 'images/Watchr_2.jpeg';
 let watcherAbyssLoaded = false;
@@ -8353,9 +9349,9 @@ function renderGalaxyBackground(ctx, W, H) {
   const hasImg = galaxyBgImgLoaded;
   if (!hasVideo && !hasImg) return;
 
-  // Only in default biome (not ABYSS)
-  const isAbyss = G.biomeOverride >= 0 && SPECIAL_BIOMES[G.biomeOverride] && SPECIAL_BIOMES[G.biomeOverride].name === 'ABYSS';
-  if (isAbyss) {
+  // Only in default biome (not ABYSS or EXPANSE)
+  const isSpecialBiome = G.biomeOverride >= 0;
+  if (isSpecialBiome) {
     galaxyBgOpacity = Math.max(0, galaxyBgOpacity - G.dt * 2.0);
     if (galaxyBgOpacity < 0.001) return;
   } else {
@@ -8437,6 +9433,46 @@ function renderGalaxyBackground(ctx, W, H) {
   ctx.restore();
 }
 
+// EXPANSE (B3) background image — desert landscape behind all gameplay
+// Opacity tied to WT%: invisible at 0%, fades in from 5%, peaks at ~18% opacity
+function renderExpanseBgImage(ctx, W, H) {
+  if (!expanseBgLoaded) return;
+  const isExpanse = G.biomeOverride === 2;
+  if (isExpanse) {
+    const madness = getMadnessAmount();
+    // WT-tied: start at 5%, ramp to full by 50%, peak opacity 18%
+    const targetOpacity = madness < 0.05 ? 0.04 :
+      Math.min(0.18, 0.04 + (madness - 0.05) / 0.45 * 0.14);
+    const fadeSpeed = expanseBgOpacity > targetOpacity ? 2.5 : 0.4;
+    expanseBgOpacity += (targetOpacity - expanseBgOpacity) * G.dt * fadeSpeed;
+  } else {
+    expanseBgOpacity = Math.max(0, expanseBgOpacity - G.dt * 2.0);
+    if (expanseBgOpacity < 0.001) return;
+  }
+  if (expanseBgOpacity < 0.001) return;
+
+  ctx.save();
+  const w = G.watcher;
+  // Slow breathing + subtle parallax drift like Watcher
+  const breathe = 1 + Math.sin((w.breathPhase || G.time) * 0.3) * 0.004;
+  const driftX = Math.sin((w.breathPhase || G.time) * 0.08) * 3;
+  const driftY = Math.cos((w.breathPhase || G.time) * 0.06) * 2;
+
+  const imgW = expanseBgImg.width;
+  const imgH = expanseBgImg.height;
+  const coverScale = Math.max(W / imgW, H / imgH) * 1.05 * breathe;
+  const drawW = imgW * coverScale;
+  const drawH = imgH * coverScale;
+  const drawX = (W - drawW) / 2 + driftX;
+  const drawY = (H - drawH) / 2 + driftY;
+
+  ctx.globalAlpha = expanseBgOpacity;
+  ctx.globalCompositeOperation = 'screen';
+  ctx.drawImage(expanseBgImg, drawX, drawY, drawW, drawH);
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.restore();
+}
+
 // Galaxy stars — persistent twinkle field
 const galaxyStars = [];
 for (let gs = 0; gs < 80; gs++) {
@@ -8479,6 +9515,62 @@ for (let fs = 0; fs < FIELD_STAR_COUNT; fs++) {
     phase: Math.random() * Math.PI * 2,
     colorIdx: Math.floor(Math.random() * 4) // 0=white, 1=blue, 2=gold, 3=violet
   });
+}
+
+// BG-mid starfield — 200 subtle blinking 1px stars between background and shadow layer
+const BG_MID_STAR_COUNT = 200;
+const bgMidStars = [];
+for (let i = 0; i < BG_MID_STAR_COUNT; i++) {
+  bgMidStars.push({
+    x: Math.random(), y: Math.random(),        // normalized 0-1
+    vx: (Math.random() - 0.5) * 0.0005,
+    vy: (Math.random() - 0.5) * 0.0004,
+    phase: Math.random() * Math.PI * 2,
+    blinkSpeed: 0.6 + Math.random() * 2.0,
+    bright: 0.3 + Math.random() * 0.7
+  });
+}
+
+function updateBgMidStars(dt, W, H) {
+  for (let i = 0; i < bgMidStars.length; i++) {
+    const s = bgMidStars[i];
+    // Gentle drift
+    s.x += s.vx * dt;
+    s.y += s.vy * dt;
+    // Cursor gravity removed — was causing clumping even at 25%
+    // PGE (whirlwind) reaction — mild tangential drift matching the orb swirl
+    if (whirlwindActive > 0) {
+      const pcx = 0.5, pcy = 0.5;
+      const pdx = s.x - pcx, pdy = s.y - pcy;
+      const pd = Math.sqrt(pdx * pdx + pdy * pdy) + 0.01;
+      const swirlStr = 0.002 * dt;
+      s.vx += (-pdy / pd * whirlwindDir) * swirlStr;
+      s.vy += (pdx / pd * whirlwindDir) * swirlStr;
+    }
+    // Velocity damping
+    s.vx *= (1 - dt * 0.25);
+    s.vy *= (1 - dt * 0.25);
+    // Wrap at edges
+    if (s.x < -0.02) s.x += 1.04;
+    if (s.x > 1.02) s.x -= 1.04;
+    if (s.y < -0.02) s.y += 1.04;
+    if (s.y > 1.02) s.y -= 1.04;
+  }
+}
+
+function renderBgMidStars(ctx, W, H) {
+  for (let i = 0; i < bgMidStars.length; i++) {
+    const s = bgMidStars[i];
+    const sx = s.x * W;
+    const sy = s.y * H;
+    const twinkle = 0.3 + 0.7 * Math.abs(Math.sin(G.time * s.blinkSpeed + s.phase));
+    const alpha = 0.04 + s.bright * twinkle * 0.11;
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#fff';
+    const sz = 1.5 + s.bright;
+    ctx.fillRect(sx - sz * 0.5, sy - sz * 0.5, sz, sz);
+  }
+  ctx.globalAlpha = 1;
 }
 
 function updateFieldStars(dt, W, H) {
@@ -9501,10 +10593,124 @@ function renderAbyssSC(ctx, c, drawR) {
   }
 }
 
+// Tidal mesh deformation — per-vertex teardrop shape for BH spaghettification
+// Draws a smooth deformed orb using quadratic bezier curves through midpoints.
+// At tidalT=0 produces identical ellipse to ctx.scale(); as tidalT increases → teardrop.
+function drawTidalOrb(ctx, cx, cy, r, sx, sy, angle, tidal) {
+  const N = 20;
+  const pts = [];
+  for (let i = 0; i < N; i++) {
+    const theta = (i / N) * Math.PI * 2;
+    const phi = theta - angle;
+    const cp = Math.cos(phi), sp = Math.sin(phi);
+    // Elliptical radius at this angle (polar form of ellipse)
+    const denom = Math.sqrt(sy * sy * cp * cp + sx * sx * sp * sp);
+    const eR = r * sx * sy / (denom || 0.001);
+    // Tidal displacement: BH-facing side bulges, far side compresses
+    const tidalFactor = cp > 0 ? cp * cp : cp * 0.3;
+    const tidalDisp = tidal * r * 0.35 * tidalFactor;
+    const fR = eR + tidalDisp;
+    pts.push({ x: cx + Math.cos(theta) * fR, y: cy + Math.sin(theta) * fR });
+  }
+  // Smooth closed bezier curve through midpoints (Catmull-Rom style)
+  ctx.beginPath();
+  const last = pts[N - 1], first = pts[0];
+  ctx.moveTo((last.x + first.x) * 0.5, (last.y + first.y) * 0.5);
+  for (let i = 0; i < N; i++) {
+    const next = pts[(i + 1) % N];
+    ctx.quadraticCurveTo(pts[i].x, pts[i].y,
+      (pts[i].x + next.x) * 0.5, (pts[i].y + next.y) * 0.5);
+  }
+  ctx.closePath();
+}
+
+// ─── LT Inner Shadow (Photoshop/Figma style) ───
+// Applies directional inner shadow per-orb by clipping to the just-filled body path
+// and painting an offset radial gradient: transparent on the lit side (toward cursor),
+// dark on the far side. Follows tidal/velocity deformation automatically via clip.
+function applyLtInnerShadow(ctx, cx, cy, r) {
+  if (G.biomeOverride !== 1 || !G._ltR || r < 4) return;
+
+  // Direction from orb to light (cursor = light source, world coords)
+  const dx = G.cursorX - cx;
+  const dy = G.cursorY - cy;
+  const dist = Math.sqrt(dx * dx + dy * dy) + 1;
+  const nx = dx / dist;
+  const ny = dy / dist;
+
+  ctx.save();
+  ctx.clip();  // clips to current path (orb body just filled)
+
+  // Gradient center offset toward lit side
+  const offset = r * 0.45;
+  const gcx = cx + nx * offset;
+  const gcy = cy + ny * offset;
+  const outerR = r * 1.4;
+
+  const grad = ctx.createRadialGradient(gcx, gcy, 0, gcx, gcy, outerR);
+  grad.addColorStop(0,    'rgba(0,0,0,0)');
+  grad.addColorStop(0.30, 'rgba(0,0,0,0)');
+  grad.addColorStop(0.50, 'rgba(0,0,0,0.08)');
+  grad.addColorStop(0.65, 'rgba(0,0,0,0.19)');
+  grad.addColorStop(0.78, 'rgba(0,0,0,0.33)');
+  grad.addColorStop(0.88, 'rgba(0,0,0,0.44)');
+  grad.addColorStop(1.00, 'rgba(0,0,0,0.55)');
+
+  ctx.fillStyle = grad;
+  ctx.fillRect(cx - r * 3, cy - r * 3, r * 6, r * 6);
+
+  ctx.restore();
+}
+
+// ── Depth shadow projection: high orbs cast soft shadows onto low orb plane ──
+function renderDepthShadows(ctx) {
+  if (G.biomeOverride !== 1) return;
+  const wt = getMadnessAmount();
+  const heightScale = 0.02 + wt * 0.10;  // 0.02 at WT0, 0.07 at WT50, 0.12 at WT100
+  const lx = G.cursorX, ly = G.cursorY;
+  const hasCursor = lx > -500 && ly > -500;
+  const lightR = G._ltR || 1400;
+
+  ctx.save();
+  ctx.filter = 'blur(8px)';
+
+  for (let i = 0; i < G.circles.length; i++) {
+    const c = G.circles[i];
+    if (!c.alive || c.popped || c.depth !== 1) continue;
+
+    const dx = c.x - lx, dy = c.y - ly;
+    const d = Math.sqrt(dx * dx + dy * dy) + 1;
+
+    // Shadow position = orb + offset away from light
+    const shadowX = c.x + dx * heightScale;
+    const shadowY = c.y + dy * heightScale;
+
+    // Alpha: stronger near light, fades far
+    const proximity = Math.max(0, 1 - d / lightR);
+    const alpha = hasCursor ? 0.05 + proximity * 0.30 : 0.08;
+
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#000';
+    ctx.beginPath();
+    ctx.arc(shadowX, shadowY, c.radius * 1.15, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
 function renderCircles(ctx) {
+  // LT biome: two-pass depth rendering (low orbs → depth shadows → high orbs)
+  const _ltDepth = G.biomeOverride === 1;
+  const _passes = _ltDepth ? 3 : 1;
+  for (let _pass = 0; _pass < _passes; _pass++) {
+    // Pass 1 (index 1): render projected shadows from high orbs
+    if (_ltDepth && _pass === 1) { renderDepthShadows(ctx); continue; }
+    const _depthFilter = _ltDepth ? (_pass === 0 ? 0 : 1) : -1;
+
   for (let i = 0; i < G.circles.length; i++) {
     const c = G.circles[i];
     if (c.popped || !c.alive) continue;
+    if (_depthFilter >= 0 && c.depth !== _depthFilter) continue;
 
     let pulse = 1 + Math.sin(c.pulsePhase) * (c.superCell ? 0.15 : 0.08);
     // 100 BPM beat pulse — subtle spike on selected orbs at high madness
@@ -9514,7 +10720,7 @@ function renderCircles(ctx) {
       pulse += beatPulse;
     }
     const r = c.radius * pulse;
-    const spawnScale = c.spawnAnim > 0 ? (1 - c.spawnAnim) : 1;
+    const spawnScale = c.spawnAnim > 0 ? (1 - c.spawnAnim * c.spawnAnim) : 1;
     const drawR = r * spawnScale;
     if (drawR < 1) continue;
 
@@ -9537,7 +10743,7 @@ function renderCircles(ctx) {
       const lDist = Math.sqrt(ldx * ldx + ldy * ldy);
       const ll = Math.max(0, 1 - lDist / G._ltR); // 1.0 at center, 0.0 at edge
       // Gradual: near light (ll>0.3) boost up to +0.25, far (ll<0.3) desaturate down to -0.30
-      const satShift = ll > 0.3 ? (ll - 0.3) * 0.357 : -(1 - ll / 0.3) * 0.30;
+      const satShift = ll > 0.3 ? (ll - 0.3) * 0.50 : -(1 - ll / 0.3) * 0.40;
       orbColor = adjustSaturationHex(orbColor, satShift);
     }
 
@@ -9605,6 +10811,28 @@ function renderCircles(ctx) {
         ctx.beginPath();
         ctx.arc(0, 0, drawR, 0, Math.PI * 2);
         ctx.fill();
+        // --- Merge eye fix: render eye on merging orb at high madness ---
+        const _mergeIsAbyss = G.biomeOverride >= 0 && SPECIAL_BIOMES[G.biomeOverride] &&
+                              SPECIAL_BIOMES[G.biomeOverride].name === 'ABYSS';
+        const _mergeIsExpanse = G.biomeOverride === 2;
+        if (!_mergeIsAbyss && !_mergeIsExpanse) {
+          const _mMad = getMadnessAmount();
+          const _mEi = _mMad < 0.1 ? 0 : Math.min(1, (_mMad - 0.1) / 0.9);
+          if (_mEi > 0.2 && drawR > 4) {
+            const _mFade = (1 - mEase) * _mEi;  // fade eye as orb merges
+            ctx.globalAlpha = _mFade * 0.6;
+            ctx.fillStyle = '#d8d0c8';
+            const eyeR = drawR * (0.25 + _mEi * 0.15);
+            ctx.beginPath();
+            ctx.arc(0, 0, eyeR, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = _mFade * 0.85;
+            ctx.fillStyle = '#111';
+            ctx.beginPath();
+            ctx.arc(0, 0, eyeR * 0.4, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
         ctx.restore();
       } else {
         // No target — simple circle fallback
@@ -9612,6 +10840,28 @@ function renderCircles(ctx) {
         ctx.beginPath();
         ctx.arc(c.x, c.y, drawR, 0, Math.PI * 2);
         ctx.fill();
+        // --- Merge eye fix (no-target fallback) ---
+        const _mergeIsAbyss2 = G.biomeOverride >= 0 && SPECIAL_BIOMES[G.biomeOverride] &&
+                               SPECIAL_BIOMES[G.biomeOverride].name === 'ABYSS';
+        const _mergeIsExpanse2 = G.biomeOverride === 2;
+        if (!_mergeIsAbyss2 && !_mergeIsExpanse2) {
+          const _mMad2 = getMadnessAmount();
+          const _mEi2 = _mMad2 < 0.1 ? 0 : Math.min(1, (_mMad2 - 0.1) / 0.9);
+          if (_mEi2 > 0.2 && drawR > 4) {
+            const _mFade2 = (1 - mEase) * _mEi2;
+            ctx.globalAlpha = _mFade2 * 0.6;
+            ctx.fillStyle = '#d8d0c8';
+            const eyeR2 = drawR * (0.25 + _mEi2 * 0.15);
+            ctx.beginPath();
+            ctx.arc(c.x, c.y, eyeR2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = _mFade2 * 0.85;
+            ctx.fillStyle = '#111';
+            ctx.beginPath();
+            ctx.arc(c.x, c.y, eyeR2 * 0.4, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
       }
       ctx.restore();
       continue;
@@ -9666,11 +10916,16 @@ function renderCircles(ctx) {
       }
     }
 
-    // Spaghettification — MBH tidal stretch overrides velocity deformation when active
+    // Spaghettification — tidal mesh deformation (body drawn per-vertex in drawTidalOrb)
+    let hasTidalDeform = false;
     if (c.stretchX && c.stretchX > 1.05) {
+      hasTidalDeform = true;
+      // Mild scale for detail layers (eyes, armor rings) — body uses drawTidalOrb() instead
+      const mildSx = 1 + (c.stretchX - 1) * 0.25;
+      const mildSy = 1 + (c.stretchY - 1) * 0.25;
       ctx.translate(c.x, c.y);
       ctx.rotate(c.stretchAngle || 0);
-      ctx.scale(c.stretchX, c.stretchY);
+      ctx.scale(mildSx, mildSy);
       ctx.rotate(-(c.stretchAngle || 0));
       ctx.translate(-c.x, -c.y);
     } else {
@@ -10109,83 +11364,152 @@ function renderCircles(ctx) {
         ctx.arc(c.x, c.y, drawR, 0, Math.PI * 2);
         ctx.fill();
       } else if (isExpanseOrb && drawR > 2) {
-        // === EXPANSE ORB: Weathered stone-like ancient orbs ===
         const savedAlpha = ctx.globalAlpha || 1;
         const seed = c.id * 5.17;
 
-        // Rough-edged polygon — ancient/eroded, not perfectly round
-        const sides = 8 + (c.id % 5); // 8-12 sides per orb, seeded
-        const buildExpansePath = () => {
+        if (c.sharpShard) {
+          // === EXPANSE SHARP SHARD: Angular spinning fragment ===
+          // Variant 0 = default jagged (3-5 sides), Variant 1 = micro-sliver (needle), Variant 2 = pebble chip (rounded)
+          const shVariant = c.shardVariant || 0;
+          const shAngle = c.shardAngle || 0;
+          ctx.save();
+          ctx.translate(c.x, c.y);
+          ctx.rotate(shAngle);
           ctx.beginPath();
-          for (let p = 0; p <= sides; p++) {
-            const angle = (p / sides) * Math.PI * 2;
-            // Subtle radial variation seeded by orb ID — looks weathered
-            const wobble = 1.0
-              - 0.04 * Math.sin(angle * 3 + seed)
-              - 0.03 * Math.sin(angle * 5 + seed * 2.3)
-              - 0.02 * Math.sin(angle * 7 + seed * 0.7);
-            const r = drawR * wobble;
-            const ax = c.x + Math.cos(angle) * r;
-            const ay = c.y + Math.sin(angle) * r;
-            if (p === 0) ctx.moveTo(ax, ay); else ctx.lineTo(ax, ay);
+
+          if (shVariant === 1) {
+            // === MICRO-SLIVER: Needle-like, always 3 sides, elongated ===
+            const needleElongates = [2.0, 0.45, 1.1]; // long tip, narrow base, medium tail
+            for (let sp = 0; sp <= 3; sp++) {
+              const a = (sp / 3) * Math.PI * 2;
+              const jag = 0.85 + ((c.id * 7 + sp * 13) % 7) / 7 * 0.3; // 0.85-1.15 (tight)
+              const r = drawR * jag * needleElongates[sp % 3];
+              if (sp === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+              else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+            }
+          } else if (shVariant === 2) {
+            // === PEBBLE CHIP: Rounded, 5-6 sides, minimal jag variance ===
+            const pebbleSides = 5 + (c.id % 2); // 5 or 6 sides
+            for (let sp = 0; sp <= pebbleSides; sp++) {
+              const a = (sp / pebbleSides) * Math.PI * 2;
+              const jag = 0.88 + ((c.id * 7 + sp * 13) % 11) / 11 * 0.24; // 0.88-1.12 (smooth)
+              const elongate = 1.0 + ((sp % 2 === 0) ? 0.08 : -0.06); // nearly round
+              const r = drawR * jag * elongate;
+              if (sp === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+              else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+            }
+          } else {
+            // === DEFAULT SHARP SHARD: Original jagged polygon ===
+            const shSides = c.shardSides || (3 + (c.id % 3));
+            for (let sp = 0; sp <= shSides; sp++) {
+              const a = (sp / shSides) * Math.PI * 2;
+              const jag = 0.6 + ((c.id * 7 + sp * 13) % 11) / 11 * 0.8; // 0.6-1.4
+              const elongate = (sp % 2 === 0) ? 1.3 : 0.75; // alternating long/short = sharp points
+              const r = drawR * jag * elongate;
+              if (sp === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+              else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+            }
           }
+
           ctx.closePath();
-        };
-
-        // Base fill — warm ancient color
-        ctx.globalAlpha = savedAlpha;
-        ctx.fillStyle = orbColor;
-        buildExpansePath();
-        ctx.fill();
-
-        // Inner shadow — dark center for depth/weight (LOD 0-1)
-        if (lod <= 1 && drawR > 6) {
-          const innerGrad = ctx.createRadialGradient(c.x, c.y, drawR * 0.15, c.x, c.y, drawR * 0.85);
-          innerGrad.addColorStop(0, 'rgba(13,6,4,0.25)');
-          innerGrad.addColorStop(0.5, 'rgba(13,6,4,0.10)');
-          innerGrad.addColorStop(1, 'transparent');
-          ctx.globalAlpha = savedAlpha * 0.6;
-          ctx.fillStyle = innerGrad;
-          buildExpansePath();
+          // Fill — warm shard color (pebble chips get slightly paler tone)
+          ctx.globalAlpha = savedAlpha;
+          ctx.fillStyle = shVariant === 2 ? '#e8d5b0' : orbColor;
           ctx.fill();
-        }
-
-        // Edge highlight — faint warm rim light on one side (LOD 0 only)
-        if (lod === 0 && drawR > 8) {
-          const rimAngle = seed * 0.3; // consistent per-orb rim direction
-          const rimX = c.x + Math.cos(rimAngle) * drawR * 0.25;
-          const rimY = c.y + Math.sin(rimAngle) * drawR * 0.25;
-          const rimGrad = ctx.createRadialGradient(rimX, rimY, drawR * 0.3, c.x, c.y, drawR);
-          rimGrad.addColorStop(0, 'rgba(255,200,100,0.12)');
-          rimGrad.addColorStop(0.5, 'rgba(255,180,80,0.04)');
-          rimGrad.addColorStop(1, 'transparent');
-          ctx.globalAlpha = savedAlpha * 0.5;
-          ctx.fillStyle = rimGrad;
-          buildExpansePath();
-          ctx.fill();
-        }
-
-        // Surface cracks — faint dark lines suggesting age (LOD 0, large orbs only)
-        if (lod === 0 && drawR > 15) {
-          ctx.globalAlpha = savedAlpha * 0.12;
-          ctx.strokeStyle = '#1a0a00';
-          ctx.lineWidth = 0.6;
-          const crackCount = 2 + (c.id % 3);
-          for (let ci = 0; ci < crackCount; ci++) {
-            const cAngle = (ci / crackCount) * Math.PI * 2 + seed * 0.5;
-            const innerR = drawR * (0.1 + ((ci * 7 + c.id) % 5) * 0.08);
-            const outerR = drawR * (0.5 + ((ci * 3 + c.id) % 4) * 0.1);
-            ctx.beginPath();
-            ctx.moveTo(c.x + Math.cos(cAngle) * innerR, c.y + Math.sin(cAngle) * innerR);
-            const cpA = cAngle + ((c.id + ci) % 2 ? 0.3 : -0.3);
-            const cpR = (innerR + outerR) * 0.55;
-            ctx.quadraticCurveTo(
-              c.x + Math.cos(cpA) * cpR, c.y + Math.sin(cpA) * cpR,
-              c.x + Math.cos(cAngle + 0.15) * outerR, c.y + Math.sin(cAngle + 0.15) * outerR
-            );
+          // Edge highlight — thinner for slivers, thicker for pebble chips
+          if (drawR > 3) {
+            ctx.globalAlpha = savedAlpha * (shVariant === 2 ? 0.30 : 0.25);
+            ctx.strokeStyle = shVariant === 2 ? 'rgba(255,240,200,0.4)' : 'rgba(255,220,160,0.4)';
+            ctx.lineWidth = shVariant === 1 ? 0.4 : (shVariant === 2 ? 0.9 : 0.7);
             ctx.stroke();
           }
-        }
+          // Dark inner fracture line (LOD 0, larger shards only — skip for micro-slivers)
+          if (lod === 0 && drawR > 6 && shVariant !== 1) {
+            ctx.globalAlpha = savedAlpha * 0.2;
+            ctx.strokeStyle = '#1a0a00';
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(-drawR * 0.3, drawR * 0.1);
+            ctx.lineTo(drawR * 0.4, -drawR * 0.15);
+            ctx.stroke();
+          }
+          ctx.restore();
+        } else {
+          // === EXPANSE ORB: Weathered stone-like ancient orbs ===
+          // Rough-edged polygon — ancient/eroded, not perfectly round
+          const sides = 8 + (c.id % 5); // 8-12 sides per orb, seeded
+          const buildExpansePath = () => {
+            ctx.beginPath();
+            for (let p = 0; p <= sides; p++) {
+              const angle = (p / sides) * Math.PI * 2;
+              // Subtle radial variation seeded by orb ID — looks weathered
+              const wobble = 1.0
+                - 0.04 * Math.sin(angle * 3 + seed)
+                - 0.03 * Math.sin(angle * 5 + seed * 2.3)
+                - 0.02 * Math.sin(angle * 7 + seed * 0.7);
+              const r = drawR * wobble;
+              const ax = c.x + Math.cos(angle) * r;
+              const ay = c.y + Math.sin(angle) * r;
+              if (p === 0) ctx.moveTo(ax, ay); else ctx.lineTo(ax, ay);
+            }
+            ctx.closePath();
+          };
+
+          // Base fill — warm ancient color
+          ctx.globalAlpha = savedAlpha;
+          ctx.fillStyle = orbColor;
+          buildExpansePath();
+          ctx.fill();
+
+          // Inner shadow — dark center for depth/weight (LOD 0-1)
+          if (lod <= 1 && drawR > 6) {
+            const innerGrad = ctx.createRadialGradient(c.x, c.y, drawR * 0.15, c.x, c.y, drawR * 0.85);
+            innerGrad.addColorStop(0, 'rgba(13,6,4,0.25)');
+            innerGrad.addColorStop(0.5, 'rgba(13,6,4,0.10)');
+            innerGrad.addColorStop(1, 'transparent');
+            ctx.globalAlpha = savedAlpha * 0.6;
+            ctx.fillStyle = innerGrad;
+            buildExpansePath();
+            ctx.fill();
+          }
+
+          // Edge highlight — faint warm rim light on one side (LOD 0 only)
+          if (lod === 0 && drawR > 8) {
+            const rimAngle = seed * 0.3; // consistent per-orb rim direction
+            const rimX = c.x + Math.cos(rimAngle) * drawR * 0.25;
+            const rimY = c.y + Math.sin(rimAngle) * drawR * 0.25;
+            const rimGrad = ctx.createRadialGradient(rimX, rimY, drawR * 0.3, c.x, c.y, drawR);
+            rimGrad.addColorStop(0, 'rgba(255,200,100,0.12)');
+            rimGrad.addColorStop(0.5, 'rgba(255,180,80,0.04)');
+            rimGrad.addColorStop(1, 'transparent');
+            ctx.globalAlpha = savedAlpha * 0.5;
+            ctx.fillStyle = rimGrad;
+            buildExpansePath();
+            ctx.fill();
+          }
+
+          // Surface cracks — faint dark lines suggesting age (LOD 0, large orbs only)
+          if (lod === 0 && drawR > 15) {
+            ctx.globalAlpha = savedAlpha * 0.12;
+            ctx.strokeStyle = '#1a0a00';
+            ctx.lineWidth = 0.6;
+            const crackCount = 2 + (c.id % 3);
+            for (let ci = 0; ci < crackCount; ci++) {
+              const cAngle = (ci / crackCount) * Math.PI * 2 + seed * 0.5;
+              const innerR = drawR * (0.1 + ((ci * 7 + c.id) % 5) * 0.08);
+              const outerR = drawR * (0.5 + ((ci * 3 + c.id) % 4) * 0.1);
+              ctx.beginPath();
+              ctx.moveTo(c.x + Math.cos(cAngle) * innerR, c.y + Math.sin(cAngle) * innerR);
+              const cpA = cAngle + ((c.id + ci) % 2 ? 0.3 : -0.3);
+              const cpR = (innerR + outerR) * 0.55;
+              ctx.quadraticCurveTo(
+                c.x + Math.cos(cpA) * cpR, c.y + Math.sin(cpA) * cpR,
+                c.x + Math.cos(cAngle + 0.15) * outerR, c.y + Math.sin(cAngle + 0.15) * outerR
+              );
+              ctx.stroke();
+            }
+          }
+        } // end sharpShard vs weathered
 
         ctx.globalAlpha = savedAlpha;
       }
@@ -10208,12 +11532,17 @@ function renderCircles(ctx) {
         const ei = eyeIntensity;
         const eyeVariant = c.id % 4; // 0-3: four distinct vector eye styles
 
-        // Draw base colored orb first
+        // Draw base colored orb first (tidal mesh deformation when near BH)
         ctx.globalAlpha = savedAlpha;
         ctx.fillStyle = orbColor;
-        ctx.beginPath();
-        ctx.arc(c.x, c.y, drawR, 0, Math.PI * 2);
+        if (hasTidalDeform) {
+          drawTidalOrb(ctx, c.x, c.y, drawR, c.stretchX, c.stretchY, c.stretchAngle, c.tidalT || 0);
+        } else {
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, drawR, 0, Math.PI * 2);
+        }
         ctx.fill();
+        applyLtInnerShadow(ctx, c.x, c.y, drawR);
 
         // === MUTATION PHASE 1: Void Seed — subtle dark center forming ===
         // Shape hints at the eye variant this orb will grow into:
@@ -10491,18 +11820,27 @@ function renderCircles(ctx) {
         const _hueShift = `rgb(${Math.min(255, _og + 40)},${Math.min(255, _ob + 30)},${Math.min(255, _or + 50)})`;
 
         if (drawR > 5) {
-          // Flat color fill — clean, no blend layers
+          // Flat color fill — clean, no blend layers (tidal mesh when near BH)
           ctx.globalAlpha = orbAlpha;
           ctx.fillStyle = orbColor;
-          ctx.beginPath();
-          ctx.arc(c.x, c.y, drawR, 0, Math.PI * 2);
+          if (hasTidalDeform) {
+            drawTidalOrb(ctx, c.x, c.y, drawR, c.stretchX, c.stretchY, c.stretchAngle, c.tidalT || 0);
+          } else {
+            ctx.beginPath();
+            ctx.arc(c.x, c.y, drawR, 0, Math.PI * 2);
+          }
           ctx.fill();
+          applyLtInnerShadow(ctx, c.x, c.y, drawR);
 
         } else {
-          // Tiny orbs: simple fill
+          // Tiny orbs: simple fill (tidal mesh when near BH)
           ctx.fillStyle = orbColor;
-          ctx.beginPath();
-          ctx.arc(c.x, c.y, drawR, 0, Math.PI * 2);
+          if (hasTidalDeform) {
+            drawTidalOrb(ctx, c.x, c.y, drawR, c.stretchX, c.stretchY, c.stretchAngle, c.tidalT || 0);
+          } else {
+            ctx.beginPath();
+            ctx.arc(c.x, c.y, drawR, 0, Math.PI * 2);
+          }
           ctx.fill();
         }
       }
@@ -10602,6 +11940,7 @@ function renderCircles(ctx) {
 
     ctx.restore();
   }
+  } // end _pass loop
 }
 
 function renderHoverProximity(ctx) {
@@ -11214,6 +12553,12 @@ function renderAbyssBackground(ctx, W, H) {
   const sat = getAbyssSaturation(); // 0 = B&W void, 1 = vivid bioluminescence
   const vivid = p.vividColors || p.colors;
 
+  // Underwater sway — entire deep-sea background drifts slowly
+  // Invisible in void (sat=0), gentle rocking with bioluminescence
+  const swayX = Math.sin(G.time * 0.3) * 3 * sat;
+  const swayY = Math.cos(G.time * 0.23) * 2 * sat;
+  ctx.translate(swayX, swayY);
+
   // Compute visible area in game-space (compensates for zoom transform)
   const zInv = G.zoomLevel !== 1 ? 1 / G.zoomLevel : 1;
   const visW = W * zInv;
@@ -11358,6 +12703,14 @@ function renderAbyssBackground(ctx, W, H) {
       const localCurrent = Math.sin(G.time * 0.1 + dp.y * 3) * 0.3;
       dp.vx += Math.cos(localCurrent) * 0.003 * dt * madScale;
       dp.vy += Math.sin(localCurrent) * 0.001 * dt * madScale;
+
+      // Wave undulation — particles sway in visible bands (like real water currents)
+      // dp.x * 8 creates spatial frequency so nearby particles move together
+      const waveUndulate = Math.sin(G.time * 0.4 + dp.x * 8 + dp.phase) * 0.004 * sat;
+      dp.vy += waveUndulate * dt * madScale;
+      // Counter-phase horizontal oscillation for figure-8 drift
+      const horzUndulate = Math.cos(G.time * 0.35 + dp.y * 6 + dp.phase * 1.3) * 0.002 * sat;
+      dp.vx += horzUndulate * dt * madScale;
 
       // Gentle upward float (deep-sea convection)
       dp.vy -= 0.0005 * dt;
@@ -11521,6 +12874,97 @@ function renderAbyssBackground(ctx, W, H) {
       ctx.arc(nx, ny, nr, 0, Math.PI * 2);
       ctx.fill();
     }
+  }
+
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.restore();
+}
+
+// ========== ABYSS FOREGROUND CAUSTICS (B2) ==========
+// Underwater light caustic overlay — diamond-shaped bright patches where light converges
+function renderAbyssCaustics(ctx, W, H) {
+  const isAbyss = G.biomeOverride >= 0 && SPECIAL_BIOMES[G.biomeOverride] && SPECIAL_BIOMES[G.biomeOverride].name === 'ABYSS';
+  if (!isAbyss) return;
+
+  const sat = getAbyssSaturation();
+  if (sat < 0.15) return; // invisible in deep void
+
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter'; // additive blending for light accumulation
+
+  // Compute visible area (same as renderAbyssBackground)
+  const zInv = G.zoomLevel !== 1 ? 1 / G.zoomLevel : 1;
+  const visW = W * zInv;
+  const visH = H * zInv;
+  const visL = (W - visW) * 0.5;
+  const visT = (H - visH) * 0.5;
+
+  // Caustic intensity: cubic ramp from sat 0.15→1.0
+  const intensity = Math.pow((sat - 0.15) / 0.85, 1.5);
+
+  // --- Layer A: 7 overlapping elliptical light patches ---
+  // Where they overlap additively, diamond-shaped bright spots appear naturally
+  const CAUSTIC_COUNT = 7;
+  for (let i = 0; i < CAUSTIC_COUNT; i++) {
+    const seed = i * 3.17 + 1.4;
+
+    // Each patch drifts on its own slow orbit
+    const cx = visL + visW * (0.1 + 0.8 * (0.5 + 0.5 * Math.sin(G.time * 0.07 + seed)));
+    const cy = visT + visH * (0.05 + 0.9 * (0.5 + 0.5 * Math.cos(G.time * 0.053 + seed * 1.3)));
+
+    // Pulsing size (breathing)
+    const breathe = 0.6 + 0.4 * Math.sin(G.time * 0.2 + seed * 2.1);
+    const rx = visW * (0.12 + 0.06 * Math.sin(G.time * 0.11 + i * 1.7)) * breathe;
+    const ry = visH * (0.08 + 0.04 * Math.cos(G.time * 0.09 + i * 2.3)) * breathe;
+    const rMax = Math.max(rx, ry);
+    if (rMax < 5) continue;
+
+    // Very low alpha — cumulative additive creates visible bright spots at overlaps
+    ctx.globalAlpha = (0.015 + 0.03 * intensity) * breathe;
+
+    // Alternate cool cyan and warm white-green caustic tones
+    const causticGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, rMax);
+    if (i % 2 === 0) {
+      causticGrad.addColorStop(0, 'rgba(180,230,255,1)');
+      causticGrad.addColorStop(0.3, 'rgba(180,230,255,0.5)');
+      causticGrad.addColorStop(0.7, 'rgba(180,230,255,0.1)');
+    } else {
+      causticGrad.addColorStop(0, 'rgba(200,255,240,1)');
+      causticGrad.addColorStop(0.3, 'rgba(200,255,240,0.5)');
+      causticGrad.addColorStop(0.7, 'rgba(200,255,240,0.1)');
+    }
+    causticGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = causticGrad;
+
+    // Rotated ellipse for organic shape
+    ctx.beginPath();
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(G.time * 0.02 + i * 0.9);
+    ctx.scale(1, ry / Math.max(rx, 1));
+    ctx.arc(0, 0, rx, 0, Math.PI * 2);
+    ctx.restore();
+    ctx.fill();
+  }
+
+  // --- Layer B: 5 thin arc strokes — bright caustic cell edges ---
+  const ARC_COUNT = 5;
+  for (let i = 0; i < ARC_COUNT; i++) {
+    const seed2 = i * 2.31 + 0.7;
+    const ax = visL + visW * (0.15 + 0.7 * (0.5 + 0.5 * Math.sin(G.time * 0.06 + seed2)));
+    const ay = visT + visH * (0.1 + 0.8 * (0.5 + 0.5 * Math.cos(G.time * 0.047 + seed2 * 1.5)));
+    const ar = Math.min(visW, visH) * (0.15 + 0.1 * Math.sin(G.time * 0.13 + i * 2));
+
+    // Partial arc with shimmer
+    const startAngle = G.time * 0.08 + i * 1.2;
+    const sweep = Math.PI * (0.4 + 0.3 * Math.sin(G.time * 0.15 + i * 3));
+
+    ctx.globalAlpha = (0.02 + 0.04 * intensity) * (0.5 + 0.5 * Math.sin(G.time * 0.3 + i * 1.8));
+    ctx.strokeStyle = 'rgba(200,240,255,0.6)';
+    ctx.lineWidth = (1.5 + Math.sin(G.time * 0.25 + i) * 0.5) * zInv;
+    ctx.beginPath();
+    ctx.arc(ax, ay, ar, startAngle, startAngle + sweep);
+    ctx.stroke();
   }
 
   ctx.globalCompositeOperation = 'source-over';
@@ -11693,7 +13137,7 @@ function renderOrbBloom(ctx) {
 
     const pulse = 1 + Math.sin(c.pulsePhase) * 0.12;
     const r = c.radius * pulse * 2.2;
-    const spawnScale = c.spawnAnim > 0 ? (1 - c.spawnAnim) : 1;
+    const spawnScale = c.spawnAnim > 0 ? (1 - c.spawnAnim * c.spawnAnim) : 1;
     const drawR = r * spawnScale;
     if (drawR < 3) continue;
 
@@ -11998,6 +13442,66 @@ function setupInput() {
     toggleExpanse();
   });
 
+  // Dev: Trigger PGE for current biome
+  const pgeBtn = document.getElementById('pge-btn');
+  function updatePgeButtonLabel() {
+    const biome = G.biomeOverride;
+    if (biome === 2) {
+      pgeBtn.textContent = 'PGE: Sand';
+      pgeBtn.style.borderColor = 'rgba(212,146,10,0.4)';
+      pgeBtn.style.color = '#d4920a';
+    } else if (biome >= 0 && typeof SPECIAL_BIOMES !== 'undefined' && SPECIAL_BIOMES[biome] && SPECIAL_BIOMES[biome].name === 'ABYSS') {
+      pgeBtn.textContent = 'PGE: Crush';
+      pgeBtn.style.borderColor = 'rgba(0,229,255,0.4)';
+      pgeBtn.style.color = '#00e5ff';
+    } else {
+      pgeBtn.textContent = 'PGE: Swirl';
+      pgeBtn.style.borderColor = 'rgba(180,80,255,0.4)';
+      pgeBtn.style.color = '#b450ff';
+    }
+  }
+  updatePgeButtonLabel();
+  // Update label periodically (biome can change at any time)
+  setInterval(updatePgeButtonLabel, 500);
+
+  pgeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (G.state !== 'playing') return;
+    const madness = getMadnessAmount();
+    const biome = G.biomeOverride;
+    if (biome === 2) {
+      // EXPANSE: trigger Sandfall
+      const beatDur = 3 + madness * 3;
+      expanseSandfallActive = beatDur * PGE_BEAT_SEC;
+      expanseBeatsSinceLast = 0;
+      playSandfallSound();
+    } else if (biome >= 0 && typeof SPECIAL_BIOMES !== 'undefined' && SPECIAL_BIOMES[biome] && SPECIAL_BIOMES[biome].name === 'ABYSS') {
+      // ABYSS: trigger Pressure Wave
+      const beatDur = 2 + madness * 2;
+      abyssPressureWave = beatDur * PGE_BEAT_SEC;
+      abyssBeatsSinceLast = 0;
+      if (typeof playAbyssWooshSound === 'function') playAbyssWooshSound();
+    } else {
+      // DEFAULT / TESTLEVEL: trigger Whirlwind
+      const beatDur = 2 + madness * 2;
+      whirlwindActive = beatDur * PGE_BEAT_SEC;
+      whirlwindDir = Math.random() < 0.5 ? 1 : -1;
+      pgeBeatsSinceLast = 0;
+      if (typeof playWhirlwindSound === 'function') playWhirlwindSound();
+    }
+    // Brief visual flash on button
+    pgeBtn.classList.add('active');
+    setTimeout(() => pgeBtn.classList.remove('active'), 400);
+  });
+
+  // Dev: Perk choice count toggle (1 = fate picks, 2 = player chooses from 2)
+  document.getElementById('perks-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    perkChoiceCount = perkChoiceCount === 1 ? 2 : 1;
+    document.getElementById('perks-btn').textContent = `Perks: ${perkChoiceCount}`;
+    document.getElementById('perks-btn').classList.toggle('active', perkChoiceCount === 2);
+  });
+
   // Dev: Spawn mini black hole
   document.getElementById('spawnmbh-btn').addEventListener('click', (e) => {
     e.stopPropagation();
@@ -12027,9 +13531,77 @@ function setupInput() {
   document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
 }
 
+// Clean biome transition — purge biome-specific state to prevent stale data
+// when switching between biomes. Called by all toggle/advance functions.
+function cleanBiomeTransition(fromBiome, toBiome) {
+  // --- 1. Reset all PGE timers ---
+  whirlwindTimer = 0;
+  whirlwindActive = 0;
+  whirlwindDir = 1;
+  pgeBeatAccum = 0;
+  pgeBeatsSinceLast = 0;
+  abyssPressureTimer = 0;
+  abyssPressureWave = 0;
+  abyssBeatAccum = 0;
+  abyssBeatsSinceLast = 0;
+  expanseSandfallActive = 0;
+  expanseBeatAccum = 0;
+  expanseBeatsSinceLast = 0;
+  expanseSandfallCooldown = 0;
+
+  // --- 2. Clear rift walls (HP/visual differ per biome) ---
+  G.riftWalls = [];
+  G.riftWallTimer = 0;
+
+  // --- 3. Strip Expanse-specific orb properties ---
+  for (let i = 0; i < G.circles.length; i++) {
+    const c = G.circles[i];
+    if (!c.alive || c.popped) continue;
+
+    // Release clump relationships (Expanse-only mechanic)
+    if (c.clumpHost !== undefined) {
+      c.clumpHost = undefined;
+      c.clumpOffsetAngle = undefined;
+      c.clumpOffsetDist = undefined;
+    }
+    if (c.clumpChildren && c.clumpChildren.length > 0) {
+      c.clumpChildren = [];
+    }
+
+    // Strip shard rendering properties (Expanse fracture visuals)
+    if (c.sharpShard) {
+      c.sharpShard = false;
+      c.shardVariant = undefined;
+      c.shardAngle = undefined;
+      c.shardSpin = undefined;
+      c.shardSides = undefined;
+    }
+
+    // Release Archon tethers (visual rendering changes per biome)
+    if (c.superCell && c.scTethers && c.scTethers.length > 0) {
+      for (let t = 0; t < c.scTethers.length; t++) {
+        const orb = findCircleById(c.scTethers[t].orbId);
+        if (orb) orb.tethered = false;
+      }
+      c.scTethers = [];
+      c.scSigilTethers = [];
+    }
+  }
+
+  // --- 4. Clear black holes (visual rendering differs drastically) ---
+  G.blackHoles = [];
+
+  // --- 5. Reset boss if active (different boss types per biome) ---
+  if (G.boss) {
+    G.boss = null;
+    G.bossTimer = 10; // short delay before next boss in new biome
+  }
+}
+
 function toggleBiome() {
   // Snapshot current palette before switching
   G.prevPalette = getCurrentPalette();
+  const fromBiome = G.biomeOverride;
   if (G.biomeOverride === 0) {
     G.biomeOverride = -1;
     document.getElementById('biome-btn').classList.remove('active');
@@ -12040,6 +13612,7 @@ function toggleBiome() {
     document.getElementById('testlvl-btn').classList.remove('active');
     document.getElementById('expanse-btn').classList.remove('active');
   }
+  cleanBiomeTransition(fromBiome, G.biomeOverride);
   // Trigger smooth palette transition
   G.biomeTransition = 0;
   // Re-color all existing orbs
@@ -12066,6 +13639,7 @@ function toggleBiome() {
 function toggleTestLevel() {
   // Toggle TESTLEVEL biome (index 1 in SPECIAL_BIOMES)
   G.prevPalette = getCurrentPalette();
+  const fromBiome = G.biomeOverride;
   if (G.biomeOverride === 1) {
     G.biomeOverride = -1;
     document.getElementById('testlvl-btn').classList.remove('active');
@@ -12076,6 +13650,7 @@ function toggleTestLevel() {
     document.getElementById('biome-btn').classList.remove('active');
     document.getElementById('expanse-btn').classList.remove('active');
   }
+  cleanBiomeTransition(fromBiome, G.biomeOverride);
   G.biomeTransition = 0;
   // Re-color all existing orbs
   for (let i = 0; i < G.circles.length; i++) {
@@ -12092,6 +13667,7 @@ function toggleTestLevel() {
 function toggleExpanse() {
   // Toggle EXPANSE biome (index 2 in SPECIAL_BIOMES)
   G.prevPalette = getCurrentPalette();
+  const fromBiome = G.biomeOverride;
   if (G.biomeOverride === 2) {
     G.biomeOverride = -1;
     document.getElementById('expanse-btn').classList.remove('active');
@@ -12102,6 +13678,7 @@ function toggleExpanse() {
     document.getElementById('biome-btn').classList.remove('active');
     document.getElementById('testlvl-btn').classList.remove('active');
   }
+  cleanBiomeTransition(fromBiome, G.biomeOverride);
   G.biomeTransition = 0;
   // Re-color all existing orbs
   for (let i = 0; i < G.circles.length; i++) {
@@ -12127,6 +13704,7 @@ function toggleExpanse() {
 // Advance to the next biome (called when field is cleared)
 function advanceBiome() {
   G.prevPalette = getCurrentPalette();
+  const fromBiome = G.biomeOverride;
   if (G.biomeOverride >= 0) {
     // Currently in a special biome — cycle back to level-based
     G.biomeOverride = -1;
@@ -12139,6 +13717,7 @@ function advanceBiome() {
     G.level = nextIdx * PALETTE_LEVELS + 1;
     G.xpToNext = XP_BASE * Math.pow(XP_SCALE, G.level - 1);
   }
+  cleanBiomeTransition(fromBiome, G.biomeOverride);
   G.biomeTransition = 0;
   // Re-color existing orbs
   for (let i = 0; i < G.circles.length; i++) {
@@ -12353,6 +13932,8 @@ function update(dt) {
   updateWhirlwind(dt);
   // ABYSS MECHANIC: Pressure Waves — periodic crushing force pushes orbs inward
   updateAbyssalPressure(dt);
+  // EXPANSE MECHANIC: Sandfall — periodic downward gravity toward ground
+  updateExpanseSandfall(dt);
 
   updateChainReaction(dt);
   updateCircles(dt);
@@ -12366,9 +13947,22 @@ function update(dt) {
   updateAmbientParticles(dt);
   updateFieldStars(dt, G.W, G.H);
   updateVoidStars(dt, G.W, G.H);
+  updateBgMidStars(dt, G.W, G.H);
   updateFloatingTexts(dt);
   updateAftershocks(dt);
   updateGravityWells(dt);
+  // Relax tidal stretch each frame — BH updates below will override if orb is still in zone
+  for (let _ri = 0; _ri < G.circles.length; _ri++) {
+    const _rc = G.circles[_ri];
+    if (!_rc.alive || _rc.popped) continue;
+    if ((_rc.stretchX || 1) > 1.005) {
+      _rc.stretchX += (1 - _rc.stretchX) * dt * 4;
+      _rc.stretchY += (1 - _rc.stretchY) * dt * 4;
+      if ((_rc.tidalT || 0) > 0) _rc.tidalT = Math.max(0, _rc.tidalT - dt * 4);
+    } else {
+      _rc.stretchX = 1; _rc.stretchY = 1; _rc.tidalT = 0;
+    }
+  }
   updateBlackHole(dt);
   updateSuperBlackHole(dt);
   updateMiniBlackHoles(dt);
@@ -12410,8 +14004,25 @@ function update(dt) {
 
   // === World Transparency Milestone Banners ===
   // Show dramatic text when crossing 50%, 75%, 90% WT thresholds
+  // Biome-specific banners — each biome has its own progression flavor
   const wtAmount = getMadnessAmount();
-  const wtMilestones = [
+  const isExpanseWT = G.biomeOverride === 2;
+  const isAbyssWT = G.biomeOverride >= 0 && SPECIAL_BIOMES[G.biomeOverride] && SPECIAL_BIOMES[G.biomeOverride].name === 'ABYSS';
+  const wtMilestones = isExpanseWT ? [
+    { pct: 50, threshold: 0.50, text: 'THE SAND REMEMBERS', subtext: '50% EROSION', color: '#d4920a',
+      lore: '\u201CThe Sculptor did not carve. The Sculptor waited, and the stone forgot what it was not.\u201D \u2014LITHOS-011' },
+    { pct: 75, threshold: 0.75, text: 'THE BEDROCK FRACTURES', subtext: '75% EROSION', color: '#b87333',
+      lore: '\u201CMonitoring Station 7 confirms: the strata are moving. Not shifting. Moving.\u201D \u2014SILT-004' },
+    { pct: 90, threshold: 0.90, text: 'THE ANCIENT GROUND OPENS', subtext: '90% EROSION', color: '#8b2500',
+      lore: '\u201CBelow the sand, below the stone, below the silence \u2014 teeth.\u201D \u2014CAIRN-001' }
+  ] : isAbyssWT ? [
+    { pct: 50, threshold: 0.50, text: 'THE DEPTHS STIR', subtext: '50% WORLD TRANSPARENCY', color: '#00e5ff',
+      lore: '\u201CThe deep does not welcome. The deep does not reject. The deep does not notice.\u201D \u2014BRINE-008' },
+    { pct: 75, threshold: 0.75, text: 'PRESSURE BECOMES THOUGHT', subtext: '75% WORLD TRANSPARENCY', color: '#00bfa5',
+      lore: '\u201CAt sufficient depth, the distinction between observer and observed is a surface luxury.\u201D \u2014HADAL-002' },
+    { pct: 90, threshold: 0.90, text: 'THE LEVIATHAN TURNS', subtext: '90% WORLD TRANSPARENCY', color: '#76ff03',
+      lore: '\u201CIt was not born. It accumulated. And now it has accumulated enough.\u201D \u2014TRAWL-006' }
+  ] : [
     { pct: 50, threshold: 0.50, text: 'THE MEMBRANE THINS', subtext: '50% WORLD TRANSPARENCY', color: '#b060ff',
       lore: '\u201CThe Membrane does not separate. The Membrane is the act of two things disagreeing about whether they are one thing.\u201D \u2014ADAM-007' },
     { pct: 75, threshold: 0.75, text: 'REALITY UNRAVELS',   subtext: '75% WORLD TRANSPARENCY', color: '#ff5080',
@@ -12589,7 +14200,7 @@ function renderTestLevelLighting(ctx, W, H) {
   const lightR = 1400;            // very wide, huge feather radius
   // Cache light position for cross-function access (orb saturation in renderCircles)
   G._ltLx = lx; G._ltLy = ly; G._ltR = lightR;
-  const darkAlpha = 0.08;         // whisper-thin darkness — just a hint darker than non-LT
+  const darkAlpha = 0.35;         // subtle darkness — close to non-LT brightness
   const flickerT = G.time || 0;
   const flicker = 1.0 + Math.sin(flickerT * 3.7) * 0.012 + Math.sin(flickerT * 7.1) * 0.006;
   const effectiveR = lightR * flicker;
@@ -12604,11 +14215,11 @@ function renderTestLevelLighting(ctx, W, H) {
   if (hasCursor) {
     _lightCtx.globalCompositeOperation = 'destination-out';
     const grad = _lightCtx.createRadialGradient(lx, ly, 0, lx, ly, effectiveR);
-    grad.addColorStop(0, 'rgba(255,255,255,0.35)');     // very subtle center
-    grad.addColorStop(0.10, 'rgba(255,255,255,0.28)');  // gentle
-    grad.addColorStop(0.25, 'rgba(255,255,255,0.18)');
-    grad.addColorStop(0.45, 'rgba(255,255,255,0.08)');
-    grad.addColorStop(0.65, 'rgba(255,255,255,0.03)');
+    grad.addColorStop(0, 'rgba(255,255,255,0.12)');       // almost invisible cursor light
+    grad.addColorStop(0.10, 'rgba(255,255,255,0.09)');
+    grad.addColorStop(0.25, 'rgba(255,255,255,0.06)');
+    grad.addColorStop(0.45, 'rgba(255,255,255,0.03)');
+    grad.addColorStop(0.65, 'rgba(255,255,255,0.01)');
     grad.addColorStop(0.85, 'rgba(255,255,255,0.005)');
     grad.addColorStop(1.0, 'rgba(255,255,255,0)');
     _lightCtx.fillStyle = grad;
@@ -12619,9 +14230,12 @@ function renderTestLevelLighting(ctx, W, H) {
 
   // --- Step 3: Cast soft shadows from ORBS ONLY (shadow balls excluded) ---
   _lightCtx.globalCompositeOperation = 'source-over';
-  const shadowAlpha = darkAlpha * 0.55;
+  const shadowAlpha = darkAlpha * 0.85;
 
   if (hasCursor) {
+    // Native Gaussian blur for genuinely soft shadow edges
+    _lightCtx.save();
+    _lightCtx.filter = 'blur(12px)';
     for (let i = 0; i < G.circles.length; i++) {
       const c = G.circles[i];
       if (!c.alive || c.popped) continue;
@@ -12629,47 +14243,25 @@ function renderTestLevelLighting(ctx, W, H) {
       const sr = c.radius * zoom;
       const shadow = computeCircleShadow(lx, ly, cs.x, cs.y, sr, effectiveR);
       if (!shadow) continue;
-      // Multi-pass feathered shadow — 4 layers from soft outer to tight core
-      const midX = (shadow.t1x + shadow.t2x + shadow.f1x + shadow.f2x) * 0.25;
-      const midY = (shadow.t1y + shadow.t2y + shadow.f1y + shadow.f2y) * 0.25;
-      const shadowPasses = [
-        { expand: 1.18, alpha: shadowAlpha * 0.10 },  // outermost penumbra
-        { expand: 1.12, alpha: shadowAlpha * 0.20 },  // soft edge
-        { expand: 1.06, alpha: shadowAlpha * 0.40 },  // mid blur
-        { expand: 1.0,  alpha: shadowAlpha * 0.75 },  // tight core
-      ];
-      for (const pass of shadowPasses) {
-        _lightCtx.fillStyle = `rgba(0,0,0,${pass.alpha.toFixed(3)})`;
-        _lightCtx.beginPath();
-        _lightCtx.moveTo(midX + (shadow.t1x - midX) * pass.expand, midY + (shadow.t1y - midY) * pass.expand);
-        _lightCtx.lineTo(midX + (shadow.f1x - midX) * pass.expand, midY + (shadow.f1y - midY) * pass.expand);
-        _lightCtx.lineTo(midX + (shadow.f2x - midX) * pass.expand, midY + (shadow.f2y - midY) * pass.expand);
-        _lightCtx.lineTo(midX + (shadow.t2x - midX) * pass.expand, midY + (shadow.t2y - midY) * pass.expand);
-        _lightCtx.closePath();
-        _lightCtx.fill();
-      }
-      // Orb body shadow — lit-side edge blur: gradient from dark backside to transparent lit side
-      const orbDx = cs.x - lx, orbDy = cs.y - ly;
-      const orbAngle = Math.atan2(orbDy, orbDx);
-      // Shadow on the far side from light, with soft blurred edge toward light
-      const shadowCx = cs.x + Math.cos(orbAngle) * sr * 0.15;
-      const shadowCy = cs.y + Math.sin(orbAngle) * sr * 0.15;
-      const orbShadGrad = _lightCtx.createRadialGradient(
-        cs.x - Math.cos(orbAngle) * sr * 0.4,
-        cs.y - Math.sin(orbAngle) * sr * 0.4,
-        0, shadowCx, shadowCy, sr * 0.95
-      );
-      orbShadGrad.addColorStop(0, 'rgba(0,0,0,0)');
-      orbShadGrad.addColorStop(0.3, 'rgba(0,0,0,0)');
-      orbShadGrad.addColorStop(0.55, `rgba(0,0,0,${(shadowAlpha * 0.5).toFixed(3)})`);
-      orbShadGrad.addColorStop(0.8, `rgba(0,0,0,${(shadowAlpha * 0.8).toFixed(3)})`);
-      orbShadGrad.addColorStop(1, `rgba(0,0,0,${shadowAlpha.toFixed(3)})`);
-      _lightCtx.fillStyle = orbShadGrad;
+      // Push shadow start well behind the orb — must NOT begin before the object
+      // sr*1.5 places near edge past the orb's far side even after blur bleed
+      const pushAngle = Math.atan2(cs.y - ly, cs.x - lx);
+      const pushDist = sr * 1.5;
+      shadow.t1x += Math.cos(pushAngle) * pushDist;
+      shadow.t1y += Math.sin(pushAngle) * pushDist;
+      shadow.t2x += Math.cos(pushAngle) * pushDist;
+      shadow.t2y += Math.sin(pushAngle) * pushDist;
+      // Single pass at ~50% intensity — blur handles the softness
+      _lightCtx.fillStyle = `rgba(0,0,0,${(shadowAlpha * 0.30).toFixed(3)})`;
       _lightCtx.beginPath();
-      _lightCtx.arc(cs.x, cs.y, sr * 0.92, 0, Math.PI * 2);
+      _lightCtx.moveTo(shadow.t1x, shadow.t1y);
+      _lightCtx.lineTo(shadow.f1x, shadow.f1y);
+      _lightCtx.lineTo(shadow.f2x, shadow.f2y);
+      _lightCtx.lineTo(shadow.t2x, shadow.t2y);
+      _lightCtx.closePath();
       _lightCtx.fill();
     }
-    // NOTE: Shadow balls completely excluded — they don't interact with light
+    _lightCtx.restore(); // clears filter
   }
 
   // --- Step 4: Orb self-glow (each orb emits faint light) ---
@@ -12679,11 +14271,11 @@ function renderTestLevelLighting(ctx, W, H) {
     if (!c.alive || c.popped) continue;
     const cs = _w2s(c.x, c.y);
     const sr = c.radius * zoom;
-    const glowR = sr * 4.0;
+    const glowR = sr * 2.5;
     const orbGlow = _lightCtx.createRadialGradient(cs.x, cs.y, 0, cs.x, cs.y, glowR);
-    orbGlow.addColorStop(0, 'rgba(255,255,255,0.65)');
-    orbGlow.addColorStop(0.3, 'rgba(255,255,255,0.30)');
-    orbGlow.addColorStop(0.6, 'rgba(255,255,255,0.08)');
+    orbGlow.addColorStop(0, 'rgba(255,255,255,0.85)');
+    orbGlow.addColorStop(0.4, 'rgba(255,255,255,0.35)');
+    orbGlow.addColorStop(0.7, 'rgba(255,255,255,0.08)');
     orbGlow.addColorStop(1, 'rgba(255,255,255,0)');
     _lightCtx.fillStyle = orbGlow;
     _lightCtx.beginPath();
@@ -12813,8 +14405,8 @@ function renderTestLevelLighting(ctx, W, H) {
   // --- Step 6: Warm glow at cursor (bigger center radius) ---
   if (hasCursor) {
     ctx.globalCompositeOperation = 'screen';
-    ctx.globalAlpha = 0.14;
-    const glowR = effectiveR * 0.5; // bigger center glow (was 0.35)
+    ctx.globalAlpha = 0.03;
+    const glowR = effectiveR * 0.25; // subtle center glow
     const glow = ctx.createRadialGradient(lx, ly, 0, lx, ly, glowR);
     glow.addColorStop(0, '#ffe8c0');
     glow.addColorStop(0.3, '#e0c080');
@@ -12826,7 +14418,7 @@ function renderTestLevelLighting(ctx, W, H) {
     ctx.fill();
 
     // Purple rim
-    ctx.globalAlpha = 0.05;
+    ctx.globalAlpha = 0.01;
     const rim = ctx.createRadialGradient(lx, ly, effectiveR * 0.4, lx, ly, effectiveR * 0.95);
     rim.addColorStop(0, 'transparent');
     rim.addColorStop(0.5, '#a060ff');
@@ -12991,15 +14583,43 @@ const CHANGELOG = [
     'Supernova covers 45%+ of the play area — screen-filling devastation',
     'Spawns less frequently now (30–50s, was 20–35s)',
   ]},
-  { title: 'Abyss Biome', items: [
-    'Black holes rendered as spinning ocean whirlpools in Abyss',
-    'Supermassive black holes become deep maelstroms',
-    'Biome gravity effects 50% longer, scale 1.25–3× with madness',
-  ]},
   { title: 'Cursor & Physics', items: [
     'Cursor pull radius vastly expanded (4–10× reach scaling with madness)',
     'Orb field density softer — peaks at 2.5× (was 3.5×) at max madness',
     'Bigger orbs from 50%+ madness, giant merged orbs scale with madness',
+  ]},
+  // --- BIOME CHANGELOGS ---
+  { biomeGroup: 'abyss', biomeLabel: 'Biome 0 — The Abyss' },
+  { title: 'Ocean Voids', biome: 'abyss', items: [
+    'Black holes rendered as spinning ocean whirlpools',
+    'Supermassive black holes become deep maelstroms with foam particles',
+    'Biome gravity effects 50% longer, scale 1.25–3× with madness',
+  ]},
+  { biomeGroup: 'expanse', biomeLabel: 'Biome 2 — The Expanse' },
+  { title: 'Sand Maelstrom', biome: 'expanse', items: [
+    'Black holes are now sand whirlpools with warm amber spinning arcs',
+    'Supermassive voids become massive sand maelstroms with dust fields',
+    'Swallowed orbs eject 2–4 tiny micro-sliver sand grains outward',
+    'Floating text and progress arcs recolored to golden/amber',
+  ]},
+  { title: 'Shard Geology', biome: 'expanse', items: [
+    'Three distinct shard shapes based on fragment generation',
+    'Gen 1–2: jagged sharp shards — angular, spinning, dangerous',
+    'Gen 3: pebble chips — rounded, pale bone-colored stone fragments',
+    'Gen 4–5: micro-slivers — needle-thin, fast-spinning sand grains',
+  ]},
+  { title: 'Shard Physics', biome: 'expanse', items: [
+    'Shards never overlap — always-on passive collision in Expanse',
+    'Gentle nudge separation (soft restitution) outside chain reactions',
+    'Big shards pull smaller ones — 3× gravity, 1.5× range, lower threshold',
+    'Debris fields form naturally around large ancient stones',
+  ]},
+  { title: 'Sandstone Barricades', biome: 'expanse', items: [
+    'Rift walls rethemed as thick sandstone barriers with warm amber tones',
+    'Layered rendering: outer glow, inner stone core, hash-mark joints',
+    'Continuous health bar replaces pip dots — smooth animated drain',
+    '40 HP (was 15) — barricades resist many more blasts before crumbling',
+    'Desert lore: "The sand hardens…", "Ancient stone rises…"',
   ]},
 ];
 
@@ -13012,7 +14632,13 @@ function buildChangelogModal() {
   let clHtml = '<div id="changelog-title">What\'s New</div>';
   for (let s = 0; s < CHANGELOG.length; s++) {
     const sec = CHANGELOG[s];
-    clHtml += '<div class="cl-section">';
+    // Biome group separator — renders a labeled divider before biome-specific sections
+    if (sec.biomeGroup) {
+      clHtml += `<div class="cl-biome-group"><div class="cl-biome-label ${sec.biomeGroup}">${sec.biomeLabel}</div></div>`;
+      continue;
+    }
+    const biomeClass = sec.biome ? ` biome-${sec.biome}` : '';
+    clHtml += `<div class="cl-section${biomeClass}">`;
     clHtml += `<div class="cl-section-title">${sec.title}</div>`;
     for (let i = 0; i < sec.items.length; i++) {
       clHtml += `<div class="cl-item">${sec.items[i]}</div>`;

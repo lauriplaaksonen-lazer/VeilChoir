@@ -31,6 +31,10 @@ Pop Effects:
   - Special deep boom + crunch sound
   - Extra massive particle burst
 
+Tether & Sigil Connections:
+  See 13-SIGILS-AND-TETHERS.txt for detailed Phase 5 tether mechanics,
+  Archon-Sigil Enochian connections, inter-tether web, and implosion scaling.
+
 
 === BLACK HOLE (REGULAR) ===
 Spawn: Every 25-45 seconds (random)

@@ -132,6 +132,57 @@ B2 SPECIAL RENDERINGS:
   - Shadow ball corona: bioluminescent glow at sat > 0.3
   - SuperCell: tentacle horror with saturation-scaled colors
 
+=== B3: EXPANSE BIOME (SPECIAL) ===
+
+Palette:
+  bgTop: #1a0a00 (dark sand), bgBot: #2a1505 (warm earth)
+  colors: sand tones — #d4920a, #b87333, #e8d5b0, #8b6914, #daa520
+  accent: #daa520 (golden)
+
+B3 ORB PROPERTIES:
+  - Sparse field: levelDampen *= 0.45 (fewer but larger orbs)
+  - Giant orbs: sizeBase *= 2.5
+  - Sharp shards: fracture fragments are angular, spinning polygons
+  - Three shard variants:
+    Gen 1-2: Default jagged sharp shards (3-5 sides, wide jag)
+    Gen 3: Pebble chips (5-6 sides, rounded, bone-pale #e8d5b0)
+    Gen 4-5: Micro-slivers (3 sides, needle-like, elongated)
+  - Clumping: orbs stick together instead of merging
+
+B3 PGE — SANDFALL (RARE + DRAMATIC):
+  - Pulls all shards downward toward screen bottom (gravity activates)
+  - BPM-synced at 90 BPM but Expanse-specific long intervals:
+    Min beats: 30 (~20 seconds), Max beats: 55 (~37 seconds)
+    Much rarer than B1 Whirlwind / B2 Pressure Waves
+  - Duration: 3-6 beats (~2-4 seconds) — longer pulse
+  - Force: 130 * physics_scale * madness_mult (0.7x to 1.7x) — SEVERE
+  - Ground collision: hard landing at screen bottom (restitution -0.2, 80% energy loss)
+  - Ground friction: vx *= 0.80 on contact
+  - High madness (>30%): horizontal sand scatter jitter
+  - Plays low rumble sound on onset
+  - When effect ends: shards drift back up via normal movement
+  - Post-sandfall spawn bias: for 10 seconds after sandfall ends,
+    new shards spawn in upper play area (70% top edge, upper 35-40%)
+  - Shadow ball anti-gravity: during sandfall, shadow balls float UPWARD
+    (opposing force to shards falling), continues as gentle lift during 10s cooldown
+
+B3 SPECIAL RENDERINGS:
+  - Black holes: sand whirlpools with warm amber spinning arcs
+  - Supermassive BH: massive sand maelstroms with dust fields
+  - Swallowed orbs eject 2-4 micro-sliver sand grains
+  - Rift walls: sandstone barricades with layered stone rendering
+  - Rift wall health bar: continuous gradient bar (not pip dots)
+  - Floating text: amber/golden (#d4920a / #daa520)
+
+B3 PHYSICS:
+  - Always-on collision: shards never overlap (soft restitution 0.5)
+  - Enhanced inter-orb gravity: 3x strength, 1.5x range, threshold 1.05x
+  - Big shards gravitationally attract smaller shards (debris fields)
+  - Extra drag on small shards (gen 2+): generation-scaled friction
+    so combo fragments settle faster instead of flying endlessly
+    Gen 2: 3.1x extra, Gen 3: 3.9x, Gen 4: 4.7x, Gen 5: 5.5x
+
+
 LORE TEXTS:
   Phase I:  3 variants (field awakens, matter condenses, membrane stretches)
   Phase II: 3 variants (warmth bleeds, field remembers, energy pools)
@@ -139,3 +190,4 @@ LORE TEXTS:
   Phase IV: 3 variants (field hungers, chains echo, void breathes)
   Phase V:  3 variants (boundaries dissolve, pops tear membrane, field and void are one)
   ABYSS:   3 variants (sink below, pressure crushes, deep remembers)
+  EXPANSE: 3 variants (the sand hardens, ancient stone rises, a barricade forms)

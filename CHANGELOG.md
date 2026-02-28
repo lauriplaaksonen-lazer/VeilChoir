@@ -2,6 +2,85 @@
 
 ---
 
+## Session 10 — 2026-02-27
+
+### B3 THE EXPANSE — Desert Biome
+- New special biome (`biomeOverride === 2`, `SPECIAL_BIOMES[2]`) with full visual identity
+- **Palette:** amber/copper/blood/bone tones, 120Hz sine oscillator
+- **Debug button** "Expanse" at top:248px, keyboard shortcut X
+- **3-way mutual exclusion** toggle function (Abyss/Test/Expanse)
+- **WEIGHT mechanic:** 45% orb count, 2.5× orb size — sparse giant orbs
+- **Weathered orb rendering:** rough polygons, inner shadow, rim light, surface cracks
+- **Desert background:** horizon glow, heat haze blobs
+- **200 sand particles** drifting horizontally with wind gusts
+- **4 red eye pairs** at screen edges with independent blinking
+- **2× XP, 1.5× score multiplier** for ancient orbs
+- **Boss spawn guard** — no boss yet for Expanse biome
+- Nebulae and whirlwind disabled in Expanse
+- 5 desert lore quotes sourced from `game-name-biomes.md`
+- `BIOME_LORE` entry for EXPANSE added
+
+---
+
+## Session 9 — 2026-02-27
+
+### LT Engine Polish
+- Softer center light (lightR 840→1050, gentler gradient curve)
+- 4-pass feathered shadow edges (replaces 2-layer flat shadows)
+- Per-orb saturation shift by light proximity (+15% near, -30% far)
+- Removed black outer ring artifact (shrink orb body shadow to sr*0.92)
+
+### Visual Fixes
+- Eye sclera covers full orb (0.85-0.92× → 0.96-1.0×), eliminates colored ring around eye
+- Void Seed shapes match eye variant (V2 vertical slit, V3 horizontal ellipse)
+
+### Gameplay Tuning
+- Dark Prism less frequent (balls 8→12, radius 25→35, threshold 7→10, cooldown 2→5s)
+- Mini BH 2× wider gravity radius (150→300)
+- Level 6 density dampening at low WT (25% fewer orbs, scales to normal by 40% WT)
+- Faster zoom-out (score curve 400k→250k, lerp dt*2→dt*3.5)
+
+### Lore & Info
+- Lore quotes displayed on WT milestone banners (50%/75%/90%)
+- Banner duration extended 3.5→5s
+
+---
+
+## Session 8 — 2026-02-27
+
+### New Features
+- **Wormhole** spawns at peak madness after 4 boss kills in B1
+- **Smooth gravity inversion** (ease in/out, 1.8s cooldown)
+- **Purple radial pulse** + shadow orb growth during Dark Prism events
+- **Mini black hole** debug spawn button
+- **Coming Next roadmap** in changelog modal
+
+### Gameplay Tuning
+- Stronger cursor pull near cursor (close-range bonus)
+- Reduced gravity reaction at high WT
+- More saturated B1 orb palette, reduced orbBrighten wash
+- Archon tethers: more connections, inter-tether web, sigil-seeking
+
+### Bug Fix
+- Fixed orb teleport after splash screens
+
+---
+
+## Session 7 — 2026-02-27
+
+### TESTLEVEL / LT Lighting Engine
+- New lighting engine for `biomeOverride === 1` (formerly just "TESTLEVEL")
+- **Point light at cursor** with tangent shadow casting from orbs
+- **Dynamic light sources:** mini black holes, chain links, explosions
+- **Orb self-glow**, dust layer, soft penumbra shadows
+- **Screen-space compositing** (bypasses zoom transform)
+
+### Boss Visual Overhaul
+- **4 vector mouth variants:** fanged, screamer, serrated, abyssal maw
+- Bigger eyes within orb containers, enhanced sclera/iris rendering
+
+---
+
 ## Session 6 — 2026-02-27
 
 ### Unified 4-Variant Vector Eye System
